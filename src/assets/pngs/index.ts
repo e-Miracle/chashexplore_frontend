@@ -1,0 +1,18 @@
+import Logo from "./logo 2.png";
+import Background from "./background.png";
+import Google from "./Google svg.png";
+import Instagram from "./Instagram - png.png";
+import Facebook from "./g12.png";
+import Twitter from "./Logo__x2014__FIXED.png";
+import LinkedIn from "./Path 2520.png";
+import Draw from "./g10.png"
+export {
+  Logo,
+  Background,
+  Google,
+  Instagram,
+  Facebook,
+  Twitter,
+  LinkedIn,
+  Draw,
+};

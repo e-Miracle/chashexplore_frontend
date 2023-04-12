@@ -1,6 +1,6 @@
 import React, { Suspense } from "react";
 import { Link } from "react-router-dom";
-import { USER_TYPES } from "../../constants";
+import { USER_TYPES, _INFLUENCER_ } from "../../constants";
 import { faLongArrowAltRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { LazyLoadImage } from "react-lazy-load-image-component";
@@ -17,7 +17,7 @@ const CreateNewDraw = () => {
           alt={Draw}
         />
         <Link
-          to={`/${USER_TYPES._INFLUENCER_}/my/draws`}
+          to={`/${_INFLUENCER_}/my/draws`}
           className=" text-primary  font-ubuntu text-base lg:text-lg text-center"
         >
           {" "}

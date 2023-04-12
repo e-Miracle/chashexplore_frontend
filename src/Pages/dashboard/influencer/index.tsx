@@ -1,6 +1,7 @@
 import React, { Suspense, lazy } from "react";
 import { DashBoardLayout } from "../../";
 import CreateNewDraw from "../../../components/InfluencerDraws/CreateNewDraw";
+import Spinner from "../../../components/Spinner";
 const InflencerCards = lazy(() => import("../../../components/InflencerCards"));
 const InfluencerDraws = lazy(
   () => import("../../../components/InfluencerDraws")
@@ -15,7 +16,7 @@ const index = () => {
     tickets: 1478,
   };
   return (
-    <Suspense>
+    <Suspense fallback={<Spinner />}>
       <DashBoardLayout type="influencer">
         <div>
           <InflencerCards {...cardProps} />

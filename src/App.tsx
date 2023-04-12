@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import {
   Home,
   About,
@@ -14,12 +15,14 @@ import {
   FollowersSettings,
   InflunecersDashboard,
   InflunecersDraws,
+  InflunecersNewDraw,
   InflunecersTransactions,
   InflunecersSettings,
 } from "./Pages";
 import "./App.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { _FOLLOWER_, _INFLUENCER_ } from "./constants";
+import Spinner from "./components/Spinner";
 initFontAwesome();
 
 function App() {
@@ -62,6 +65,10 @@ function App() {
           element: <InflunecersDraws />,
         },
         {
+          path: `/${_INFLUENCER_}/my/draws/create`,
+          element: <InflunecersNewDraw />,
+        },
+        {
           path: `/${_INFLUENCER_}/my/transactions`,
           element: <InflunecersTransactions />,
         },
@@ -72,7 +79,11 @@ function App() {
       ],
     },
   ]);
-  return <RouterProvider router={router} />;
+  return (
+    <Suspense fallback={<Spinner />}>
+      <RouterProvider router={router} />
+    </Suspense>
+  );
 }
 
 export default App;

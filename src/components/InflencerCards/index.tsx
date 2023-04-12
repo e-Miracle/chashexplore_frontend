@@ -23,6 +23,7 @@ const index: React.FC<Props> = (props: Props) => {
         {influencerCards &&
           influencerCards.map((card, i) => (
             <div
+              key={i}
               style={{ background: card.color }}
               className="p-5 rounded-[10px] font-ubuntu text-white cursor-pointer"
             >

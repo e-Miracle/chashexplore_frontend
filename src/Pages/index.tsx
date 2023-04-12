@@ -19,6 +19,7 @@ const FollowersSettings = lazy(() => import("./dashboard/followers/Settings"));
 //influncers pages
 const InflunecersDashboard = lazy(() => import("./dashboard/influencer"));
 const InflunecersDraws = lazy(() => import("./dashboard/influencer/Draws"));
+const InflunecersNewDraw = lazy(() => import("./dashboard/influencer/CreateDraw"));
 const InflunecersTransactions = lazy(
   () => import("./dashboard/influencer/Transactions")
 );
@@ -63,6 +64,7 @@ export {
   FollowersSettings,
   InflunecersDashboard,
   InflunecersDraws,
+  InflunecersNewDraw,
   InflunecersTransactions,
   InflunecersSettings,
 };

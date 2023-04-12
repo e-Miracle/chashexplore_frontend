@@ -1,9 +1,9 @@
 import React, { Suspense } from "react";
 import { DashBoardLayout } from "../../";
-
+import Spinner from "../../../components/Spinner";
 const Transactions = () => {
   return (
-    <Suspense>
+    <Suspense fallback={<Spinner />}>
       <DashBoardLayout type="follower">
         <div className="text-[#000] bg-[red]">index lorem*1000 </div>
       </DashBoardLayout>

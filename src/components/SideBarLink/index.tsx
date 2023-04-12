@@ -1,4 +1,4 @@
-import React, { Suspense } from "react";
+import { Suspense } from "react";
 import { NavLink } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 type Props = {
@@ -8,18 +8,6 @@ type Props = {
   isIconMode?: boolean;
 };
 
-const activeStyle: {
-  background: string;
-  color: string;
-} = {
-  background: "#fff",
-  color: "#1F52AE",
-};
-
-const emptyStyle: { color: string; background: string } = {
-  color: "#fff",
-  background: "#1F52AE",
-};
 
 function SidebarLink({ path, title, Icon, isIconMode = false }: Props) {
   let body = (

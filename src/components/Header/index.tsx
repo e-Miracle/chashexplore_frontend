@@ -1,4 +1,4 @@
-import React from "react";
+import React, {Suspense} from "react";
 import {
   faHamburger,
   faBell,
@@ -26,55 +26,57 @@ const index: React.FC<Props> = ({
   const location = useLocation();
   const isMobile: boolean = useMediaQuery({ query: `(max-width: 768px)` });
   return (
-    <div className="flex px-2 md:px-0 justify-between items-center py-[1rem] bg-white">
-      <div className={" flex items-center  "}>
-        <button
-          className=" hidden lg:block text-icon text-2xl mr-5 hover:opacity-80 ease-in duration-300 "
-          onClick={() => setExpand(!expand)}
-        >
-          <FontAwesomeIcon icon={expand ? faTimes : faBars} />
-        </button>
-        <h1
-          className={
-            "font-ubuntu text-heading font-medium lg:text-[1.5rem] text-[1.2rem]"
-          }
-        >
-          {location.pathname.includes("dashboard") ? (
-            <>{isMobile ? "Hello" : "Hello Genevieve"} &#128075;</>
-          ) : (
-            <>
-              Genevieve Doe <FontAwesomeIcon icon={faCheckCircle} />
-            </>
-          )}
-          ;
-        </h1>
-      </div>
-
-      <div className="flex items-center">
-        <div className="flex items-center">
-          <Link
-            to="/my/dashbaord/search"
-            className="text-icon lg:text-2xl mr-5 text-xl hover:opacity-80 ease-in duration-300"
+    <Suspense>
+      <div className="flex px-2 md:px-0 justify-between items-center py-[1rem] bg-white">
+        <div className={" flex items-center  "}>
+          <button
+            className=" hidden lg:block text-icon text-2xl mr-5 hover:opacity-80 ease-in duration-300 "
+            onClick={() => setExpand(!expand)}
           >
-            <FontAwesomeIcon icon={faSearch} />
-          </Link>
-
-          <Link
-            to="/my/dashbaord/notification"
-            className="mr-5 text-icon lg:text-2xl text-xl hover:opacity-80 ease-in duration-300"
+            <FontAwesomeIcon icon={expand ? faTimes : faBars} />
+          </button>
+          <h1
+            className={
+              "font-ubuntu text-heading font-medium lg:text-[1.5rem] text-[1.2rem]"
+            }
           >
-            <FontAwesomeIcon icon={faBell} />
-          </Link>
+            {location.pathname.includes("dashboard") ? (
+              <>{isMobile ? "Hello" : "Hello Genevieve"} &#128075;</>
+            ) : (
+              <>
+                Genevieve Doe <FontAwesomeIcon icon={faCheckCircle} className="text-primary" />
+              </>
+            )}
+            ;
+          </h1>
         </div>
-        <button
-          role="button"
-          onClick={handleMobileNav}
-          className="block md:hidden mr-3 text-icon text-xl lg:text-2xl mr-5 hover:opacity-80 ease-in duration-300"
-        >
-          <FontAwesomeIcon icon={expand ? faTimes : faBars} />
-        </button>
+
+        <div className="flex items-center">
+          <div className="flex items-center">
+            <Link
+              to="/my/dashbaord/search"
+              className="text-icon lg:text-2xl mr-5 text-xl hover:opacity-80 ease-in duration-300"
+            >
+              <FontAwesomeIcon icon={faSearch} />
+            </Link>
+
+            <Link
+              to="/my/dashbaord/notification"
+              className="mr-5 text-icon lg:text-2xl text-xl hover:opacity-80 ease-in duration-300"
+            >
+              <FontAwesomeIcon icon={faBell} />
+            </Link>
+          </div>
+          <button
+            role="button"
+            onClick={handleMobileNav}
+            className="block md:hidden mr-3 text-icon text-xl lg:text-2xl mr-5 hover:opacity-80 ease-in duration-300"
+          >
+            <FontAwesomeIcon icon={expand ? faTimes : faBars} />
+          </button>
+        </div>
       </div>
-    </div>
+    </Suspense>
   );
 };
 

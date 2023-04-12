@@ -18,6 +18,7 @@ export default {
       heading: "#232E43",
       icon: "#4E5767",
       secondary: "#FBFBFD",
+      bg: "#FBFBFD",
     },
   },
   plugins: [],

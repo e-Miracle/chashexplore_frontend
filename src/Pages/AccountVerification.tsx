@@ -37,6 +37,7 @@ const Form = () => {
       .min(3, { message: "size must have at least three characters " }),
     facebook: z
       .string()
+      .url()
       .min(3, { message: "facebook must have at least three characters " })
       .refine(
         (value) =>
@@ -47,6 +48,7 @@ const Form = () => {
       ),
     instagram: z
       .string()
+      .url()
       .min(3, { message: "instagram must have at least three characters " })
       .refine(
         (value) =>
@@ -57,6 +59,7 @@ const Form = () => {
       ),
     twitter: z
       .string()
+      .url()
       .min(3, { message: "twitter must have at least three characters " })
       .refine(
         (value) =>
@@ -67,6 +70,7 @@ const Form = () => {
       ),
     LinkedIn: z
       .string()
+      .url()
       .min(3, { message: "LinkedIn must have at least three characters " })
       .refine(
         (value) => /^https:\/\/[a-z]{2,3}\.linkedin\.com\/.*$/.test(value),

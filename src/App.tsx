@@ -18,11 +18,13 @@ import {
   InflunecersNewDraw,
   InflunecersTransactions,
   InflunecersSettings,
+  InflunecersPreviewDraw,
 } from "./Pages";
 import "./App.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { _FOLLOWER_, _INFLUENCER_ } from "./constants";
 import Spinner from "./components/Spinner";
+import { Toaster } from "react-hot-toast";
 initFontAwesome();
 
 function App() {
@@ -69,6 +71,10 @@ function App() {
           element: <InflunecersNewDraw />,
         },
         {
+          path: `/${_INFLUENCER_}/my/draws/preview`,
+          element: <InflunecersPreviewDraw />,
+        },
+        {
           path: `/${_INFLUENCER_}/my/transactions`,
           element: <InflunecersTransactions />,
         },
@@ -81,6 +87,7 @@ function App() {
   ]);
   return (
     <Suspense fallback={<Spinner />}>
+      <Toaster position={"top-right"} />
       <RouterProvider router={router} />
     </Suspense>
   );

@@ -5,12 +5,14 @@ import {
 } from "@fortawesome/free-regular-svg-icons";
 import { faLongArrowAltRight } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
-const influencerCards = await import("../../constants").then((module) => {
-  return module.influencerCards;
-});
-const nFormatter = await import("../../Utils").then((module) => {
-  return module.nFormatter;
-});
+import { influencerCards } from "../../constants";
+import { nFormatter } from "../../Utils";
+// const influencerCards = await import("../../constants").then((module) => {
+//   return module.influencerCards;
+// });
+// const nFormatter = await import("../../Utils").then((module) => {
+//   return module.nFormatter;
+// });
 type Props = {
   raffles: number;
   participants: number;

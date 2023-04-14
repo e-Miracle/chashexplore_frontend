@@ -1,4 +1,5 @@
 import { lazy } from "react";
+import { initFontAwesome } from "../Utils/initFontawesome";
 
 //pages
 const Home = lazy(() => import("./Home"));
@@ -20,6 +21,9 @@ const FollowersSettings = lazy(() => import("./dashboard/followers/Settings"));
 const InflunecersDashboard = lazy(() => import("./dashboard/influencer"));
 const InflunecersDraws = lazy(() => import("./dashboard/influencer/Draws"));
 const InflunecersNewDraw = lazy(() => import("./dashboard/influencer/CreateDraw"));
+const InflunecersPreviewDraw = lazy(
+  () => import("./dashboard/influencer/PreviewDraw")
+);
 const InflunecersTransactions = lazy(
   () => import("./dashboard/influencer/Transactions")
 );
@@ -37,11 +41,11 @@ const DashBoardLayout = lazy(() => import('../components/Layouts/DashboardLayout
 
 //utils
 //lazyload
-const initFontAwesome = await import("../Utils/initFontawesome").then(
-  (module) => {
-    return module.initFontAwesome;
-  }
-);
+// const initFontAwesome = await import("../Utils/initFontawesome").then(
+//   (module) => {
+//     return module.initFontAwesome;
+//   }
+// );
 
 
 export {
@@ -65,6 +69,7 @@ export {
   InflunecersDashboard,
   InflunecersDraws,
   InflunecersNewDraw,
+  InflunecersPreviewDraw,
   InflunecersTransactions,
   InflunecersSettings,
 };

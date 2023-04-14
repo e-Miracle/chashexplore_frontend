@@ -4,11 +4,13 @@ import { Logo } from "../../assets";
 import { useMediaQuery } from "react-responsive";
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { _FOLLOWER_, _INFLUENCER_ } from "../../constants";
+import {
+  _FOLLOWER_,
+  _INFLUENCER_,
+  dashBoardLinks,
+} from "../../constants";
+
 const SideBarLink = React.lazy(() => import("../SideBarLink"));
-const Links = await import("../../constants").then((module) => {
-  return module.dashBoardLinks;
-});
 
 type Props = {
   mobileNav: boolean;
@@ -51,8 +53,8 @@ const Index: React.FC<Props> = ({ mobileNav, expand, userImg, type }) => {
         </div>
 
         <ul className="flex flex-col justify-center items-center w-full">
-          {Links &&
-            Links.map((link, i) => (
+          {dashBoardLinks &&
+            dashBoardLinks.map((link, i) => (
               <SideBarLink
                 key={i}
                 isIconMode={expand}

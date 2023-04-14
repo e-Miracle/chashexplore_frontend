@@ -1,4 +1,4 @@
-import React, {Suspense} from "react";
+import React, { Suspense } from "react";
 import {
   faHamburger,
   faBell,
@@ -44,7 +44,11 @@ const index: React.FC<Props> = ({
               <>{isMobile ? "Hello" : "Hello Genevieve"} &#128075;</>
             ) : (
               <>
-                Genevieve Doe <FontAwesomeIcon icon={faCheckCircle} className="text-primary" />
+                {isMobile ? "Genevieve Doe".substring(0, 3) + "..." : "Genevieve Doe"}{" "}
+                <FontAwesomeIcon
+                  icon={faCheckCircle}
+                  className="text-primary"
+                />
               </>
             )}
             ;

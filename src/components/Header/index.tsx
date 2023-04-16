@@ -51,7 +51,6 @@ const index: React.FC<Props> = ({
                 />
               </>
             )}
-            ;
           </h1>
         </div>
 

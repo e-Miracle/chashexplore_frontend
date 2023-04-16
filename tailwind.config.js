@@ -8,6 +8,7 @@ export default {
       },
       boxShadow: {
         normal: "0px 4px 100px rgba(31, 82, 174, 0.1)",
+        new: "0px 4px 4px rgba(0, 0, 0, 0.05)",
       },
     },
     colors: {

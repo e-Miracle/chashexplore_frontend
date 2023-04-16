@@ -22,7 +22,7 @@ const index: React.FC<Props> = (props: Props) => {
   return (
     <Suspense>
       <div className=" grid gap-[1rem] grid-cols-1 md:grid-cols-2 lg:grid-cols-3 mt-[1rem] lg:mt-0">
-        {influencerCards &&
+        {influencerCards && influencerCards.length > 0 &&
           influencerCards.map((card, i) => (
             <div
               key={i}

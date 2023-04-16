@@ -21,6 +21,9 @@ const FollowersSettings = lazy(() => import("./dashboard/followers/Settings"));
 const InflunecersDashboard = lazy(() => import("./dashboard/influencer"));
 const InflunecersDraws = lazy(() => import("./dashboard/influencer/Draws"));
 const InflunecersNewDraw = lazy(() => import("./dashboard/influencer/CreateDraw"));
+const InflunecersSingleDraw = lazy(
+  () => import("./dashboard/influencer/SingleDraw")
+);
 const InflunecersPreviewDraw = lazy(
   () => import("./dashboard/influencer/PreviewDraw")
 );
@@ -29,6 +32,10 @@ const InflunecersTransactions = lazy(
 );
 const InflunecersSettings = lazy(
   () => import("./dashboard/influencer/Settings")
+);
+
+const InflunecersResults= lazy(
+  () => import("./dashboard/influencer/Results")
 );
 
 //general components
@@ -72,4 +79,6 @@ export {
   InflunecersPreviewDraw,
   InflunecersTransactions,
   InflunecersSettings,
+  InflunecersSingleDraw,
+  InflunecersResults,
 };

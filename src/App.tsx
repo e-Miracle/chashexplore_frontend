@@ -19,6 +19,8 @@ import {
   InflunecersTransactions,
   InflunecersSettings,
   InflunecersPreviewDraw,
+  InflunecersSingleDraw,
+  InflunecersResults,
 } from "./Pages";
 import "./App.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
@@ -73,6 +75,14 @@ function App() {
         {
           path: `/${_INFLUENCER_}/my/draws/preview`,
           element: <InflunecersPreviewDraw />,
+        },
+        {
+          path: `/${_INFLUENCER_}/my/draws/singledraw`,
+          element: <InflunecersSingleDraw />,
+        },
+        {
+          path: `/${_INFLUENCER_}/my/draws/results`,
+          element: <InflunecersResults />,
         },
         {
           path: `/${_INFLUENCER_}/my/transactions`,

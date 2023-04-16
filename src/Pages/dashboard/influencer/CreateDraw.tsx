@@ -1,7 +1,6 @@
 import React, { Suspense, useState } from "react";
 import { DashBoardLayout } from "../../";
 import Spinner from "../../../components/Spinner";
-import { useNavigate } from "react-router-dom";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ErrorMessage } from "@hookform/error-message";
@@ -11,28 +10,13 @@ import "react-quill/dist/quill.snow.css";
 import { Image } from "../../../components/DragandDrop";
 import { currency_list } from "../../../constants";
 import toast from "react-hot-toast";
-const Button = React.lazy(() => import("../../../components/Backbtn"));
 const DropBox = React.lazy(() => import("../../../components/DragandDrop"));
-// const currency_list = await import("../../../constants").then((module) => {
-//   return module.currency_list;
-// });
-
 const colors: string[] = ["#211DEC", "#716EEA", "#DDDCEF"];
 
 const Settings = () => {
-  const navigate = useNavigate();
   const [raffleimages, setRaffleImages] = useState<Image[]>([]);
   const [PageIcons, setPageIcons] = useState<Image[]>([]);
   const [brandColor, setBrandColors] = useState<string>("");
-  const buttonProps = {
-    frontIcon: true,
-    icon: {
-      prefix: "fas",
-      name: "long-arrow-alt-left",
-    },
-    className: "text-primary font-ubuntu hover:opacity-80 text-sm lg:text-base ml-2 lg:ml-0",
-    onClick: () => navigate(-1),
-  };
   const dateSchema = z.object({
     date: z
       .string({
@@ -88,12 +72,11 @@ const Settings = () => {
         invalid_type_error: "description must be a string",
       })
       .min(3, { message: "description must have at least three characters " }),
-    currency: z
-      .string({
-        required_error: "currency is required",
-        invalid_type_error: "currency must be a string",
-      }),
-      // .min(1, { message: "currency must have at least one character" }),
+    currency: z.string({
+      required_error: "currency is required",
+      invalid_type_error: "currency must be a string",
+    }),
+    // .min(1, { message: "currency must have at least one character" }),
     amount: z
       .number({
         required_error: "number of winners  is required",
@@ -128,10 +111,7 @@ const Settings = () => {
   };
   return (
     <Suspense fallback={<Spinner />}>
-      <DashBoardLayout type="influencer">
-        <Button {...buttonProps} frontIcon={true}>
-          Back
-        </Button>
+      <DashBoardLayout type="influencer" backbtn={true}>
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="bg-bg p-[1rem] mt-5 rounded-[10px]">
             <h3 className="text-primary font-ubuntu text-[1.2rem] lg:text-[1.5rem] border-b-[1px] border-formborder font-bold">

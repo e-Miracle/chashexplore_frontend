@@ -9,7 +9,6 @@ import { Link } from "react-router-dom";
 import { faCheckCircle, faCamera } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimesCircle } from "@fortawesome/free-regular-svg-icons";
-import { LazyLoadImage } from "react-lazy-load-image-component";
 const Form = () => {
   const [imageUrl, setImageUrl] = React.useState<string>("");
   const MAX_FILE_SIZE: number = 1000000;

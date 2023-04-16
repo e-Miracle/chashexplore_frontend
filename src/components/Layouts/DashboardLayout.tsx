@@ -1,14 +1,17 @@
 import React, { Suspense } from "react";
 import { useMediaQuery } from "react-responsive";
+import { useNavigate } from "react-router-dom";
 const SideBar = React.lazy(() => import("../Sidebar"));
 const Header = React.lazy(() => import("../Header"));
-
+const Button = React.lazy(() => import("../Backbtn"));
 type Props = {
   children: React.ReactNode;
   type: "influencer" | "follower";
+  backbtn?: boolean;
 };
 
-const DashboardLayout: React.FC<Props> = ({ children, type }) => {
+const DashboardLayout: React.FC<Props> = ({ children, type, backbtn }) => {
+  const navigate = useNavigate();
   const [expand, setExpand] = React.useState<boolean>(false);
   const [mobileNav, setmobileNav] = React.useState<boolean>(false);
   const isMobile: boolean = useMediaQuery({ query: `(max-width: 768px)` });
@@ -16,6 +19,16 @@ const DashboardLayout: React.FC<Props> = ({ children, type }) => {
     if (isMobile) {
       setmobileNav(!mobileNav);
     }
+  };
+  const buttonProps = {
+    frontIcon: true,
+    icon: {
+      prefix: "fas",
+      name: "long-arrow-alt-left",
+    },
+    className:
+      "text-primary font-ubuntu hover:opacity-80 text-sm lg:text-base ml-2 lg:ml-0",
+    onClick: () => navigate(-1),
   };
   return (
     <Suspense>
@@ -43,7 +56,14 @@ const DashboardLayout: React.FC<Props> = ({ children, type }) => {
               mobileNav={mobileNav}
               handleMobileNav={handleMobileNav}
             />{" "}
-            <div className="bg-white">{children}</div>
+            <div className="bg-white">
+              {backbtn && (
+                <Button {...buttonProps} frontIcon={true}>
+                  Back
+                </Button>
+              )}
+              {children}
+            </div>
           </div>
         </div>
       </div>

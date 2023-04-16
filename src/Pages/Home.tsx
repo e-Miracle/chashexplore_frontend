@@ -45,7 +45,13 @@ export const Header: React.FC<HeaderProps> = ({
   );
 };
 
-export const SocialComponent = ({ text }: { text: string }) => {
+export const SocialComponent = ({
+  text,
+  option = true,
+}: {
+  text?: string;
+  option?: boolean;
+}) => {
   const socailCta: socialCta[] = [
     { imgUrl: Google, cta: "" },
     { imgUrl: Twitter, cta: "", color: "#1D9BF0" },
@@ -55,13 +61,15 @@ export const SocialComponent = ({ text }: { text: string }) => {
   ];
   return (
     <div className="my-[1.5rem]">
-      <h4 className="text-[#797F8A] font-ubuntu text-[1.2rem] lg:text-[1.5rem] my-3">
-        {text}
-      </h4>
-      <div className="flex justify-between items-center">
+      {text && (
+        <h4 className="text-[#797F8A] font-ubuntu text-[1.2rem] lg:text-[1.5rem] my-3">
+          {text}
+        </h4>
+      )}
+      <div className="flex flex-wrap justify-between items-center">
         {socailCta.map((item: socialCta, i: number) => (
           <button
-            className="hover:opacity-80 rounded-[4px] shadow-primary p-2 flex justify-center items-center"
+            className="hover:opacity-80 rounded-[4px] shadow-primary p-2 flex justify-center items-center mr-2"
             key={i}
             style={{ background: item?.color }}
           >
@@ -76,12 +84,14 @@ export const SocialComponent = ({ text }: { text: string }) => {
         ))}
       </div>
 
-      <div className="text-[#BABCC1] my-5 flex items-center justify-between font-ubuntu text-[1.2rem] lg:text-[1.5rem]">
-        {" "}
-        <hr className="border-[1px] w-[40%]" />
-        <span>0R</span>
-        <hr className="border-[1px] w-[40%]" />
-      </div>
+      {option && (
+        <div className="text-[#BABCC1] my-5 flex items-center justify-between font-ubuntu text-[1.2rem] lg:text-[1.5rem]">
+          {" "}
+          <hr className="border-[1px] w-[40%]" />
+          <span>0R</span>
+          <hr className="border-[1px] w-[40%]" />
+        </div>
+      )}
     </div>
   );
 };
@@ -216,7 +226,7 @@ const Login = () => {
     title: "Login",
     text: "Don’t have an account? ",
     linkName: "Sign up here",
-    route: ""
+    route: "",
   };
   return (
     <Suspense fallback={<Spinner />}>

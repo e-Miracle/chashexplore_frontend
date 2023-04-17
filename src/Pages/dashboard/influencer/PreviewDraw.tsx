@@ -7,6 +7,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { PreviewLogo } from "../../../assets";
 import { useMediaQuery } from "react-responsive";
 import { PreviewImage } from "../../../assets";
+import { BackgroundDrop } from "./Profile";
 const Timer = lazy(() => import("../../../components/Timer/Timer"));
 
 const imgArray: string[] = [PreviewImage, PreviewImage, PreviewImage];

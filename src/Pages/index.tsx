@@ -38,6 +38,10 @@ const InflunecersResults= lazy(
   () => import("./dashboard/influencer/Results")
 );
 
+const InflunecersProfile = lazy(() => import("./dashboard/influencer/Profile"));
+const InflunecersNotifications = lazy(() => import("./dashboard/influencer/Notifications"));
+const InflunecersActiveTransaction = lazy(() => import("./dashboard/influencer/ActiveTransaction"));
+
 //general components
 const Spinner = lazy(() => import("../components/Spinner"));
 
@@ -81,4 +85,7 @@ export {
   InflunecersSettings,
   InflunecersSingleDraw,
   InflunecersResults,
+  InflunecersProfile,
+  InflunecersActiveTransaction,
+  InflunecersNotifications,
 };

@@ -9,6 +9,7 @@ export default {
       boxShadow: {
         normal: "0px 4px 100px rgba(31, 82, 174, 0.1)",
         new: "0px 4px 4px rgba(0, 0, 0, 0.05)",
+        drawCard: "0px 4px 10px rgba(31, 82, 174, 0.03)",
       },
     },
     colors: {
@@ -23,6 +24,7 @@ export default {
       rand: "#0D1A31",
       forms: "#646C79",
       formborder: "#DBDDE2",
+      green: "#18FD66",
     },
   },
   plugins: [],

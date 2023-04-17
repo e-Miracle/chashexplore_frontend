@@ -7,6 +7,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { PrizeDraw } from "../../../assets";
 import { _INFLUENCER_ } from "../../../constants";
+import { BackgroundDrop } from "./Profile";
 const DrawsTable = React.lazy(() => import("../../../components/Table"));
 const Header = () => {
   return (
@@ -100,7 +101,7 @@ const Draws = () => {
   return (
     <Suspense fallback={<Spinner />}>
       <DashBoardLayout type="influencer">
-        <div className="">
+        <div>
           <Header />
           <Body />
         </div>

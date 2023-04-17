@@ -1,6 +1,7 @@
 import React, { Suspense } from "react";
 import { DashBoardLayout } from "../../";
 import Spinner from "../../../components/Spinner";
+import { BackgroundDrop } from "./Profile";
 const Settings = () => {
   return (
     <Suspense fallback={<Spinner />}>

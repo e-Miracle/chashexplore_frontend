@@ -21,6 +21,9 @@ import {
   InflunecersPreviewDraw,
   InflunecersSingleDraw,
   InflunecersResults,
+  InflunecersProfile,
+  InflunecersActiveTransaction,
+  InflunecersNotifications,
 } from "./Pages";
 import "./App.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
@@ -85,8 +88,20 @@ function App() {
           element: <InflunecersResults />,
         },
         {
+          path: `/${_INFLUENCER_}/profile`,
+          element: <InflunecersProfile />,
+        },
+        {
           path: `/${_INFLUENCER_}/my/transactions`,
           element: <InflunecersTransactions />,
+        },
+        {
+          path: `/${_INFLUENCER_}/my/transactions/active`,
+          element: <InflunecersActiveTransaction />,
+        },
+        {
+          path: `/${_INFLUENCER_}/my/notifications`,
+          element: <InflunecersNotifications />,
         },
         {
           path: `/${_INFLUENCER_}/my/settings`,

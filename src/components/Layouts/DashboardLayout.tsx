@@ -51,6 +51,7 @@ const DashboardLayout: React.FC<Props> = ({ children, type, backbtn }) => {
             }
           >
             <Header
+              type={type}
               expand={expand}
               setExpand={setExpand}
               mobileNav={mobileNav}

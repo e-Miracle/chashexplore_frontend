@@ -11,6 +11,7 @@ import {
 import { nFormatter } from "../../../Utils";
 import { PreviewImage } from "../../../assets";
 import { SocialComponent } from "../../Home";
+import { BackgroundDrop } from "./Profile";
 const Modal = lazy(() => import("../../../components/Modal/Modal"));
 const Timer = lazy(() => import("../../../components/Timer/Timer"));
 const Table = lazy(() => import("../../../components/Table/DrawsTable"));

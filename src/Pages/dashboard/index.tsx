@@ -4,9 +4,9 @@ import { DashBoardLayout } from '../'
 const index = () => {
     return (
       <Suspense>
-        {/* <DashBoardLayout>
-          <div className='text-[#000] bg-[red]'>index lorem*1000 </div>
-        </DashBoardLayout> */}
+        <DashBoardLayout type="influencer">
+          <div className="text-[#000] bg-[red]">index lorem*1000 </div>
+        </DashBoardLayout>
       </Suspense>
     );
 }

@@ -2,6 +2,7 @@ import React, { Suspense, lazy } from "react";
 import { DashBoardLayout } from "../../";
 import CreateNewDraw from "../../../components/InfluencerDraws/CreateNewDraw";
 import Spinner from "../../../components/Spinner";
+import { BackgroundDrop } from "./Profile";
 const InflencerCards = lazy(() => import("../../../components/InflencerCards"));
 const InfluencerDraws = lazy(
   () => import("../../../components/InfluencerDraws")

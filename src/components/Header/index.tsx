@@ -15,6 +15,7 @@ type Props = {
   setExpand: React.Dispatch<React.SetStateAction<boolean>>;
   mobileNav: boolean;
   handleMobileNav?: () => void;
+  type: "influencer" | "follower";
 };
 
 const index: React.FC<Props> = ({
@@ -22,6 +23,7 @@ const index: React.FC<Props> = ({
   setExpand,
   mobileNav,
   handleMobileNav,
+  type,
 }) => {
   const location = useLocation();
   const isMobile: boolean = useMediaQuery({ query: `(max-width: 768px)` });
@@ -44,7 +46,9 @@ const index: React.FC<Props> = ({
               <>{isMobile ? "Hello" : "Hello Genevieve"} &#128075;</>
             ) : (
               <>
-                {isMobile ? "Genevieve Doe".substring(0, 3) + "..." : "Genevieve Doe"}{" "}
+                {isMobile
+                  ? "Genevieve Doe".substring(0, 3) + "..."
+                  : "Genevieve Doe"}{" "}
                 <FontAwesomeIcon
                   icon={faCheckCircle}
                   className="text-primary"
@@ -64,7 +68,7 @@ const index: React.FC<Props> = ({
             </Link>
 
             <Link
-              to="/my/dashbaord/notification"
+              to={`/${type}/my/notifications`}
               className="mr-5 text-icon lg:text-2xl text-xl hover:opacity-80 ease-in duration-300"
             >
               <FontAwesomeIcon icon={faBell} />

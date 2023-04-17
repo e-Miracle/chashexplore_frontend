@@ -10,6 +10,7 @@ import "react-quill/dist/quill.snow.css";
 import { Image } from "../../../components/DragandDrop";
 import { currency_list } from "../../../constants";
 import toast from "react-hot-toast";
+import { BackgroundDrop } from "./Profile";
 const DropBox = React.lazy(() => import("../../../components/DragandDrop"));
 const colors: string[] = ["#211DEC", "#716EEA", "#DDDCEF"];
 
@@ -113,7 +114,7 @@ const Settings = () => {
     <Suspense fallback={<Spinner />}>
       <DashBoardLayout type="influencer" backbtn={true}>
         <form onSubmit={handleSubmit(onSubmit)}>
-          <div className="bg-bg p-[1rem] mt-5 rounded-[10px]">
+          <BackgroundDrop>
             <h3 className="text-primary font-ubuntu text-[1.2rem] lg:text-[1.5rem] border-b-[1px] border-formborder font-bold">
               Raffle Draw Details
             </h3>
@@ -406,7 +407,7 @@ const Settings = () => {
                 </p>
               )}
             />
-          </div>
+          </BackgroundDrop>
 
           <div className="bg-bg p-[1rem] mt-[1rem] lg:mt-[2rem] rounded-[10px]">
             <h3 className="text-primary font-ubuntu text-[1.2rem] lg:text-[1.5rem] border-b-[1px] border-formborder font-bold">

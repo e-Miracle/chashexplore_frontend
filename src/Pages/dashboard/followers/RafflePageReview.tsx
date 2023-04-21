@@ -1,21 +1,140 @@
-import { Suspense, lazy, useState } from "react";
+import React, { Suspense, useState, lazy } from "react";
 import { DashBoardLayout } from "../../";
-import { useNavigate, Link } from "react-router-dom";
 import Spinner from "../../../components/Spinner";
 import { faCheckCircle } from "@fortawesome/free-solid-svg-icons";
+import {
+  faFacebookF,
+  faLinkedin,
+  faInstagram,
+  faTwitter,
+} from "@fortawesome/free-brands-svg-icons";
+import { faBars, faTimes } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { PreviewLogo } from "../../../assets";
 import { useMediaQuery } from "react-responsive";
-import { PreviewImage } from "../../../assets";
-import { BackgroundDrop } from "./Profile";
+import { PreviewImage, BlueLogo } from "../../../assets";
+import { Link } from "react-router-dom";
 const Timer = lazy(() => import("../../../components/Timer/Timer"));
 
 const imgArray: string[] = [PreviewImage, PreviewImage, PreviewImage];
 
-const PreviewDraw = () => {
+const Header = () => {
+  const [mobileNav, setMobileNav] = useState<boolean>(false);
+  const isMobile = useMediaQuery({ query: `(max-width: 768px)` });
+  const handleMobileNav = () => {
+    if (isMobile) {
+      setMobileNav(!mobileNav);
+    }
+  };
+  return (
+    <nav className="flex justify-between items-center py-5 h-[10vh] lg:h-[70px]">
+      <div className="logo">
+        <Link to="/">
+          <img
+            src={BlueLogo}
+            alt={BlueLogo}
+            className=" w-[200px] lg:w-[300px] h-[50px]   object-contain"
+          />
+        </Link>
+      </div>
+      <ul
+        className={
+          mobileNav
+            ? "absolute h-[100vh] right-0 top-0 w-full bg-primary flex flex-col justify-evenly items-center ease-in duration-300 z-[3]"
+            : "hidden lg:flex items-center"
+        }
+      >
+        <li className={mobileNav ? "" : ""}>
+          <Link
+            onClick={handleMobileNav}
+            to="/"
+            className={
+              mobileNav
+                ? "bg-white rounded-[100px] text-primary text-base lg:text-[1.25rem] py-3 px-5 border-2 border-white"
+                : " mx-1 bg-primary rounded-[100px] text-white text-base lg:text-[1.25rem] py-3 px-5 border-2 border-primary"
+            }
+          >
+            Sign Up
+          </Link>
+        </li>
+        <li
+          className={
+            mobileNav
+              ? "bg-white rounded-[100px] text-primary text-base lg:text-[1.25rem] py-3 px-5 border-2 border-white"
+              : "mx-1 rounded-[100px] text-primary text-base lg:text-[1.25rem] py-3 px-5 border-2 border-primary"
+          }
+        >
+          <Link onClick={handleMobileNav} to="register" className={"/services"}>
+            Log in
+          </Link>
+        </li>
+      </ul>
+      <button
+        className={
+          mobileNav
+            ? "text-white text-2xl lg:hidden z-[99]"
+            : "text-primary text-2xl lg:hidden z-[99]"
+        }
+        onClick={handleMobileNav}
+      >
+        <FontAwesomeIcon icon={mobileNav ? faTimes : faBars} />
+      </button>
+    </nav>
+  );
+};
+
+const Footer = () => {
+  return (
+    <div className="font-ubuntu my-10">
+      <div>
+        <img
+          src={BlueLogo}
+          alt={BlueLogo}
+          className="w-full  lg:w-[300px] h-[50px]   object-contain"
+        />
+        <p className="text-center md:text-left text-paragraph text-sm lg:text-base mt-5">
+          CashXplore is a licensed bla bla bla
+        </p>
+      </div>
+
+      <div className="mt-[10rem]">
+        <div className="flex justify-center items-center">
+          <a
+            href="#"
+            className="text-primary text-sm lg:text-base mx-1 hover:opacity-90"
+          >
+            <FontAwesomeIcon icon={faLinkedin} />
+          </a>
+          <a
+            href="#"
+            className="text-primary text-sm lg:text-base mx-1 hover:opacity-90"
+          >
+            <FontAwesomeIcon icon={faInstagram} />
+          </a>
+          <a
+            href="#"
+            className="text-primary text-sm lg:text-base mx-1 hover:opacity-90"
+          >
+            <FontAwesomeIcon icon={faFacebookF} />
+          </a>
+          <a
+            href="#"
+            className="text-primary text-sm lg:text-base mx-1 hover:opacity-90"
+          >
+            <FontAwesomeIcon icon={faTwitter} />
+          </a>
+        </div>
+        <p className="text-center mt-5  text-[#251C43] text-sm lg:text-base">
+          All Rights Reserved. CashXplore Ltd. 2023
+        </p>
+      </div>
+    </div>
+  );
+};
+const RafflePageReview = () => {
   const isMobile: boolean = useMediaQuery({ query: `(max-width: 768px)` });
   const header = (
-    <div className="flex items-center">
+    <div className="flex items-center justify-center lg:justify-start">
       <img
         src={PreviewLogo}
         alt={PreviewLogo}
@@ -142,25 +261,12 @@ const PreviewDraw = () => {
     </div>
   );
 
-  const BtnBlock = (
-    <div className="flex flex-col md:flex-row items-center justify-end mt-10">
-      <Link
-        className="w-full md:w-auto inline-block text-center bg-transparent border-[2px] border-primary text-primary rounded-[100px] py-5 px-10 text-sm lg:text-base hover:opacity-80"
-        to={`/influencer/my/draws/create`}
-      >
-        Continue Editing{" "}
-      </Link>
-      <button className="w-full md:w-auto md:ml-5 mt-5 md:mt-0 inline-block text-center border-[2px] border-primary bg-primary text-white rounded-[100px] py-5 px-10 text-sm lg:text-base hover:opacity-80">
-        Send
-      </button>
-    </div>
-  );
-
   return (
     <Suspense fallback={<Spinner />}>
-      <DashBoardLayout type="influencer" backbtn={true}>
+      <div className="my-container">
         <div className="bg-bg p-[1rem] mt-5 rounded-[10px] ">
-          <div className="flex flex-col md:flex-row justify-between">
+          <Header />
+          <div className="mt-5 flex flex-col md:flex-row justify-between">
             <>{header}</>
             <div className="flex justify-center items-center">
               <Timer />
@@ -171,12 +277,12 @@ const PreviewDraw = () => {
             {Block1}
             {Block2}
             {Block3}
-            {BtnBlock}
+            <Footer />
           </>
         </div>
-      </DashBoardLayout>
+      </div>
     </Suspense>
   );
 };
 
-export default PreviewDraw;
+export default RafflePageReview;

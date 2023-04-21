@@ -1,18 +1,16 @@
-import { Suspense, lazy, useState } from "react";
+import React, { Suspense, useState, lazy } from "react";
 import { DashBoardLayout } from "../../";
-import { useNavigate, Link } from "react-router-dom";
 import Spinner from "../../../components/Spinner";
 import { faCheckCircle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { PreviewLogo } from "../../../assets";
 import { useMediaQuery } from "react-responsive";
 import { PreviewImage } from "../../../assets";
-import { BackgroundDrop } from "./Profile";
+import { Link } from "react-router-dom";
 const Timer = lazy(() => import("../../../components/Timer/Timer"));
 
 const imgArray: string[] = [PreviewImage, PreviewImage, PreviewImage];
-
-const PreviewDraw = () => {
+const ViewRaffle = () => {
   const isMobile: boolean = useMediaQuery({ query: `(max-width: 768px)` });
   const header = (
     <div className="flex items-center">
@@ -158,7 +156,7 @@ const PreviewDraw = () => {
 
   return (
     <Suspense fallback={<Spinner />}>
-      <DashBoardLayout type="influencer" backbtn={true}>
+      <DashBoardLayout type="follower">
         <div className="bg-bg p-[1rem] mt-5 rounded-[10px] ">
           <div className="flex flex-col md:flex-row justify-between">
             <>{header}</>
@@ -179,4 +177,4 @@ const PreviewDraw = () => {
   );
 };
 
-export default PreviewDraw;
+export default ViewRaffle;

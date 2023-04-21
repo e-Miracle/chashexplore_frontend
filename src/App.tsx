@@ -24,10 +24,19 @@ import {
   InflunecersProfile,
   InflunecersActiveTransaction,
   InflunecersNotifications,
+  FollowersViewRaffle,
+  FollowersRafflePagePreview,
+  FollowersPurchaseTicket,
+  FollowersSingleDraw,
+  FollowersResults,
+  FollowersProfile,
+  FollowersNotification,
+  FollowersTicket,
+  AdminDashboard,
 } from "./Pages";
 import "./App.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import { _FOLLOWER_, _INFLUENCER_ } from "./constants";
+import { _FOLLOWER_, _INFLUENCER_, _ADMIN_ } from "./constants";
 import Spinner from "./components/Spinner";
 import { Toaster } from "react-hot-toast";
 initFontAwesome();
@@ -52,16 +61,44 @@ function App() {
           element: <FollowersDashboard />,
         },
         {
+          path: `/${_FOLLOWER_}/my/dashboard/view-raffle`,
+          element: <FollowersViewRaffle />,
+        },
+        {
+          path: `/${_FOLLOWER_}/my/dashboard/raffle-page-preview`,
+          element: <FollowersRafflePagePreview />,
+        },
+        {
+          path: `/${_FOLLOWER_}/my/dashboard/purchase-ticket`,
+          element: <FollowersPurchaseTicket />,
+        },
+        {
           path: `/${_FOLLOWER_}/my/draws`,
           element: <FollowersDraws />,
         },
         {
+          path: `/${_FOLLOWER_}/my/draws/singledraw`,
+          element: <FollowersSingleDraw />,
+        },
+        {
           path: `/${_FOLLOWER_}/my/transactions`,
-          element: <FollowersTransactions />,
+          element: <FollowersTicket />,
         },
         {
           path: `/${_FOLLOWER_}/my/settings`,
           element: <FollowersSettings />,
+        },
+        {
+          path: `/${_FOLLOWER_}/profile`,
+          element: <FollowersProfile />,
+        },
+        {
+          path: `/${_FOLLOWER_}/my/draws/results`,
+          element: <FollowersResults />,
+        },
+        {
+          path: `/${_FOLLOWER_}/my/notifications`,
+          element: <FollowersNotification />,
         },
         {
           path: `/${_INFLUENCER_}/my/dashboard`,
@@ -106,6 +143,10 @@ function App() {
         {
           path: `/${_INFLUENCER_}/my/settings`,
           element: <InflunecersSettings />,
+        },
+        {
+          path: `/${_ADMIN_}/my/dashboard`,
+          element: <AdminDashboard />,
         },
       ],
     },

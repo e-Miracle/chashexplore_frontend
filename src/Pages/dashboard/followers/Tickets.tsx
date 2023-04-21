@@ -2,70 +2,61 @@ import React, { Suspense, useState } from "react";
 import { DashBoardLayout } from "../../";
 import Spinner from "../../../components/Spinner";
 import { BackgroundDrop } from "../influencer/Profile";
-import DrawsCard from "../../../components/DrawsCard/DrawsCardAlt";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faArrowDown,
-  faArrowUp,
-} from "@fortawesome/free-solid-svg-icons";
+import { Title } from "./Draws";
+import DrawsCard from "../../../components/DrawsCard/DrawsCardAlt2";
 import { Raffle } from "../../../assets";
-
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+// import { faArrowDown, faArrowUp } from "@fortawesome/free-solid-svg-icons";
+import { faArrowDown, faArrowUp } from "@fortawesome/free-solid-svg-icons";
 const data = [
   {
     imgSrc: Raffle,
-    name: "Genevieve Doe",
+    status: "Pending",
     title: "500,000naira New Year Giveaway",
     endIn: "14:48:27",
     id: 1,
-    price: 150,
+    ticketId: "GN24812ER",
   },
   {
     imgSrc: Raffle,
-    name: "Genevieve Doe",
+    status: "Pending",
     title: "500,000naira New Year Giveaway",
     endIn: "14:48:27",
     id: 2,
-    price: 150,
+    ticketId: "GN24806DF",
   },
   {
     imgSrc: Raffle,
-    name: "Genevieve Doe",
+    status: "Pending",
     title: "500,000naira New Year Giveaway",
     endIn: "14:48:27",
     id: 3,
-    price: 150,
+    ticketId: "GN24805GH",
   },
   {
     imgSrc: Raffle,
-    name: "Genevieve Doe",
+    status: "Pending",
     title: "500,000naira New Year Giveaway",
     endIn: "14:48:27",
     id: 4,
-    price: 150,
+    ticketId: "GN24809YM",
   },
   {
     imgSrc: Raffle,
-    name: "Genevieve Doe",
+    status: "Pending",
     title: "500,000naira New Year Giveaway",
     endIn: "14:48:27",
     id: 5,
-    price: 150,
+    ticketId: "GN24809HN",
   },
 ];
-export const Title = ({ text }: { text: string }) => {
-  return (
-    <h2 className="text-primary font-ubuntu text-[1.5rem] lg:text-[2rem] capitalize">
-      {text}
-    </h2>
-  );
-};
 
 const UserDraws = ({ text, data }: { text: string; data: any[] }) => {
   const [visible, setVisbility] = useState<boolean>(true);
   return (
     <div className="w-full bg-bg rounded-[10px] p-[1rem] font-ubuntu">
       <button onClick={() => setVisbility(!visible)}>
-        <h3 className="text-primary text-base lg:text-[1.25rem] font-semibold">
+        <h3 className="text-[#4E5767] text-base lg:text-[1.25rem] font-semibold">
           {text}{" "}
           <FontAwesomeIcon
             icon={visible ? faArrowUp : faArrowDown}
@@ -83,12 +74,13 @@ const UserDraws = ({ text, data }: { text: string; data: any[] }) => {
     </div>
   );
 };
-const Draws = () => {
+const Transactions = () => {
   return (
     <Suspense fallback={<Spinner />}>
-      <DashBoardLayout type="follower">
-        <Title text="My Draws" />
+      <DashBoardLayout type="follower" backbtn={true}>
+        <Title text="My Tickets" />
         <BackgroundDrop>
+          {" "}
           <UserDraws text="Active Draws" data={data} />
           <UserDraws text="Inactive  Draws" data={data} />
         </BackgroundDrop>
@@ -97,4 +89,4 @@ const Draws = () => {
   );
 };
 
-export default Draws;
+export default Transactions;

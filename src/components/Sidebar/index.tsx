@@ -7,7 +7,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   _FOLLOWER_,
   _INFLUENCER_,
+  _ADMIN_,
   dashBoardLinks,
+  adminDashBoardLinks,
+  followersdashBoardLinks,
 } from "../../constants";
 
 const SideBarLink = React.lazy(() => import("../SideBarLink"));
@@ -16,7 +19,7 @@ type Props = {
   mobileNav: boolean;
   expand: boolean;
   userImg?: string;
-  type: "influencer" | "follower";
+  type: "influencer" | "follower" | "admin";
 };
 
 const Index: React.FC<Props> = ({ mobileNav, expand, userImg, type }) => {
@@ -53,8 +56,33 @@ const Index: React.FC<Props> = ({ mobileNav, expand, userImg, type }) => {
         </div>
 
         <ul className="flex flex-col justify-center items-center w-full">
-          {dashBoardLinks &&
+          {type === "influencer" &&
+            dashBoardLinks &&
             dashBoardLinks.map((link, i) => (
+              <SideBarLink
+                key={i}
+                isIconMode={expand}
+                Icon={link.icon}
+                {...link}
+                path={`/${type}${link.path}`}
+              />
+            ))}
+
+          {type === _FOLLOWER_ &&
+            followersdashBoardLinks &&
+            followersdashBoardLinks.map((link, i) => (
+              <SideBarLink
+                key={i}
+                isIconMode={expand}
+                Icon={link.icon}
+                {...link}
+                path={`/${type}${link.path}`}
+              />
+            ))}
+
+          {type === _ADMIN_ &&
+            adminDashBoardLinks &&
+            adminDashBoardLinks.map((link, i) => (
               <SideBarLink
                 key={i}
                 isIconMode={expand}

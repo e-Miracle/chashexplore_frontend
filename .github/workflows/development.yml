@@ -18,7 +18,7 @@ jobs:
       with:
           node-version: ${{ matrix.node-version }}
     - run: npm install
-    - name: Create Build Folder
+    - name: Create Dist Folder
       run: npm run build
     - name: 📂 Sync files
       uses: SamKirkland/FTP-Deploy-Action@4.0.0
@@ -27,4 +27,4 @@ jobs:
         username: ${{ secrets.NODE_SITE_USER}}
         password: ${{ secrets.NODE_SITE_PASS}}
         server-dir: frontend/
-        local-dir: build
+        local-dir: dist

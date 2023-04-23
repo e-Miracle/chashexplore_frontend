@@ -18,8 +18,8 @@ jobs:
       with:
           node-version: ${{ matrix.node-version }}
     - run: npm install
-    - name: Create Dist Folder and Run Babel Build
-      run: npm run clean && npm run babel-build
+    - name: Create Build Folder
+      run: npm run build
     - name: 📂 Sync files
       uses: SamKirkland/FTP-Deploy-Action@4.0.0
       with:

@@ -26,5 +26,5 @@ jobs:
         server: ${{ secrets.NODE_SITE_SERVER}}
         username: ${{ secrets.NODE_SITE_USER}}
         password: ${{ secrets.NODE_SITE_PASS}}
-        server-dir: cash_explore_frontend/
+        server-dir: frontend/
         local-dir: build

@@ -27,4 +27,4 @@ jobs:
         username: ${{ secrets.NODE_SITE_USER}}
         password: ${{ secrets.NODE_SITE_PASS}}
         server-dir: frontend/
-        local-dir: dist
+        local-dir: dist/

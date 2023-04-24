@@ -36,9 +36,7 @@ const FollowersProfile = lazy(() => import("./dashboard/followers/Profile"));
 const FollowersNotification = lazy(
   () => import("./dashboard/followers/Notifications")
 );
-const FollowersTicket = lazy(
-  () => import("./dashboard/followers/Tickets")
-);
+const FollowersTicket = lazy(() => import("./dashboard/followers/Tickets"));
 
 //influncers pages
 const InflunecersDashboard = lazy(() => import("./dashboard/influencer"));
@@ -71,8 +69,18 @@ const InflunecersActiveTransaction = lazy(
 
 //admin section
 const AdminDashboard = lazy(() => import("./dashboard/admin"));
-
-
+const AdminRegistration = lazy(() => import("./dashboard/admin/Registrations"));
+const AdminRaffles = lazy(() => import("./dashboard/admin/Raffles"));
+const AdminDraws = lazy(() => import("./dashboard/admin/Draws"));
+const AdminCreateDraws = lazy(() => import("./dashboard/admin/CreateDraw"));
+const AdminPreviewDraws = lazy(() => import("./dashboard/admin/PreviewDraw"));
+const AdminSingleDraws = lazy(() => import("./dashboard/admin/SingleDraw"));
+const AdminResults = lazy(() => import("./dashboard/admin/Results"));
+const AdminUsers = lazy(() => import("./dashboard/admin/Users"));
+const AdminInfluencers = lazy(() => import("./dashboard/admin/Influencer"));
+const AdminFollowers = lazy(() => import("./dashboard/admin/Follower"));
+const AdminTransactions = lazy(() => import("./dashboard/admin/Transaction"));
+const AdminSingleTransaction = lazy(() => import("./dashboard/admin/SingleTransaction"));
 //general components
 const Spinner = lazy(() => import("../components/Spinner"));
 
@@ -129,4 +137,16 @@ export {
   FollowersNotification,
   FollowersTicket,
   AdminDashboard,
+  AdminRegistration,
+  AdminRaffles,
+  AdminDraws,
+  AdminCreateDraws,
+  AdminPreviewDraws,
+  AdminSingleDraws,
+  AdminResults,
+  AdminUsers,
+  AdminInfluencers,
+  AdminFollowers,
+  AdminTransactions,
+  AdminSingleTransaction,
 };

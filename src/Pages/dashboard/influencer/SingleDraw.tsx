@@ -109,37 +109,42 @@ type ModalProp = {
 };
 export const BackDrop: React.FC<ModalProp> = ({ onclick, children }) => {
   return (
-    <div className="bg-white shadow-normal w-[90%] md:w-1/2 rounded-[10px] p-[2rem] relative max-w-[768px] font-ubuntu">
-      <button
-        onClick={onclick}
-        className="absolute top-[.5rem] right-[.2rem] md:top-[1rem] md:right-[1rem] text-xl lg:text-3xl text-[#4E5767]"
-      >
-        <FontAwesomeIcon className="mr-2" icon={faTimesCircle} />
-      </button>
-      {children}
-    </div>
+    <Suspense fallback={<Spinner toggle={false} />}>
+      <div className="bg-white shadow-normal w-[90%] md:w-1/2 rounded-[10px] p-[2rem] relative max-w-[768px] font-ubuntu">
+        <button
+          onClick={onclick}
+          className="absolute top-[.5rem] right-[.2rem] md:top-[1rem] md:right-[1rem] text-xl lg:text-3xl text-[#4E5767]"
+        >
+          <FontAwesomeIcon className="mr-2" icon={faTimesCircle} />
+        </button>
+        {children}
+      </div>
+    </Suspense>
   );
 };
 
 type ModalContent = {
   onclick: React.MouseEventHandler<HTMLButtonElement> | undefined;
+  link: string;
 };
-const ModalContent: React.FC<ModalContent> = ({ onclick }) => {
+export const ModalContent: React.FC<ModalContent> = ({ onclick, link }) => {
   return (
-    <BackDrop onclick={onclick}>
-      <h3 className="text-primary text-center text-[1.8rem] md:text-[2rem]">
-        Share Raffle Link
-      </h3>
-      <div className="w-full  flex justify-center items-center  my-[1rem]">
-        <SocialComponent option={false} />
-      </div>
-      <p className="text-[#394355] text-center text-sm md:text-base">
-        Or Copy link here
-      </p>
-      <div className="w-full  flex justify-center items-center  my-[1rem]">
-        <CopyText text="https://www.cashXplore/GenevieveDoe?100,000nairanewyeargiveaway" />
-      </div>
-    </BackDrop>
+    <Suspense fallback={<Spinner toggle={false} />}>
+      <BackDrop onclick={onclick}>
+        <h3 className="text-primary text-center text-[1.8rem] md:text-[2rem]">
+          Share Raffle Link
+        </h3>
+        <div className="w-full  flex justify-center items-center  my-[1rem]">
+          <SocialComponent option={false} />
+        </div>
+        <p className="text-[#394355] text-center text-sm md:text-base">
+          Or Copy link here
+        </p>
+        <div className="w-full  flex justify-center items-center  my-[1rem]">
+          <CopyText text={link} />
+        </div>
+      </BackDrop>
+    </Suspense>
   );
 };
 const SingleDraw = () => {
@@ -174,7 +179,10 @@ const SingleDraw = () => {
           <Table dataArr={dataArr} columnsArr={columnsArr} />
           <Buttons onClickShare={() => setIsOpen(true)} />
           <Modal visible={modalIsOpen}>
-            <ModalContent onclick={() => setIsOpen(false)} />
+            <ModalContent
+              onclick={() => setIsOpen(false)}
+              link="https://www.cashXplore/GenevieveDoe?100,000nairanewyeargiveaway"
+            />
           </Modal>
         </div>
       </DashBoardLayout>

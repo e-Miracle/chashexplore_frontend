@@ -18,13 +18,9 @@ import { BackDrop } from "../influencer/SingleDraw";
 const Timer = lazy(() => import("../../../components/Timer/Timer"));
 const Modal = lazy(() => import("../../../components/Modal/Modal"));
 
-const payWithFlutterWave = (): void => {
-    
-}
+const payWithFlutterWave = (): void => {};
 
-const payWithWallet = (): void => {
-    
-}
+const payWithWallet = (): void => {};
 
 export const Header = ({
   text,
@@ -38,15 +34,17 @@ export const Header = ({
   headerColor?: string;
 }) => {
   return (
-    <div className="flex flex-col lg:flex-row items-center justify-between">
-      <h2
-        className=" text-[1.2rem] lg:text-[1.5rem]"
-        style={{ color: headerColor }}
-      >
-        {text}
-      </h2>
-      <Timer countDownDate={time} color={color} />
-    </div>
+    <Suspense fallback={<Spinner toggle={false} />}>
+      <div className="flex flex-col lg:flex-row items-center justify-between">
+        <h2
+          className=" text-[1.2rem] lg:text-[1.5rem]"
+          style={{ color: headerColor }}
+        >
+          {text}
+        </h2>
+        <Timer countDownDate={time} color={color} />
+      </div>
+    </Suspense>
   );
 };
 
@@ -245,7 +243,10 @@ const ModalContent: React.FC<ModalContent> = ({
           How would you like to purchase your tickets?
         </h4>
         <div className="flex items-center justify-center flex-wrap my-5">
-          <button onClick={payWithWallet} className=" w-full md:w-auto bg-secondary border-2 border-btnBorder font-semibold text-heading text-sm lg:text-base  py-3 px-10  rounded-[10px] cursor-pointer hover:opacity-80">
+          <button
+            onClick={payWithWallet}
+            className=" w-full md:w-auto bg-secondary border-2 border-btnBorder font-semibold text-heading text-sm lg:text-base  py-3 px-10  rounded-[10px] cursor-pointer hover:opacity-80"
+          >
             Pay from Wallet
           </button>
           <button

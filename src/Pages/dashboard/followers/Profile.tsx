@@ -11,9 +11,12 @@ import {
   faArrowDown,
   faArrowUp,
 } from "@fortawesome/free-solid-svg-icons";
-import DrawsCard from "../../../components/DrawsCard/DrawsCard";
 import { nFormatter } from "../../../Utils";
 import { Raffle } from "../../../assets";
+
+const DrawsCard = React.lazy(
+  () => import("../../../components/DrawsCard/DrawsCard")
+);
 const data = [
   {
     imgSrc: Raffle,
@@ -57,7 +60,7 @@ const data = [
   },
 ];
 
-const Header = () => {
+export const Header = () => {
   type socialCta = { imgUrl: string; cta: string; color?: string };
 //   const socailCta: socialCta[] = [
 //     { imgUrl: Google, cta: "" },
@@ -120,7 +123,7 @@ const Header = () => {
   );
 };
 
-const ActiveDraws = ({ data }: { data: any[] }) => {
+export const ActiveDraws = ({ data }: { data: any[] }) => {
   const [visible, setVisbility] = useState<boolean>(false);
   return (
     <div className="w-full bg-bg rounded-[10px] p-[1rem] font-ubuntu">
@@ -149,7 +152,7 @@ const ActiveDraws = ({ data }: { data: any[] }) => {
   );
 };
 
-const InActiveDraws = ({ data }: { data: any[] }) => {
+export const InActiveDraws = ({ data }: { data: any[] }) => {
   const [visible, setVisibility] = useState<boolean>(false);
   return (
     <div className="w-full bg-bg rounded-[10px] p-[1rem] font-ubuntu mt-[1rem]">

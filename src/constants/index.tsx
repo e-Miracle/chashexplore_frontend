@@ -89,7 +89,7 @@ export const adminDashBoardLinks = [
     icon: "sleigh",
   },
   {
-    path: "/my/transactions",
+    path: "/my/users",
     title: "Users",
     icon: "users",
   },

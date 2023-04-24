@@ -29,39 +29,45 @@ const ticketTableData = [
   { ticketId: "JYG123456HA", status: "Pending" },
 ];
 
-const TicketTable = ({ onclick }: { onclick: (data: any) => void }) => {
+export const TicketTable = ({ onclick }: { onclick: (data: any) => void }) => {
   return (
-    <div className="relative overflow-x-auto  sm:rounded-lg font-ubuntu">
-      <table className="w-full bg-bg text-sm text-left text-gray-500 dark:text-gray-400">
-        <thead className="text-xs text-labelLight uppercase bg-bg ">
-          <tr>
-            <th scope="col" className="text-center px-6 py-3">
-              Ticket ID
-            </th>
-            <th scope="col" className="text-center px-6 py-3">
-              Tickets Status
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          {ticketTableData &&
-            ticketTableData.length > 0 &&
-            ticketTableData.map((item, i: number) => (
-              <tr key={i} className="bg-white hover:opacity-80 cursor-pointer " onClick={() => onclick(item)}>
-                <th
-                  scope="row"
-                  className="px-6 py-4 font-medium  text-heading whitespace-nowrap text-center"
+    <Suspense fallback={<Spinner toggle={false} />}>
+      <div className="relative overflow-x-auto  sm:rounded-lg font-ubuntu">
+        <table className="w-full bg-bg text-sm text-left text-gray-500 dark:text-gray-400">
+          <thead className="text-xs text-labelLight uppercase bg-bg ">
+            <tr>
+              <th scope="col" className="text-center px-6 py-3">
+                Ticket ID
+              </th>
+              <th scope="col" className="text-center px-6 py-3">
+                Tickets Status
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {ticketTableData &&
+              ticketTableData.length > 0 &&
+              ticketTableData.map((item, i: number) => (
+                <tr
+                  key={i}
+                  className="bg-white hover:opacity-80 cursor-pointer "
+                  onClick={() => onclick(item)}
                 >
-                  {item.ticketId}
-                </th>
-                <td className="px-6 py-4 text-heading text-center">
-                  {item.status}
-                </td>
-              </tr>
-            ))}
-        </tbody>
-      </table>
-    </div>
+                  <th
+                    scope="row"
+                    className="px-6 py-4 font-medium  text-heading whitespace-nowrap text-center"
+                  >
+                    {item.ticketId}
+                  </th>
+                  <td className="px-6 py-4 text-heading text-center">
+                    {item.status}
+                  </td>
+                </tr>
+              ))}
+          </tbody>
+        </table>
+      </div>
+    </Suspense>
   );
 };
 
@@ -73,52 +79,53 @@ const ParticipantsTableData = [
   { imgSrc: PreviewImage, username: "@johnnkobo346", amount: "1" },
 ];
 
-const ParticipantsTable = () => {
+export const ParticipantsTable = () => {
   return (
-    <div className="relative overflow-x-auto  sm:rounded-lg font-ubuntu">
-      <table className="w-full bg-bg text-sm text-left text-gray-500 dark:text-gray-400">
-        <thead className="text-xs text-labelLight uppercase bg-bg ">
-          <tr>
-            <th scope="col" className=" px-6 py-3">
-              Participants’ Username
-            </th>
-            <th scope="col" className="text-center px-6 py-3">
-              Tickets Bought
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          {ParticipantsTableData &&
-            ParticipantsTableData.length > 0 &&
-            ParticipantsTableData.map((item, i: number) => (
-              <tr
-                key={i}
-                className="bg-bg border-b dark:bg-gray-900 dark:border-gray-700"
-              >
-                <th
-                  scope="row"
-                  className="px-6 py-4 font-medium  text-heading whitespace-nowrap text-center flex items-center"
+    <Suspense fallback={<Spinner toggle={false} />}>
+      <div className="relative overflow-x-auto  sm:rounded-lg font-ubuntu">
+        <table className="w-full bg-bg text-sm text-left text-gray-500 dark:text-gray-400">
+          <thead className="text-xs text-labelLight uppercase bg-bg ">
+            <tr>
+              <th scope="col" className=" px-6 py-3">
+                Participants’ Username
+              </th>
+              <th scope="col" className="text-center px-6 py-3">
+                Tickets Bought
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {ParticipantsTableData &&
+              ParticipantsTableData.length > 0 &&
+              ParticipantsTableData.map((item, i: number) => (
+                <tr
+                  key={i}
+                  className="bg-bg border-b dark:bg-gray-900 dark:border-gray-700"
                 >
-                  <img
-                    className="w-[32px] h-[32px] rounded-full object-cover mr-3"
-                    src={item.imgSrc}
-                    alt={item.imgSrc}
-                  />{" "}
-                  {item.username}
-                </th>
-                <td className="px-6 py-4 text-heading text-center">
-                  {item.amount}
-                </td>
-              </tr>
-            ))}
-        </tbody>
-      </table>
-    </div>
+                  <th
+                    scope="row"
+                    className="px-6 py-4 font-medium  text-heading whitespace-nowrap text-center flex items-center"
+                  >
+                    <img
+                      className="w-[32px] h-[32px] rounded-full object-cover mr-3"
+                      src={item.imgSrc}
+                      alt={item.imgSrc}
+                    />{" "}
+                    {item.username}
+                  </th>
+                  <td className="px-6 py-4 text-heading text-center">
+                    {item.amount}
+                  </td>
+                </tr>
+              ))}
+          </tbody>
+        </table>
+      </div>
+    </Suspense>
   );
 };
 
-const Boxes = ({
-  data,
+export const Boxes = ({
   ticketsPurchased,
   ticketsAvaliable,
   ticketCap,
@@ -126,7 +133,6 @@ const Boxes = ({
   togglePartcipantTables,
   toggleTicketTables,
 }: {
-  data: any[];
   ticketsPurchased: number;
   ticketsAvaliable: number;
   ticketCap: number;
@@ -135,90 +141,57 @@ const Boxes = ({
   togglePartcipantTables: () => void;
 }) => {
   return (
-    <div className=" grid gap-[1rem] grid-cols-1 md:grid-cols-2 lg:grid-cols-3 my-[2rem] ">
-      <div className="p-5 rounded-[10px] font-ubuntu bg-white cursor-pointer flex flex-col items-center ">
-        <h2 className="text-primary text-[1.7rem] md:text-[2rem] font-bold">
-          {nFormatter(ticketsPurchased, 3)}
-        </h2>
+    <Suspense fallback={<Spinner toggle={false} />}>
+      <div className=" grid gap-[1rem] grid-cols-1 md:grid-cols-2 lg:grid-cols-3 my-[2rem] ">
+        <div className="p-5 rounded-[10px] font-ubuntu bg-white cursor-pointer flex flex-col items-center ">
+          <h2 className="text-primary text-[1.7rem] md:text-[2rem] font-bold">
+            {nFormatter(ticketsPurchased, 3)}
+          </h2>
 
-        <p className="text-labels text-base md:text-lg font-bold">
-          tickets purchased
-        </p>
+          <p className="text-labels text-base md:text-lg font-bold">
+            tickets purchased
+          </p>
 
-        <button
-          onClick={toggleTicketTables}
-          className="block text-center mt-[4rem] text-[#646C79] hover:opacity-80"
-        >
-          View My Tickets
-          <FontAwesomeIcon className="ml-2" icon={faLongArrowRight} />
-        </button>
-      </div>
-      <div className="p-5 rounded-[10px] font-ubuntu bg-white cursor-pointer flex flex-col items-center ">
-        <h2 className="text-primary text-[1.7rem] md:text-[2rem] font-bold">
-          {nFormatter(ticketsAvaliable, 3)}
-        </h2>
-
-        <p className="text-labels text-base md:text-lg font-bold">
-          tickets available
-        </p>
-
-        <button className="block text-center mt-[4rem] text-[#646C79] hover:opacity-80">
-          Ticket Cap:{nFormatter(ticketCap, 3)}tickets
-        </button>
-      </div>
-      <div className="p-5 rounded-[10px] font-ubuntu bg-white cursor-pointer flex flex-col items-center ">
-        <h2 className="text-primary text-[1.7rem] md:text-[2rem] font-bold">
-          {nFormatter(ticketsPurchased, 3)}
-        </h2>
-
-        <p className="text-labels text-base md:text-lg font-bold">
-          tickets purchased
-        </p>
-
-        <button
-          onClick={togglePartcipantTables}
-          className="block text-center mt-[4rem] text-[#646C79] hover:opacity-80"
-        >
-          Hide Participants
-          <FontAwesomeIcon className="ml-2" icon={faLongArrowRight} />
-        </button>
-      </div>
-      {/* {data &&
-        data.length > 0 &&
-        data.map((item, i) => (
-          <div
-            key={i}
-            className="p-5 rounded-[10px] font-ubuntu bg-white cursor-pointer flex flex-col items-center "
+          <button
+            onClick={toggleTicketTables}
+            className="block text-center mt-[4rem] text-[#646C79] hover:opacity-80"
           >
-            <h2 className="text-primary text-[1.7rem] md:text-[2rem] font-bold">
-              {nFormatter(item.num, 3)}
-            </h2>
+            View My Tickets
+            <FontAwesomeIcon className="ml-2" icon={faLongArrowRight} />
+          </button>
+        </div>
+        <div className="p-5 rounded-[10px] font-ubuntu bg-white cursor-pointer flex flex-col items-center ">
+          <h2 className="text-primary text-[1.7rem] md:text-[2rem] font-bold">
+            {nFormatter(ticketsAvaliable, 3)}
+          </h2>
 
-            <p className="text-labels text-base md:text-lg font-bold">
-              {item.title}
-            </p>
+          <p className="text-labels text-base md:text-lg font-bold">
+            tickets available
+          </p>
 
-            {item.link && (
-              <button
-                onClick={() => console.log("hhii")}
-                className="block text-center mt-[4rem] text-[#646C79] hover:opacity-80"
-              >
-                {item.link}
-                {item.icon && (
-                  <FontAwesomeIcon
-                    className="ml-2"
-                    icon={
-                      item.link === "Hide My Tickets"
-                        ? faLongArrowAltDown
-                        : faLongArrowAltRight
-                    }
-                  />
-                )}
-              </button>
-            )}
-          </div>
-        ))} */}
-    </div>
+          <button className="block text-center mt-[4rem] text-[#646C79] hover:opacity-80">
+            Ticket Cap:{nFormatter(ticketCap, 3)}tickets
+          </button>
+        </div>
+        <div className="p-5 rounded-[10px] font-ubuntu bg-white cursor-pointer flex flex-col items-center ">
+          <h2 className="text-primary text-[1.7rem] md:text-[2rem] font-bold">
+            {nFormatter(ticketsPurchased, 3)}
+          </h2>
+
+          <p className="text-labels text-base md:text-lg font-bold">
+            tickets purchased
+          </p>
+
+          <button
+            onClick={togglePartcipantTables}
+            className="block text-center mt-[4rem] text-[#646C79] hover:opacity-80"
+          >
+            Hide Participants
+            <FontAwesomeIcon className="ml-2" icon={faLongArrowRight} />
+          </button>
+        </div>
+      </div>
+    </Suspense>
   );
 };
 
@@ -453,7 +426,6 @@ const SingleDraw = () => {
             headerColor="#4E5767"
           />
           <Boxes
-            data={data}
             togglePartcipantTables={togglePartcipantTables}
             toggleTicketTables={toggleTicketTables}
             {...BoxesProps}

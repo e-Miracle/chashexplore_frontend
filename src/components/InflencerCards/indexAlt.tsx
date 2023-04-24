@@ -5,12 +5,6 @@ import { faLongArrowAltRight } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
 import { influencerCardsAlt } from "../../constants";
 import { nFormatter } from "../../Utils";
-// const influencerCardsAlt = await import("../../constants").then((module) => {
-//   return module.influencerCardsAlt;
-// });
-// const nFormatter = await import("../../Utils").then((module) => {
-//   return module.nFormatter;
-// });
 type Props = {
   raffles: number;
   participants: number;

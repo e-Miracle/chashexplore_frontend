@@ -33,6 +33,18 @@ import {
   FollowersNotification,
   FollowersTicket,
   AdminDashboard,
+  AdminRegistration,
+  AdminRaffles,
+  AdminDraws,
+  AdminCreateDraws,
+  AdminPreviewDraws,
+  AdminSingleDraws,
+  AdminResults,
+  AdminUsers,
+  AdminInfluencers,
+  AdminFollowers,
+  AdminTransactions,
+  AdminSingleTransaction,
 } from "./Pages";
 import "./App.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
@@ -147,6 +159,54 @@ function App() {
         {
           path: `/${_ADMIN_}/my/dashboard`,
           element: <AdminDashboard />,
+        },
+        {
+          path: `/${_ADMIN_}/my/dashboard/registrations`,
+          element: <AdminRegistration />,
+        },
+        {
+          path: `/${_ADMIN_}/my/dashboard/raffles`,
+          element: <AdminRaffles />,
+        },
+        {
+          path: `/${_ADMIN_}/my/draws`,
+          element: <AdminDraws />,
+        },
+        {
+          path: `/${_ADMIN_}/my/draws/create`,
+          element: <AdminCreateDraws />,
+        },
+        {
+          path: `/${_ADMIN_}/my/draws/preview`,
+          element: <AdminPreviewDraws />,
+        },
+        {
+          path: `/${_ADMIN_}/my/draws/singledraw`,
+          element: <AdminSingleDraws />,
+        },
+        {
+          path: `/${_ADMIN_}/my/draws/results`,
+          element: <AdminResults />,
+        },
+        {
+          path: `/${_ADMIN_}/my/users`,
+          element: <AdminUsers />,
+        },
+        {
+          path: `/${_ADMIN_}/my/users/${_INFLUENCER_}`,
+          element: <AdminInfluencers />,
+        },
+        {
+          path: `/${_ADMIN_}/my/users/${_FOLLOWER_}`,
+          element: <AdminFollowers />,
+        },
+        {
+          path: `/${_ADMIN_}/my/transactions`,
+          element: <AdminTransactions />,
+        },
+        {
+          path: `/${_ADMIN_}/my/transactions/transaction/:id`,
+          element: <AdminSingleTransaction />,
         },
       ],
     },

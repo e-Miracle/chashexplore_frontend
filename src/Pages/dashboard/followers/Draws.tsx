@@ -4,10 +4,7 @@ import Spinner from "../../../components/Spinner";
 import { BackgroundDrop } from "../influencer/Profile";
 import DrawsCard from "../../../components/DrawsCard/DrawsCardAlt";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faArrowDown,
-  faArrowUp,
-} from "@fortawesome/free-solid-svg-icons";
+import { faArrowDown, faArrowUp } from "@fortawesome/free-solid-svg-icons";
 import { Raffle } from "../../../assets";
 
 const data = [
@@ -63,24 +60,26 @@ export const Title = ({ text }: { text: string }) => {
 const UserDraws = ({ text, data }: { text: string; data: any[] }) => {
   const [visible, setVisbility] = useState<boolean>(true);
   return (
-    <div className="w-full bg-bg rounded-[10px] p-[1rem] font-ubuntu">
-      <button onClick={() => setVisbility(!visible)}>
-        <h3 className="text-primary text-base lg:text-[1.25rem] font-semibold">
-          {text}{" "}
-          <FontAwesomeIcon
-            icon={visible ? faArrowUp : faArrowDown}
-            className="text-[#646C79]"
-          />
-        </h3>
-      </button>
-      {visible && (
-        <div className="grid gap-[1rem] grid-cols-1 md:grid-cols-2 lg:grid-cols-3 mt-[1rem] lg:mt-0">
-          {data &&
-            data.length > 0 &&
-            data.map((item, i) => <DrawsCard key={i} {...item} />)}
-        </div>
-      )}
-    </div>
+    <Suspense fallback={<Spinner toggle={false} />}>
+      <div className="w-full bg-bg rounded-[10px] p-[1rem] font-ubuntu">
+        <button onClick={() => setVisbility(!visible)}>
+          <h3 className="text-primary text-base lg:text-[1.25rem] font-semibold">
+            {text}{" "}
+            <FontAwesomeIcon
+              icon={visible ? faArrowUp : faArrowDown}
+              className="text-[#646C79]"
+            />
+          </h3>
+        </button>
+        {visible && (
+          <div className="grid gap-[1rem] grid-cols-1 md:grid-cols-2 lg:grid-cols-3 mt-[1rem] lg:mt-0">
+            {data &&
+              data.length > 0 &&
+              data.map((item, i) => <DrawsCard key={i} {...item} />)}
+          </div>
+        )}
+      </div>
+    </Suspense>
   );
 };
 const Draws = () => {

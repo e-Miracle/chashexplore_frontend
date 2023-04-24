@@ -22,7 +22,7 @@ import { nFormatter } from "../../../Utils";
 import DrawsCard from "../../../components/DrawsCard/DrawsCard";
 import { Raffle } from "../../../assets";
 
-const data = [
+export const data = [
   {
     imgSrc: Raffle,
     name: "Genevieve Doe",
@@ -66,10 +66,15 @@ const data = [
 ];
 
 export const BackgroundDrop = ({ children }: { children: React.ReactNode }) => {
-  return <div className="bg-bg p-[1rem] mt-5 rounded-[10px] ">{children}</div>;
+  return (
+    <Suspense>
+      {" "}
+      <div className="bg-bg p-[1rem] mt-5 rounded-[10px] ">{children}</div>
+    </Suspense>
+  );
 };
 
-const Header = () => {
+export const Header = () => {
   type socialCta = { imgUrl: string; cta: string; color?: string };
   const socailCta: socialCta[] = [
     { imgUrl: Google, cta: "" },
@@ -89,7 +94,7 @@ const Header = () => {
           />
           <span className="  w-[10px] h-[10px] lg:w-[15px] lg:h-[15px] bg-green rounded-full absolute right-1 bottom-2"></span>
         </div>
-        <div className="lg:ml-5 w-full ">
+        <div className="lg:ml-5 w-full lg:w-[70%] ">
           <div className=" flex items-center w-full">
             <h3 className="text-labels text-[1.5rem] lg:text-[2rem]">
               Genevieve Doe{" "}
@@ -132,7 +137,7 @@ const Header = () => {
   );
 };
 
-const ActiveDraws = ({ data }: { data: any[] }) => {
+export const ActiveDraws = ({ data }: { data: any[] }) => {
   const [visible, setVisbility] = useState<boolean>(false);
   return (
     <div className="w-full bg-bg rounded-[10px] p-[1rem] font-ubuntu">
@@ -161,7 +166,7 @@ const ActiveDraws = ({ data }: { data: any[] }) => {
   );
 };
 
-const InActiveDraws = ({ data }: { data: any[] }) => {
+export const InActiveDraws = ({ data }: { data: any[] }) => {
   const [visible, setVisibility] = useState<boolean>(false);
   return (
     <div className="w-full bg-bg rounded-[10px] p-[1rem] font-ubuntu mt-[1rem]">

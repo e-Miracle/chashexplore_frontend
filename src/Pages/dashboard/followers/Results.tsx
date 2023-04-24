@@ -137,8 +137,8 @@ const Results = () => {
       <DashBoardLayout type="follower" backbtn={true}>
         <BackgroundDrop>
           <Header />
-                  <Hero />
-                  <Winners/>
+          <Hero />
+          <Winners />
           <Reviews />
         </BackgroundDrop>
       </DashBoardLayout>

@@ -30,11 +30,11 @@ const Index: React.FC<Props> = ({ mobileNav, expand, userImg, type }) => {
         className={
           isMobile
             ? mobileNav
-              ? " bottom-0 overflow-x-hidden overflow-y-auto -translate-x-[40%] absolute right-0 top-0 h-screen bg-primary text-white flex flex-col justify-evenly items-center w-[calc(100%-30vw)] md:w-full ease-in duration-300 z-[99]"
-              : "-translate-x-[100%] md:translate-x-[0%] w-[18rem] bg-primary text-white fixed top-0 bottom-0 overflow-x-hidden overflow-y-auto ease-in duration-300 z-[99]"
+              ? " bottom-0 overflow-x-hidden overflow-y-auto -translate-x-[40%]  absolute right-0 top-0 h-screen bg-primary text-white flex flex-col justify-evenly items-center w-[calc(100%-30vw)] lg:w-full ease-in duration-300 z-[99]"
+              : "-translate-x-[100%] lg:translate-x-[0%] w-[18rem] bg-primary text-white fixed top-0 bottom-0 overflow-x-hidden overflow-y-auto ease-in duration-300 z-[99]"
             : expand
-            ? "  w-[6rem] bg-primary text-white fixed top-0 bottom-0 ooverflow-x-hidden overflow-y-auto ease-in duration-300 z-[99]"
-            : "-translate-x-[100%] md:translate-x-[0%] w-[18rem] bg-primary text-white fixed top-0 bottom-0 overflow-x-hidden overflow-y-auto ease-in duration-300 z-[99]"
+            ? "  w-[6rem] bg-primary text-white fixed top-0 bottom-0 overflow-x-hidden overflow-y-auto ease-in duration-300 z-[99]"
+            : "-translate-x-[100%] lg:translate-x-[0%] w-[18rem] bg-primary text-white fixed top-0 bottom-0 overflow-x-hidden overflow-y-auto ease-in duration-300 z-[99]"
         }
       >
         <div className="flex justify-center items-center ">

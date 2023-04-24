@@ -40,7 +40,7 @@ const index: React.FC<Props> = ({
           {type === "admin" ? (
             <h1
               className={
-                "font-ubuntu text-heading font-medium lg:text-[1.5rem] text-[1.2rem]"
+                "font-ubuntu text-heading font-medium lg:text-[1.5rem] text-[1.2rem] ml-2 lg:ml-0"
               }
             >
               Hello Admin &#128075;
@@ -48,7 +48,7 @@ const index: React.FC<Props> = ({
           ) : (
             <h1
               className={
-                "font-ubuntu text-heading font-medium lg:text-[1.5rem] text-[1.2rem]"
+                "font-ubuntu text-heading font-medium lg:text-[1.5rem] text-[1.2rem] ml-2 lg:ml-0"
               }
             >
               {location.pathname.includes("dashboard") ? (
@@ -87,7 +87,7 @@ const index: React.FC<Props> = ({
           <button
             role="button"
             onClick={handleMobileNav}
-            className="block md:hidden mr-3 text-icon text-xl lg:text-2xl mr-5 hover:opacity-80 ease-in duration-300"
+            className="block lg:hidden  text-icon text-xl lg:text-2xl mr-5 hover:opacity-80 ease-in duration-300"
           >
             <FontAwesomeIcon icon={expand ? faTimes : faBars} />
           </button>

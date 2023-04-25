@@ -1,7 +1,7 @@
 import React, { Suspense, useState } from "react";
 import { DashBoardLayout } from "../../";
-import { LazyLoadImage } from "react-lazy-load-image-component";
 import Spinner from "../../../components/Spinner";
+import { BackgroundDrop } from "../influencer/Profile";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faCheckCircle,
@@ -11,18 +11,13 @@ import {
   faArrowDown,
   faArrowUp,
 } from "@fortawesome/free-solid-svg-icons";
-import {
-  Google,
-  Twitter,
-  Facebook,
-  LinkedIn,
-  Instagram,
-} from "../../../assets";
 import { nFormatter } from "../../../Utils";
-import DrawsCard from "../../../components/DrawsCard/DrawsCard";
 import { Raffle } from "../../../assets";
 
-export const data = [
+const DrawsCard = React.lazy(
+  () => import("../../../components/DrawsCard/DrawsCard")
+);
+const data = [
   {
     imgSrc: Raffle,
     name: "Genevieve Doe",
@@ -65,27 +60,18 @@ export const data = [
   },
 ];
 
-export const BackgroundDrop = ({ children }: { children: React.ReactNode }) => {
-  return (
-    <Suspense>
-      {" "}
-      <div className="bg-bg p-[1rem] mt-5 rounded-[10px] ">{children}</div>
-    </Suspense>
-  );
-};
-
 export const Header = () => {
   type socialCta = { imgUrl: string; cta: string; color?: string };
-  const socailCta: socialCta[] = [
-    { imgUrl: Google, cta: "" },
-    { imgUrl: Twitter, cta: "", color: "#1D9BF0" },
-    { imgUrl: Facebook, cta: "", color: "#1877F2" },
-    { imgUrl: LinkedIn, cta: "", color: "#0A66C2" },
-    { imgUrl: Instagram, cta: "" },
-  ];
+//   const socailCta: socialCta[] = [
+//     { imgUrl: Google, cta: "" },
+//     { imgUrl: Twitter, cta: "", color: "#1D9BF0" },
+//     { imgUrl: Facebook, cta: "", color: "#1877F2" },
+//     { imgUrl: LinkedIn, cta: "", color: "#0A66C2" },
+//     { imgUrl: Instagram, cta: "" },
+//   ];
   return (
-    <div className="flex flex-wrap font-ubuntu">
-      <div className="w-full md:w-[70%] flex ">
+    <div className="flex flex-wrap font-ubuntu ">
+      <div className="w-full md:w-[80%] flex ">
         <div className=" hidden lg:block relative  w-[70px] h-[70px] lg:w-[120px]   lg:h-[120px] p-1 rounded-full border-[7px] border-primary border-r-white relative">
           <img
             className="  w-full h-full object-cover rounded-full "
@@ -94,7 +80,7 @@ export const Header = () => {
           />
           <span className="  w-[10px] h-[10px] lg:w-[15px] lg:h-[15px] bg-green rounded-full absolute right-1 bottom-2"></span>
         </div>
-        <div className="lg:ml-5 w-full lg:w-[70%] ">
+        <div className="lg:ml-5 w-full lg:w-[80%] ">
           <div className=" flex items-center w-full">
             <h3 className="text-labels text-[1.5rem] lg:text-[2rem]">
               Genevieve Doe{" "}
@@ -110,8 +96,8 @@ export const Header = () => {
           </p>
         </div>
       </div>
-      <div className="w-full md:w-[30%] mt-5 lg:mt-0 ">
-        {" "}
+      <div className="w-full md:w-[0%] mt-5 lg:mt-0 ">
+        {/* {" "}
         <p className="text-[#000] text-sm lg:text-base text-center md:text-left">
           Connect with me:
         </p>
@@ -131,7 +117,7 @@ export const Header = () => {
               />
             </button>
           ))}
-        </div>
+        </div> */}
       </div>
     </div>
   );
@@ -238,7 +224,7 @@ const Body = ({ balance, data }: { balance: number; data: any[] }) => {
 const Profile = () => {
   return (
     <Suspense fallback={<Spinner />}>
-      <DashBoardLayout type="influencer">
+      <DashBoardLayout type="follower">
         <BackgroundDrop>
           <Header />
           <Body data={data} balance={100000000} />

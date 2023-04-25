@@ -15,7 +15,7 @@ type Props = {
   setExpand: React.Dispatch<React.SetStateAction<boolean>>;
   mobileNav: boolean;
   handleMobileNav?: () => void;
-  type: "influencer" | "follower";
+  type: "influencer" | "follower" | "admin";
 };
 
 const index: React.FC<Props> = ({
@@ -37,25 +37,35 @@ const index: React.FC<Props> = ({
           >
             <FontAwesomeIcon icon={expand ? faTimes : faBars} />
           </button>
-          <h1
-            className={
-              "font-ubuntu text-heading font-medium lg:text-[1.5rem] text-[1.2rem]"
-            }
-          >
-            {location.pathname.includes("dashboard") ? (
-              <>{isMobile ? "Hello" : "Hello Genevieve"} &#128075;</>
-            ) : (
-              <>
-                {isMobile
-                  ? "Genevieve Doe".substring(0, 3) + "..."
-                  : "Genevieve Doe"}{" "}
-                <FontAwesomeIcon
-                  icon={faCheckCircle}
-                  className="text-primary"
-                />
-              </>
-            )}
-          </h1>
+          {type === "admin" ? (
+            <h1
+              className={
+                "font-ubuntu text-heading font-medium lg:text-[1.5rem] text-[1.2rem] ml-2 lg:ml-0"
+              }
+            >
+              Hello Admin &#128075;
+            </h1>
+          ) : (
+            <h1
+              className={
+                "font-ubuntu text-heading font-medium lg:text-[1.5rem] text-[1.2rem] ml-2 lg:ml-0"
+              }
+            >
+              {location.pathname.includes("dashboard") ? (
+                <>{isMobile ? "Hello" : "Hello Genevieve"} &#128075;</>
+              ) : (
+                <>
+                  {isMobile
+                    ? "Genevieve Doe".substring(0, 3) + "..."
+                    : "Genevieve Doe"}{" "}
+                  <FontAwesomeIcon
+                    icon={faCheckCircle}
+                    className="text-primary"
+                  />
+                </>
+              )}
+            </h1>
+          )}
         </div>
 
         <div className="flex items-center">
@@ -77,7 +87,7 @@ const index: React.FC<Props> = ({
           <button
             role="button"
             onClick={handleMobileNav}
-            className="block md:hidden mr-3 text-icon text-xl lg:text-2xl mr-5 hover:opacity-80 ease-in duration-300"
+            className="block lg:hidden  text-icon text-xl lg:text-2xl mr-5 hover:opacity-80 ease-in duration-300"
           >
             <FontAwesomeIcon icon={expand ? faTimes : faBars} />
           </button>

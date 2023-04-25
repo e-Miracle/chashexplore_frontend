@@ -7,7 +7,13 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { PreviewLogo } from "../../../assets";
 import { useMediaQuery } from "react-responsive";
 import { PreviewImage } from "../../../assets";
-import { BackgroundDrop } from "./Profile";
+const BackgroundDrop = lazy(() =>
+  import("../influencer/Profile").then((res) => {
+    return {
+      default: res.BackgroundDrop,
+    };
+  })
+);
 const Timer = lazy(() => import("../../../components/Timer/Timer"));
 
 const imgArray: string[] = [PreviewImage, PreviewImage, PreviewImage];
@@ -151,14 +157,14 @@ const PreviewDraw = () => {
         Continue Editing{" "}
       </Link>
       <button className="w-full md:w-auto md:ml-5 mt-5 md:mt-0 inline-block text-center border-[2px] border-primary bg-primary text-white rounded-[100px] py-5 px-10 text-sm lg:text-base hover:opacity-80">
-        Send
+        Publish
       </button>
     </div>
   );
 
   return (
     <Suspense fallback={<Spinner />}>
-      <DashBoardLayout type="influencer" backbtn={true}>
+      <DashBoardLayout type="admin" backbtn={true}>
         <div className="bg-bg p-[1rem] mt-5 rounded-[10px] ">
           <div className="flex flex-col md:flex-row justify-between">
             <>{header}</>

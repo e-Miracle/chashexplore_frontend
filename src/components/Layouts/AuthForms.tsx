@@ -1,4 +1,4 @@
-import React, {Suspense} from "react";
+import React, { Suspense } from "react";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { Logo, Background } from "../../assets";
 
@@ -10,18 +10,15 @@ const AuthForms: React.FC<Props> = ({ children }) => {
     <Suspense>
       <section className="py-[2rem] grid place-items-center lg:flex lg:justify-center lg:items-center h-screen  w-screen custom-bg overflow-auto ">
         {" "}
-        <div className="my-container flex items-center lg:items-start justify-center lg:justify-start flex-col flex-Wrap lg:flex-row object-contain  ">
-          <div className="lg:w-[50%] w-full h-[50px] ">
-            <LazyLoadImage
+        <div className="my-container flex items-center lg:items-start justify-center lg:justify-start flex-col flex-Wrap lg:flex-row object-contain  w-full  ">
+          <div className="lg:w-[50%] w-full h-[50px] flex justify-center items-center lg:block ">
+            <img
               className="  w-[200px] lg:w-[300px] h-[50px] lg:h-[60px]"
               src={Logo}
-              width={600}
-              height={400}
-              placeholderSrc={"https://via.placeholder.com/100x100"}
-              alt="Image Alt"
+              alt="Cashexplore"
             />
           </div>
-          <div className=" w-full mt-5 lg:mt-0  flex items-center  justify-center">
+          <div className=" w-full mt-5 lg:mt-0  flex items-center  justify-center ">
             {children}
           </div>
         </div>

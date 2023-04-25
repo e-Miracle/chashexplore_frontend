@@ -19,6 +19,7 @@ export const USER = {
 
 export const _FOLLOWER_ = "follower";
 export const _INFLUENCER_ = "influencer";
+export const _ADMIN_ = "admin";
 
 export const USER_TYPES = {
   _FOLLOWER_: "follower",
@@ -48,6 +49,57 @@ export const dashBoardLinks = [
   },
 ];
 
+export const followersdashBoardLinks = [
+  {
+    path: "/my/dashboard",
+    title: "Dashboard",
+    icon: "object-group",
+  },
+  {
+    path: "/my/draws",
+    title: "My Draws",
+    icon: "ticket",
+  },
+  {
+    path: "/my/transactions",
+    title: "My Tickets",
+    icon: "sleigh",
+  },
+  {
+    path: "/my/settings",
+    title: "Settings",
+    icon: "cog",
+  },
+];
+
+export const adminDashBoardLinks = [
+  {
+    path: "/my/dashboard",
+    title: "Dashboard",
+    icon: "object-group",
+  },
+  {
+    path: "/my/draws",
+    title: "Draws",
+    icon: "ticket",
+  },
+  {
+    path: "/my/transactions",
+    title: "Transactions",
+    icon: "sleigh",
+  },
+  {
+    path: "/my/users",
+    title: "Users",
+    icon: "users",
+  },
+  {
+    path: "/my/settings",
+    title: "Settings",
+    icon: "cog",
+  },
+];
+
 export const influencerCards = [
   {
     name: "Number of raffles created",
@@ -69,6 +121,33 @@ export const influencerCards = [
     route: "",
     color: "linear-gradient(252.55deg, #9DDDFF 0%, #2896D0 98.69%)",
     type: "tickets",
+  },
+];
+
+export const influencerCardsAlt = [
+  {
+    name: "Number of influencers",
+    icon: "ticket",
+    route: "",
+    color: "linear-gradient(72.28deg, #1345A6 3.03%, #9DDDFF 100.76%)",
+    type: "raffles",
+    text: "See influencers here",
+  },
+  {
+    name: "Number of pending registrations",
+    icon: "users",
+    route: "",
+    color: "linear-gradient(70.64deg, #830C97 3.95%, #FB0AA9 100%)",
+    type: "participants",
+    text: "See pending registrations here",
+  },
+  {
+    name: "Number of pending raffles",
+    icon: "money-bill",
+    route: "",
+    color: "linear-gradient(252.55deg, #9DDDFF 0%, #2896D0 98.69%)",
+    type: "tickets",
+    text: "See pending raffles here",
   },
 ];
 

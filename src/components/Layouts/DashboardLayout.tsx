@@ -6,7 +6,7 @@ const Header = React.lazy(() => import("../Header"));
 const Button = React.lazy(() => import("../Backbtn"));
 type Props = {
   children: React.ReactNode;
-  type: "influencer" | "follower";
+  type: "influencer" | "follower" | "admin";
   backbtn?: boolean;
 };
 

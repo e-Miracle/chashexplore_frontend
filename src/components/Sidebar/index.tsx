@@ -7,7 +7,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   _FOLLOWER_,
   _INFLUENCER_,
+  _ADMIN_,
   dashBoardLinks,
+  adminDashBoardLinks,
+  followersdashBoardLinks,
 } from "../../constants";
 
 const SideBarLink = React.lazy(() => import("../SideBarLink"));
@@ -16,7 +19,7 @@ type Props = {
   mobileNav: boolean;
   expand: boolean;
   userImg?: string;
-  type: "influencer" | "follower";
+  type: "influencer" | "follower" | "admin";
 };
 
 const Index: React.FC<Props> = ({ mobileNav, expand, userImg, type }) => {
@@ -27,11 +30,11 @@ const Index: React.FC<Props> = ({ mobileNav, expand, userImg, type }) => {
         className={
           isMobile
             ? mobileNav
-              ? " bottom-0 overflow-x-hidden overflow-y-auto -translate-x-[40%] absolute right-0 top-0 h-screen bg-primary text-white flex flex-col justify-evenly items-center w-[calc(100%-30vw)] md:w-full ease-in duration-300 z-[99]"
-              : "-translate-x-[100%] md:translate-x-[0%] w-[18rem] bg-primary text-white fixed top-0 bottom-0 overflow-x-hidden overflow-y-auto ease-in duration-300 z-[99]"
+              ? " bottom-0 overflow-x-hidden overflow-y-auto -translate-x-[40%]  absolute right-0 top-0 h-screen bg-primary text-white flex flex-col justify-evenly items-center w-[calc(100%-30vw)] lg:w-full ease-in duration-300 z-[99]"
+              : "-translate-x-[100%] lg:translate-x-[0%] w-[18rem] bg-primary text-white fixed top-0 bottom-0 overflow-x-hidden overflow-y-auto ease-in duration-300 z-[99]"
             : expand
-            ? "  w-[6rem] bg-primary text-white fixed top-0 bottom-0 ooverflow-x-hidden overflow-y-auto ease-in duration-300 z-[99]"
-            : "-translate-x-[100%] md:translate-x-[0%] w-[18rem] bg-primary text-white fixed top-0 bottom-0 overflow-x-hidden overflow-y-auto ease-in duration-300 z-[99]"
+            ? "  w-[6rem] bg-primary text-white fixed top-0 bottom-0 overflow-x-hidden overflow-y-auto ease-in duration-300 z-[99]"
+            : "-translate-x-[100%] lg:translate-x-[0%] w-[18rem] bg-primary text-white fixed top-0 bottom-0 overflow-x-hidden overflow-y-auto ease-in duration-300 z-[99]"
         }
       >
         <div className="flex justify-center items-center ">
@@ -53,8 +56,33 @@ const Index: React.FC<Props> = ({ mobileNav, expand, userImg, type }) => {
         </div>
 
         <ul className="flex flex-col justify-center items-center w-full">
-          {dashBoardLinks &&
+          {type === "influencer" &&
+            dashBoardLinks &&
             dashBoardLinks.map((link, i) => (
+              <SideBarLink
+                key={i}
+                isIconMode={expand}
+                Icon={link.icon}
+                {...link}
+                path={`/${type}${link.path}`}
+              />
+            ))}
+
+          {type === _FOLLOWER_ &&
+            followersdashBoardLinks &&
+            followersdashBoardLinks.map((link, i) => (
+              <SideBarLink
+                key={i}
+                isIconMode={expand}
+                Icon={link.icon}
+                {...link}
+                path={`/${type}${link.path}`}
+              />
+            ))}
+
+          {type === _ADMIN_ &&
+            adminDashBoardLinks &&
+            adminDashBoardLinks.map((link, i) => (
               <SideBarLink
                 key={i}
                 isIconMode={expand}

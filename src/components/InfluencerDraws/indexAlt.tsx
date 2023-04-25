@@ -1,7 +1,7 @@
 import React, { Suspense } from "react";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { EmptyDraw } from "../../assets";
-const DrawsTable = React.lazy(() => import("../Table"));
+const DrawsTable = React.lazy(() => import("../Table/IndexAlt"));
 
 const index = () => {
   const dataArr = [

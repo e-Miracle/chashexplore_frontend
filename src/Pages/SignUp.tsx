@@ -74,7 +74,7 @@ const RegisterForm = () => {
             aria-label="firstname"
             placeholder="First Name"
             type="text"
-            id="name"
+            id="First Name"
             {...register("firstname", { required: "This is required." })}
             disabled={isSubmitting}
           />
@@ -86,9 +86,9 @@ const RegisterForm = () => {
                 : " w-full lg:w-[48%] font-ubuntu bg-[#FBFBFD] text-[#797F8A] border border-[#F4F6F8] rounded-[10px] p-5 outline-none placeholder:font-ubuntu placeholder:text-[#797F8A] lg:placeholder:text-[1rem] my-3  "
             }
             aria-label="lastname"
-            placeholder="Larst Name"
+            placeholder="Last Name"
             type="text"
-            id="name"
+            id="Last Name"
             {...register("lastname", { required: "This is required." })}
             disabled={isSubmitting}
           />
@@ -124,7 +124,7 @@ const RegisterForm = () => {
           aria-label="name"
           placeholder="Email Address"
           type="email"
-          id="name"
+          id="email"
           {...register("email", { required: "This is required." })}
           disabled={isSubmitting}
         />
@@ -215,7 +215,7 @@ const SignUp = () => {
           <Header {...headerProps} />
           <SocialComponent text="Sign up with:" />
           <RegisterForm />
-          <p className="mt-3 font-ubuntu text-[#394355] text-sm lg:text-base">
+          <p className="mt-3 font-ubuntu text-[#394355] text-sm lg:text-base text-center lg:text-left">
             By continuing, you agree to CashXplore’s{" "}
             <Link className="text-primary hover:opacity-80" to={"/terms"}>
               Terms of Service

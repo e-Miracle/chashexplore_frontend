@@ -32,10 +32,10 @@ export const Header: React.FC<HeaderProps> = ({
 }) => {
   return (
     <div>
-      <h1 className="font-ubuntu text-primary text-[2rem] lg:text-[2.5rem]">
+      <h1 className="font-ubuntu text-primary text-[2rem] lg:text-[2.5rem] text-center lg:text-left">
         {title}
       </h1>
-      <p className="mt-3 font-ubuntu text-[#394355] text-[1.2rem] lg:text-[1.5rem]">
+      <p className="mt-3 font-ubuntu text-[#394355] text-[1.2rem] lg:text-[1.5rem] text-center lg:text-left">
         {text}{" "}
         <Link className="text-primary hover:opacity-80" to={route ? route : ""}>
           {linkName}
@@ -56,13 +56,13 @@ export const SocialComponent = ({
     { imgUrl: Google, cta: "" },
     { imgUrl: Twitter, cta: "", color: "#1D9BF0" },
     { imgUrl: Facebook, cta: "", color: "#1877F2" },
-    { imgUrl: LinkedIn, cta: "", color: "#0A66C2" },
+    { imgUrl: LinkedIn, cta: "",  },
     { imgUrl: Instagram, cta: "" },
   ];
   return (
     <div className="my-[1.5rem]">
       {text && (
-        <h4 className="text-[#797F8A] font-ubuntu text-[1.2rem] lg:text-[1.5rem] my-3">
+        <h4 className="text-[#797F8A] font-ubuntu text-[1.2rem] lg:text-[1.5rem] my-3 text-center lg:text-left">
           {text}
         </h4>
       )}
@@ -73,7 +73,7 @@ export const SocialComponent = ({
             key={i}
             style={{ background: item?.color }}
           >
-            {" "}
+           
             <LazyLoadImage
               className="w-[30px] lg:w-[40px] h-[30px] lg:h-[40px] object-contain"
               src={item.imgUrl}

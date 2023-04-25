@@ -10,11 +10,20 @@ import { ErrorMessage } from "@hookform/error-message";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheckCircle } from "@fortawesome/free-solid-svg-icons";
 import { BlueLogo } from "../../../assets";
-import ReviewCard from "../../../components/ReviewCard/ReviewCard";
-import { BackgroundDrop } from "./Profile";
+import moment from  "moment"
+const BackgroundDrop = React.lazy(() =>
+  import("../influencer/Profile").then((res) => {
+    return {
+      default: res.BackgroundDrop,
+    };
+  })
+);
 const Table = lazy(() => import("../../../components/Table/WinnersTable"));
 const Modal = lazy(() => import("../../../components/Modal/Modal"));
-const dataArr = [
+const ReviewCard = lazy(
+  () => import("../../../components/ReviewCard/ReviewCard")
+);
+export const dataArr = [
   {
     ticketId: "GN24809HN",
     price: 100000,
@@ -40,14 +49,14 @@ const dataArr = [
     number: "0803 *** 4567",
   },
 ];
-const columnsArr = [
+export const columnsArr = [
   { Header: "Ticket ID", accessor: "ticketId" },
   { Header: "Prize", accessor: "price" },
   { Header: "Username", accessor: "username" },
   { Header: "Phone Number", accessor: "number" },
 ];
 
-const reviewArr = [
+export const reviewArr = [
   {
     text: "Absolutely unbelievable service from Ricky Crown! Easy to deal with a completely genuine! Still in shock that i won!",
     rating: 4,
@@ -70,7 +79,7 @@ const reviewArr = [
     amount: 1000000,
   },
 ];
-const Header = () => {
+export const Header = ({ title, date }: { title: string; date: Date }) => {
   return (
     <div className="flex flex-col  items-center md:flex-row justify-between">
       <h1
@@ -78,16 +87,16 @@ const Header = () => {
           "text-center md:text-left font-ubuntu text-heading font-medium lg:text-[1.5rem] text-[1.2rem]"
         }
       >
-        100,000 naira New Year Giveaway!
+        {title}
       </h1>
       <p className=" text-center md:text-left mt-[1rem] md:mt-0 text-base lg:text-[1.25rem] text-labels">
-        Date Ended: 25th February, 2023
+        Date Ended: {date.toString()}
       </p>
     </div>
   );
 };
 
-const Hero = () => {
+export const Hero = () => {
   return (
     <div className=" mt-10 bg-white rounded-[10px] p-5 font-ubuntu flex flex-col md:flex-row items-center flex-wrap">
       <div className="w-full md:w-1/2">
@@ -110,14 +119,16 @@ const Hero = () => {
   );
 };
 
-const Winners = () => {
+export const Winners = ({ data, columns }: { data: any[]; columns: any[] }) => {
   return (
-    <div className="mt-10">
-      <h1 className="text-center md:text-left text-primary text-[1.8rem] font-bold lg:text-[2rem] font-ubuntu">
-        Winners
-      </h1>
-      <Table dataArr={dataArr} columnsArr={columnsArr} />
-    </div>
+    <Suspense fallback={<Spinner toggle={false} />}>
+      <div className="mt-10">
+        <h1 className="text-center md:text-left text-primary text-[1.8rem] font-bold lg:text-[2rem] font-ubuntu">
+          Winners
+        </h1>
+        <Table dataArr={data} columnsArr={columns} />
+      </div>
+    </Suspense>
   );
 };
 
@@ -240,7 +251,13 @@ const ModalContent: React.FC<ModalContent> = ({ onclick }) => {
   );
 };
 
-const Receipts = () => {
+export const Receipts = ({
+  data,
+  columns,
+}: {
+  data: any[];
+  columns: any[];
+}) => {
   return (
     <div>
       <h1 className="text-center md:text-left text-primary text-[1.8rem] font-bold lg:text-[2rem] font-ubuntu  my-[3rem]">
@@ -265,7 +282,7 @@ const Receipts = () => {
         <h4 className="text-[1.2rem] lg:text-[1.5rem] mt-[1rem] md:mt-0 text-primary text-center font-semibold">
           Payment Successful
         </h4>
-        <Table dataArr={dataArr} columnsArr={columnsArr} />
+        <Table dataArr={data} columnsArr={columns} />
         <p className="mt-[4rem] md:mt-[8rem] mb-[2rem] text-labels text-sm lg-text-base text-center">
           All draws are 100% transparent and randomly generated using a top
           random number picker. Create your free raffle draws today. Go to
@@ -281,18 +298,20 @@ const Receipts = () => {
   );
 };
 
-const Reviews = () => {
+export const Reviews = ({ data }: { data: any[] }) => {
   return (
-    <div>
-      <h1 className="text-center md:text-left text-primary text-[1.8rem] font-bold lg:text-[2rem] font-ubuntu  my-[3rem]">
-        Reviews
-      </h1>
-      <div className="grid gap-[1rem] grid-cols-1 md:grid-cols-2 lg:grid-cols-3 mt-[1rem] lg:mt-0">
-        {reviewArr &&
-          reviewArr.length > 0 &&
-          reviewArr.map((item, i: number) => <ReviewCard key={i} {...item} />)}
+    <Suspense fallback={<Spinner toggle={false} />}>
+      <div>
+        <h1 className="text-center md:text-left text-primary text-[1.8rem] font-bold lg:text-[2rem] font-ubuntu  my-[3rem]">
+          Reviews
+        </h1>
+        <div className="grid gap-[1rem] grid-cols-1 md:grid-cols-2 lg:grid-cols-3 mt-[1rem] lg:mt-0">
+          {data &&
+            data.length > 0 &&
+            data.map((item, i: number) => <ReviewCard key={i} {...item} />)}
+        </div>
       </div>
-    </div>
+    </Suspense>
   );
 };
 
@@ -302,9 +321,12 @@ const Results = () => {
     <Suspense fallback={<Spinner />}>
       <DashBoardLayout type="influencer">
         <BackgroundDrop>
-          <Header />
+          <Header
+            title={"100,000 naira New Year Giveaway!"}
+            date={moment().toDate()}
+          />
           <Hero />
-          <Winners />
+          <Winners data={dataArr} columns={columnsArr} />
           <div className="flex justify-center items-center my-10">
             <button
               onClick={() => setIsOpen(true)}
@@ -316,8 +338,8 @@ const Results = () => {
           <Modal visible={modalIsOpen}>
             <ModalContent onclick={() => setIsOpen(false)} />
           </Modal>
-          <Receipts />
-          <Reviews />
+          <Receipts data={dataArr} columns={columnsArr} />
+          <Reviews data={reviewArr} />
         </BackgroundDrop>
       </DashBoardLayout>
     </Suspense>

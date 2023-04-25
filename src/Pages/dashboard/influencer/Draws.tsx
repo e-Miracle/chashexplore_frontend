@@ -55,7 +55,6 @@ const Body = () => {
        amounts: 2808000,
      },
    ];
-   dataArr.length = 0;
    const columnsArr = [
      { Header: "Campaign Name", accessor: "campaign" },
      { Header: "Tickets Sold", accessor: "tickets" },

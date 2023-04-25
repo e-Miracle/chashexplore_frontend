@@ -10,10 +10,15 @@ import "react-quill/dist/quill.snow.css";
 import { Image } from "../../../components/DragandDrop";
 import { currency_list } from "../../../constants";
 import toast from "react-hot-toast";
-import { BackgroundDrop } from "./Profile";
 const DropBox = React.lazy(() => import("../../../components/DragandDrop"));
+const BackgroundDrop = React.lazy(() =>
+  import("../influencer/Profile").then((res) => {
+    return {
+      default: res.BackgroundDrop,
+    };
+  })
+);
 const colors: string[] = ["#211DEC", "#716EEA", "#DDDCEF"];
-
 const Draws = () => {
   const [raffleimages, setRaffleImages] = useState<Image[]>([]);
   const [PageIcons, setPageIcons] = useState<Image[]>([]);
@@ -72,7 +77,9 @@ const Draws = () => {
         required_error: "description is required",
         invalid_type_error: "description must be a string",
       })
-      .min(3, { message: "description must have at least three characters " }),
+      .min(3, {
+        message: "description must have at least three characters ",
+      }),
     currency: z.string({
       required_error: "currency is required",
       invalid_type_error: "currency must be a string",
@@ -112,7 +119,7 @@ const Draws = () => {
   };
   return (
     <Suspense fallback={<Spinner />}>
-      <DashBoardLayout type="influencer" backbtn={true}>
+      <DashBoardLayout type="admin">
         <form onSubmit={handleSubmit(onSubmit)}>
           <BackgroundDrop>
             <h3 className="text-primary font-ubuntu text-[1.2rem] lg:text-[1.5rem] border-b-[1px] border-formborder font-bold">

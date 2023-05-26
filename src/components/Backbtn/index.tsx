@@ -1,5 +1,5 @@
 import React, { Suspense } from "react";
-import { IconPrefix, IconName } from "@fortawesome/free-solid-svg-icons";
+import { IconPrefix, IconName, Ic } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 type Props = {
   type?: "button" | "submit" | "reset" | undefined;

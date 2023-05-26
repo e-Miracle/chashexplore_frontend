@@ -14,7 +14,8 @@ import {
   faEyeSlash,
 } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-
+import useAuthLogin from "../hooks/auth/useAuthLogin";
+import useErrorHandler from "../hooks/useErrorHandler";
 export type HeaderProps = {
   title: string;
   text: string;
@@ -56,7 +57,7 @@ export const SocialComponent = ({
     { imgUrl: Google, cta: "" },
     { imgUrl: Twitter, cta: "", color: "#1D9BF0" },
     { imgUrl: Facebook, cta: "", color: "#1877F2" },
-    { imgUrl: LinkedIn, cta: "",  },
+    { imgUrl: LinkedIn, cta: "" },
     { imgUrl: Instagram, cta: "" },
   ];
   return (
@@ -73,7 +74,6 @@ export const SocialComponent = ({
             key={i}
             style={{ background: item?.color }}
           >
-           
             <LazyLoadImage
               className="w-[30px] lg:w-[40px] h-[30px] lg:h-[40px] object-contain"
               src={item.imgUrl}
@@ -97,6 +97,8 @@ export const SocialComponent = ({
 };
 
 const LoginForm = () => {
+  const authLogin = useAuthLogin();
+  useErrorHandler(authLogin, "Login Successful", "Login Error");
   const [visible, setVisibility] = React.useState<Boolean>(false);
   const formSchema = z.object({
     email: z
@@ -129,6 +131,7 @@ const LoginForm = () => {
 
   const onSubmit: SubmitHandler<FormSchmaType> = async (data) => {
     console.log(data);
+    authLogin.mutateAsync(data);
   };
 
   return (

@@ -155,8 +155,8 @@ type Object = {
   [key: string]: {
     name: string;
     symbol: string;
-  }
-}
+  };
+};
 
 // count 168
 export const currency_list: Object = {
@@ -328,4 +328,16 @@ export const currency_list: Object = {
   YER: { name: "Yemeni Rial", symbol: "﷼" },
   ZMK: { name: "Zambian Kwacha", symbol: "ZK" },
   ZWL: { name: "Zimbabwean dollar", symbol: "$" },
+};
+
+export const ENDPOINTS = {
+  API_BASE_URL: import.meta.env.VITE_APP_API_URL,
+
+  // influencer auth URL
+  API_INFLUENCER_AUTH_SIGNUP: "/auth/influencer-register",
+  API_INFLUENCER_AUTH_LOGIN: "/auth/influencer-login",
+
+  // follower Auth URl
+  API_FOLLOWER_AUTH_LOGIN: "/follower/register",
+  API_FOLLOWER_AUTH_SIGNUP: "/follower/login",
 };

@@ -1,13 +1,19 @@
-import { USER } from "../constants"
+import { USER } from "../constants";
 
 export const getUserData = () => {
   const user = sessionStorage.getItem(USER._USER_TOKEN);
-
   // console.log(JSON.parse(user));
-  return JSON.parse(user ? user : '');
+  return JSON.parse(String(user));
 };
 
-export function nFormatter(num:number, digits: number) {
+export const storeUserData = (data:any) =>
+  sessionStorage.setItem(
+    USER._USER_TOKEN,
+    JSON.stringify({ ...data, token: data?.accessToken })
+    // JSON.stringify({ token: data?.access_token, isVerified: data?.isVerified })
+  );
+
+export function nFormatter(num: number, digits: number) {
   const lookup = [
     { value: 1, symbol: "" },
     { value: 1e3, symbol: "k" },

@@ -1,7 +1,7 @@
 import React, { Suspense, useState } from "react";
 import { DashBoardLayout } from "../../";
 import Spinner from "../../../components/Spinner";
-import { SubmitHandler, useForm } from "react-hook-form";
+import { SubmitHandler, useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ErrorMessage } from "@hookform/error-message";
 import { z } from "zod";
@@ -11,6 +11,7 @@ import { Image } from "../../../components/DragandDrop";
 import { currency_list } from "../../../constants";
 import toast from "react-hot-toast";
 import { BackgroundDrop } from "./Profile";
+import DatePicker from "react-datepicker";
 const DropBox = React.lazy(() => import("../../../components/DragandDrop"));
 const colors: string[] = ["#211DEC", "#716EEA", "#DDDCEF"];
 
@@ -45,51 +46,51 @@ const Draws = () => {
         invalid_type_error: "title must be a string",
       })
       .min(3, { message: "title must have at least three characters " })
-      .max(30, {
+      .max(50, {
         message: "title must not be greater than 30 characters",
       }),
     start: dateSchema,
     stop: dateSchema,
-    recurring: z
-      .string()
-      .min(3, { message: "recurring must have at least three characters " })
-      .nullable()
-      .optional(),
-    winners: z
-      .number({
-        required_error: "number of winners  is required",
-        invalid_type_error: "number of winners must be a number",
-      })
-      .positive(),
-    drawType: z
-      .string({
-        required_error: "drawType is required",
-        invalid_type_error: "drawType must be a string",
-      })
-      .min(3, { message: "drawType must have at least three characters " }),
-    description: z
-      .string({
-        required_error: "description is required",
-        invalid_type_error: "description must be a string",
-      })
-      .min(3, { message: "description must have at least three characters " }),
-    currency: z.string({
-      required_error: "currency is required",
-      invalid_type_error: "currency must be a string",
-    }),
-    // .min(1, { message: "currency must have at least one character" }),
-    amount: z
-      .number({
-        required_error: "number of winners  is required",
-        invalid_type_error: "number of winners must be a number",
-      })
-      .positive(),
-    noOfTickets: z
-      .number({
-        required_error: "number of tickets  is required",
-        invalid_type_error: "number of tickets must be a number",
-      })
-      .positive(),
+    // recurring: z
+    //   .string()
+    //   .min(3, { message: "recurring must have at least three characters " })
+    //   .nullable()
+    //   .optional(),
+    // winners: z
+    //   .number({
+    //     required_error: "number of winners  is required",
+    //     invalid_type_error: "number of winners must be a number",
+    //   })
+    //   .positive(),
+    // drawType: z
+    //   .string({
+    //     required_error: "drawType is required",
+    //     invalid_type_error: "drawType must be a string",
+    //   })
+    //   .min(3, { message: "drawType must have at least three characters " }),
+    // description: z
+    //   .string({
+    //     required_error: "description is required",
+    //     invalid_type_error: "description must be a string",
+    //   })
+    //   .min(3, { message: "description must have at least three characters " }),
+    // currency: z.string({
+    //   required_error: "currency is required",
+    //   invalid_type_error: "currency must be a string",
+    // }),
+    // // .min(1, { message: "currency must have at least one character" }),
+    // amount: z
+    //   .number({
+    //     required_error: "number of winners  is required",
+    //     invalid_type_error: "number of winners must be a number",
+    //   })
+    //   .positive(),
+    // noOfTickets: z
+    //   .number({
+    //     required_error: "number of tickets  is required",
+    //     invalid_type_error: "number of tickets must be a number",
+    //   })
+    //   .positive(),
   });
 
   type FormSchmaType = z.infer<typeof formSchema>;
@@ -108,7 +109,8 @@ const Draws = () => {
     // if (PageIcons && PageIcons.length < 0)
     //   return toast.error("Please add Images for the icon");
     // if (!brandColor) return toast.error("Please add brand colors");
-    console.log({ data, raffleimages, PageIcons, brandColor });
+    console.log({ data });
+    // console.log({ raffleimages, PageIcons, brandColor})
   };
   return (
     <Suspense fallback={<Spinner />}>
@@ -214,7 +216,7 @@ const Draws = () => {
               </div>
             </div>
 
-            <ErrorMessage
+            {/* <ErrorMessage
               errors={errors}
               name="start.date"
               render={({ message }) => (
@@ -249,9 +251,9 @@ const Draws = () => {
                   {message}
                 </p>
               )}
-            />
+            /> */}
 
-            <div className="flex flex-col lg:flex-row justify-between mt-[1rem] lg:mt-[2rem]">
+            {/* <div className="flex flex-col lg:flex-row justify-between mt-[1rem] lg:mt-[2rem]">
               <div className="lg:w-[30%]">
                 <label
                   htmlFor="recurring"
@@ -288,9 +290,9 @@ const Draws = () => {
                   </option>
                 </select>
               </div>
-            </div>
+            </div> */}
 
-            <ErrorMessage
+            {/* <ErrorMessage
               errors={errors}
               name="recurring"
               render={({ message }) => (
@@ -298,9 +300,9 @@ const Draws = () => {
                   {message}
                 </p>
               )}
-            />
+            /> */}
 
-            <div className="flex flex-col lg:flex-row justify-between mt-[1rem] lg:mt-[2rem]">
+            {/* <div className="flex flex-col lg:flex-row justify-between mt-[1rem] lg:mt-[2rem]">
               <label
                 htmlFor="winners"
                 className="font-ubuntu text-rand text-sm lg:text-base mb-3 lg:mb-0"
@@ -321,9 +323,9 @@ const Draws = () => {
                 })}
                 disabled={isSubmitting}
               />
-            </div>
+            </div> */}
 
-            <ErrorMessage
+            {/* <ErrorMessage
               errors={errors}
               name="winners"
               render={({ message }) => (
@@ -331,9 +333,9 @@ const Draws = () => {
                   {message}
                 </p>
               )}
-            />
+            /> */}
 
-            <div className="flex flex-wrap justify-between mt-[1rem] lg:mt-[2rem]">
+            {/* <div className="flex flex-wrap justify-between mt-[1rem] lg:mt-[2rem]">
               <div className="lg:w-[30%] mb-3 lg:mb-0">
                 <label
                   htmlFor="drawtype"
@@ -364,8 +366,8 @@ const Draws = () => {
                   </option>
                 </select>
               </div>
-            </div>
-            <ErrorMessage
+            </div> */}
+            {/* <ErrorMessage
               errors={errors}
               name="drawType"
               render={({ message }) => (
@@ -373,9 +375,9 @@ const Draws = () => {
                   {message}
                 </p>
               )}
-            />
+            /> */}
 
-            <div className="flex flex-col lg:flex-row justify-between mt-[1rem] lg:mt-[2rem]">
+            {/* <div className="flex flex-col lg:flex-row justify-between mt-[1rem] lg:mt-[2rem]">
               <div className="lg:w-[30%]">
                 <label
                   htmlFor=""
@@ -396,20 +398,20 @@ const Draws = () => {
                   { required: "This is required." })}
                 />
               </div>
-            </div>
+            </div> */}
 
-            <ErrorMessage
+            {/* <ErrorMessage
               errors={errors}
-              name="snow"
+              name="description"
               render={({ message }) => (
                 <p className="my-1 font-ubuntu text-[#E4033B] text-xs lg:text-sm">
                   {message}
                 </p>
               )}
-            />
+            /> */}
           </BackgroundDrop>
 
-          <div className="bg-bg p-[1rem] mt-[1rem] lg:mt-[2rem] rounded-[10px]">
+          {/* <div className="bg-bg p-[1rem] mt-[1rem] lg:mt-[2rem] rounded-[10px]">
             <h3 className="text-primary font-ubuntu text-[1.2rem] lg:text-[1.5rem] border-b-[1px] border-formborder font-bold">
               Ticket Details
             </h3>
@@ -499,9 +501,9 @@ const Draws = () => {
                 />
               </div>
             </div>
-          </div>
+          </div> */}
 
-          <ErrorMessage
+          {/* <ErrorMessage
             errors={errors}
             name="noOfTickets"
             render={({ message }) => (
@@ -509,9 +511,9 @@ const Draws = () => {
                 {message}
               </p>
             )}
-          />
+          /> */}
 
-          <div className="bg-bg p-[1rem] mt-[1rem] lg:mt-[2rem] rounded-[10px]">
+          {/* <div className="bg-bg p-[1rem] mt-[1rem] lg:mt-[2rem] rounded-[10px]">
             <h3 className="text-primary font-ubuntu text-[1.2rem] lg:text-[1.5rem] border-b-[1px] border-formborder font-bold">
               Customize Raffle
             </h3>
@@ -581,7 +583,7 @@ const Draws = () => {
                 ))}
               </div>
             </div>
-          </div>
+          </div> */}
 
           <div className=" w-full p-[1rem] lg:p-0">
             {isSubmitting ? (

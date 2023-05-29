@@ -8,7 +8,7 @@ function useAuthResendVerifyEmail() {
   const navigate = useNavigate();
   return useCustomMutation({
     endpoint: ENDPOINTS.API_INFLUENCER_AUTH_VERIFY,
-    method: "POST",
+    method: "GET",
     onSettled: (response: any, err: unknown) => {
       if (!err) {
         // toast.success(`Successful...${response?.data?.message}`, {

@@ -8,7 +8,7 @@ import { Header, HeaderProps } from "./Home";
 import { faTimesCircle } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Spinner } from ".";
-import useAuthVerifyEmail from "../hooks/auth/useAuthVerifyEmail";
+import useAuthVerifyEmail from "../hooks/auth/useAuthRsendVerifyEmail";
 import useErrorHandler from "../hooks/useErrorHandler";
 type Props = {};
 
@@ -16,8 +16,8 @@ const VerifyEmail = (props: Props): JSX.Element => {
   const authVerifyEmail = useAuthVerifyEmail();
   useErrorHandler(
     authVerifyEmail,
-    "Verification Successful",
-    "Verification Error"
+    "Token sent",
+    "Server Error"
   );
   const headerProps: HeaderProps = {
     title: "Resend Email",

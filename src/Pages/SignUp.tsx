@@ -20,7 +20,7 @@ import useErrorHandler from "../hooks/useErrorHandler";
 const RegisterForm = () => {
   const authSignup = useAuthSignUp();
   useErrorHandler(authSignup, "Signup Successful", "Signup Error");
-  
+
   const [visible, setVisibility] = React.useState<Boolean>(false);
   const formSchema = z.object({
     firstname: z
@@ -75,6 +75,7 @@ const RegisterForm = () => {
   return (
     <Suspense>
       <form onSubmit={handleSubmit(onSubmit)}>
+        shhshsh
         <div className="flex flex-col lg:flex-row justify-between items-center">
           <input
             className={

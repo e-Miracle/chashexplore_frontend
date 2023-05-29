@@ -10,7 +10,7 @@ function useAuthSignUp() {
     onSettled: (res: unknown, err: unknown) => {
       if (!err)
         setTimeout(() => {
-          navigate("/");
+          navigate("/verify-email");
         }, 1000);
     },
     onError: (err: unknown) => {

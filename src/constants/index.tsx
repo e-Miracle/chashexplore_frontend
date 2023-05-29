@@ -330,12 +330,13 @@ export const currency_list: Object = {
   ZWL: { name: "Zimbabwean dollar", symbol: "$" },
 };
 
-export const ENDPOINTS = {
+export const ENDPOINTS: { [key: string]: string } = {
   API_BASE_URL: import.meta.env.VITE_APP_API_URL,
 
   // influencer auth URL
   API_INFLUENCER_AUTH_SIGNUP: "/auth/influencer-register",
   API_INFLUENCER_AUTH_LOGIN: "/auth/influencer-login",
+  API_INFLUENCER_AUTH_VERIFY: "/auth/influencer-verify-email",
 
   // follower Auth URl
   API_FOLLOWER_AUTH_LOGIN: "/follower/register",

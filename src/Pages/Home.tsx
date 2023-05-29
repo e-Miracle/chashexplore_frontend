@@ -112,11 +112,11 @@ const LoginForm = () => {
       .max(50, {
         message: "The password can't accept more than 50 characters",
       })
-      .refine(
-        (value) =>
-          /^(?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z]).{8,}$/.test(value),
-        "All passwords must contain at least 8 characters, including Uppercase and lowercase letters, number and symbol."
-      ),
+      // .refine(
+      //   (value) =>
+      //     /^(?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z]).{8,}$/.test(value),
+      //   "All passwords must contain at least 8 characters, including Uppercase and lowercase letters, number and symbol."
+      // ),
   });
   type FormSchmaType = z.infer<typeof formSchema>;
 

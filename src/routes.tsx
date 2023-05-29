@@ -9,7 +9,9 @@ import {
   DashBaordHome,
   initFontAwesome,
   FollowersDashboard,
-  FollowersDraws,
+    FollowersDraws,
+    VerifyEmail,
+  ResendEmailVerification,
   FollowersTransactions,
   FollowersSettings,
   InflunecersDashboard,
@@ -61,9 +63,7 @@ const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: (
-            <Home />
-        ),
+        element: <Home />,
       },
       {
         path: "/home",
@@ -73,6 +73,14 @@ const router = createBrowserRouter([
       {
         path: "/register",
         element: <SignUp />,
+      },
+      {
+        path: "/verify-email",
+        element: <VerifyEmail />,
+      },
+      {
+        path: "/resend-email",
+        element: <ResendEmailVerification />,
       },
       {
         path: "/forgot-password",

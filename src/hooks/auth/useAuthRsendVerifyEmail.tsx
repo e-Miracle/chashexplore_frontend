@@ -2,19 +2,21 @@ import useCustomMutation from "../useCustomMutation";
 import { ENDPOINTS } from "../../constants";
 import { useNavigate } from "react-router-dom";
 import { storeUserData } from "../../Utils";
+import toast from "react-hot-toast";
 
-function useAuthLogin() {
+function useAuthResendVerifyEmail() {
+  const navigate = useNavigate();
   return useCustomMutation({
-    endpoint: ENDPOINTS.API_INFLUENCER_AUTH_LOGIN,
+    endpoint: ENDPOINTS.API_INFLUENCER_AUTH_VERIFY,
     method: "POST",
     onSettled: (response: any, err: unknown) => {
       if (!err) {
-        // console.log(
-        //   response?.data?.access_token,
-        //   "response.data.access__token"
-        // );
-          console.log(response?.data?.message?.token)
-        storeUserData(response?.data);
+        // toast.success(`Successful...${response?.data?.message}`, {
+        //   icon: "✅",
+        // });
+        setTimeout(() => {
+          navigate("/verify-email");
+        }, 1000);
       }
     },
     onError: (err: unknown) => {
@@ -23,4 +25,4 @@ function useAuthLogin() {
   });
 }
 
-export default useAuthLogin;
+export default useAuthResendVerifyEmail;

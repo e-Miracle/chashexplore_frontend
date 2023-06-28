@@ -123,7 +123,7 @@ export const SocialComponent = ({
                 className="hover:opacity-80 rounded-[4px] shadow-primary p-2 flex justify-center items-center mr-2"
                 key={i}
                 style={{ background: item?.color }}
-                onClick={async () => {
+                onClick={() => {
                   UpdatePopup(true);
                   updateSpinner(true);
                   updateType(item.name);

@@ -23,7 +23,7 @@ const index = () => {
     isFetchingNextPage,
     isError,
     error,
-    isLoading,
+    isFetching,
   } = useInfiniteQuery(
     "draws",
     async ({ pageParam = 1 }) => {
@@ -45,6 +45,7 @@ const index = () => {
         pageParams: [1],
       },
       onSuccess: (data) => {
+        console.log(data)
         if (data) toast.success(data?.pages[data?.pages.length - 1]?.message);
       },
       onError: (err) => {
@@ -66,7 +67,7 @@ const index = () => {
   }, [entry]);
 
 
-  if (isLoading) return <Spinner toggle={false} />;
+  if (isFetching) return <Spinner toggle={false} />;
 
   if (isError) {
     const errorMessage = (error as any).message || "An unknown error occurred";

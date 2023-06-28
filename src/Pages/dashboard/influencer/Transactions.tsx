@@ -115,7 +115,7 @@ const Transactions = () => {
     isFetchingNextPage,
     isError,
     error,
-    isLoading,
+    isFetching,
   } = useInfiniteQuery(
     "campaigns",
     async ({ pageParam = 1 }) => {
@@ -155,7 +155,7 @@ const Transactions = () => {
       fetchNextPage();
   }, [entry]);
 
-  if (isLoading) return <Spinner toggle={false} />;
+  if (isFetching) return <Spinner toggle={false} />;
 
   if (isError) {
     const errorMessage = (error as any).message || "An unknown error occurred";
@@ -184,7 +184,7 @@ const Transactions = () => {
             </>
           ) : (
             <>
-              {isLoading && isFetchingNextPage ? (
+              {isFetchingNextPage ? (
                 <Spinner toggle={false} />
               ) : (
                 <div className="text-[black]">Your transactions would appear here</div>

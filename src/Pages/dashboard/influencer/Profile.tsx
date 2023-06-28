@@ -22,8 +22,8 @@ import { nFormatter, getUserData } from "../../../Utils";
 import DrawsCard from "../../../components/DrawsCard/DrawsCard";
 import { Raffle } from "../../../assets";
 import toast from "react-hot-toast";
-import { fetchDraws } from "../../../hooks/customGets";
-import { useInfiniteQuery } from "react-query";
+import { fetchDraws, fetchData } from "../../../hooks/customGets";
+import { useInfiniteQuery, useQuery } from "react-query";
 import { Draws } from "../../../Utils";
 import { ENDPOINTS } from "../../../constants";
 import { useIntersection } from "@mantine/hooks";
@@ -81,13 +81,41 @@ export const BackgroundDrop = ({ children }: { children: React.ReactNode }) => {
 };
 
 export const Header = () => {
+  const { isLoading, isError, data, error } = useQuery(
+    "socials",
+    ({ pageParam = 1 }) =>
+      fetchData({
+        page: pageParam,
+        endpoint: String(ENDPOINTS.API_INFLUENCER_VERIFY_ACCOUNT),
+      }),
+    {
+      onSuccess: (data) => {
+        console.log(data);
+        if (data) toast.success("Successful");
+      },
+      onError: (err) => {
+        if (err) toast.error("An error occured");
+      },
+    }
+  );
+  if (isLoading) return <Spinner toggle={false} />;
+
+  if (isError) {
+    const errorMessage = (error as any).message || "An unknown error occurred";
+    return (
+      <div>
+        <p>There was an error fetching the data.</p>
+        <p>{errorMessage}</p>
+      </div>
+    );
+  }
   type socialCta = { imgUrl: string; cta: string; color?: string };
   const socailCta: socialCta[] = [
     { imgUrl: Google, cta: "" },
-    { imgUrl: Twitter, cta: "", color: "#1D9BF0" },
-    { imgUrl: Facebook, cta: "", color: "#1877F2" },
-    { imgUrl: LinkedIn, cta: "", color: "#0A66C2" },
-    { imgUrl: Instagram, cta: "" },
+    { imgUrl: Twitter, cta: data?.data?.twitter_url, color: "#1D9BF0" },
+    { imgUrl: Facebook, cta: data?.data?.facebook_url, color: "#1877F2" },
+    { imgUrl: LinkedIn, cta: data?.data?.linked_url, color: "" },
+    { imgUrl: Instagram, cta: data?.data?.instagram_url },
   ];
   return (
     <div className="flex flex-wrap font-ubuntu">
@@ -128,19 +156,24 @@ export const Header = () => {
         </p>
         <div className="flex flex-wrap justify-center md:justify-start  items-center  mt-[3rem]">
           {socailCta.map((item: socialCta, i: number) => (
-            <button
-              className="hover:opacity-80 rounded-full shadow-primary p-2 flex justify-center items-center ml-0 mr-2"
-              key={i}
-              style={{ background: item?.color }}
-            >
-              {" "}
-              <LazyLoadImage
-                className="w-[20px] md:w-[30px] h-[20px] md:h-[30px] object-contain"
-                src={item.imgUrl}
-                placeholderSrc={"https://via.placeholder.com/72x72"}
-                alt={item.imgUrl}
-              />
-            </button>
+            <div key={i}>
+              {item.cta && (
+                <a
+                  className="hover:opacity-80 rounded-full shadow-primary p-2 flex justify-center items-center ml-0 mr-2"
+                  style={{ background: item?.color }}
+                  href={item.cta}
+                  target="_blank"
+                >
+                  {" "}
+                  <LazyLoadImage
+                    className="w-[20px] md:w-[30px] h-[20px] md:h-[30px] object-contain"
+                    src={item.imgUrl}
+                    placeholderSrc={"https://via.placeholder.com/72x72"}
+                    alt={item.imgUrl}
+                  />
+                </a>
+              )}
+            </div>
           ))}
         </div>
       </div>
@@ -158,13 +191,14 @@ export const ActiveDraws = () => {
     isFetchingNextPage,
     isError,
     error,
+    isFetching,
     isLoading,
   } = useInfiniteQuery(
     queryKey,
     async ({ pageParam = 1 }) => {
       const res = await fetchDraws({
         page: pageParam,
-        endpoint: String(ENDPOINTS.API_INFLUENCER_ACTIVE_DRAWS),
+        endpoint: String(ENDPOINTS.API_INFLUENCER_TOP_DRAWS),
       });
       return res;
     },
@@ -180,7 +214,6 @@ export const ActiveDraws = () => {
         pageParams: [1],
       },
       onSuccess: (data) => {
-        console.log(data);
         if (data) toast.success(data?.pages[data?.pages.length - 1]?.message);
       },
       onError: (err) => {
@@ -199,7 +232,7 @@ export const ActiveDraws = () => {
     if (entry?.isIntersecting && hasNextPage && !isFetchingNextPage)
       fetchNextPage();
   }, [entry]);
-  if (isLoading) return <Spinner toggle={false} />;
+  if (isFetching) return <Spinner toggle={false} />;
 
   if (isError) {
     const errorMessage = (error as any).message || "An unknown error occurred";
@@ -212,6 +245,7 @@ export const ActiveDraws = () => {
   }
   return (
     <div className="w-full bg-bg rounded-[10px] p-[1rem] font-ubuntu">
+      {isLoading && <div className="text-black">"Loading..."</div>}
       <div
         className="flex justify-between items-center cursor-pointer"
         onClick={() => setVisbility(!visible)}
@@ -263,7 +297,7 @@ export const InActiveDraws = () => {
     isFetchingNextPage,
     isError,
     error,
-    isLoading,
+    isFetching,
   } = useInfiniteQuery(
     queryKey,
     async ({ pageParam = 1 }) => {
@@ -285,7 +319,6 @@ export const InActiveDraws = () => {
         pageParams: [1],
       },
       onSuccess: (data) => {
-        console.log(data);
         if (data) toast.success(data?.pages[data?.pages.length - 1]?.message);
       },
       onError: (err) => {
@@ -304,7 +337,7 @@ export const InActiveDraws = () => {
     if (entry?.isIntersecting && hasNextPage && !isFetchingNextPage)
       fetchNextPage();
   }, [entry]);
-  if (isLoading) return <Spinner toggle={false} />;
+  if (isFetching) return <Spinner toggle={false} />;
 
   if (isError) {
     const errorMessage = (error as any).message || "An unknown error occurred";

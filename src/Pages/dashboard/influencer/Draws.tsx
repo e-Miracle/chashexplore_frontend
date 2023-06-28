@@ -217,7 +217,7 @@ const Body = () => {
     isFetchingNextPage,
     isError,
     error,
-    isLoading,
+    isFetching,
   } = useInfiniteQuery(
     queryKey,
     async ({ pageParam = 1 }) => {
@@ -279,7 +279,7 @@ const Body = () => {
     },
   ];
 
-  if (isLoading) return <Spinner toggle={false} />;
+  if (isFetching) return <Spinner toggle={false} />;
 
   if (isError) {
     const errorMessage = (error as any).message || "An unknown error occurred";
@@ -327,7 +327,7 @@ const Body = () => {
           </>
         ) : (
           <>
-            {isLoading ? (
+            {isFetching ? (
               <Spinner toggle={false} />
             ) : (
               <div className="flex flex-col justify-center items-center h-full">

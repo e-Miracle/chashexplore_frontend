@@ -8,14 +8,31 @@ import {
   faPen,
   faEye,
   faEyeSlash,
-  faArrowDown,
-  faArrowUp,
 } from "@fortawesome/free-solid-svg-icons";
 import { nFormatter, getUserData } from "../../../Utils";
 import { Raffle } from "../../../assets";
+import { fetchData } from "../../../hooks/customGets";
+import { useQuery } from "react-query";
+import { ENDPOINTS } from "../../../constants";
+import toast from "react-hot-toast";
+import {
+  Google,
+  Twitter,
+  Facebook,
+  LinkedIn,
+  Instagram,
+} from "../../../assets";
+import { LazyLoadImage } from "react-lazy-load-image-component";
+const ActiveDraws = React.lazy(() =>
+  import("../influencer/Profile").then((res) => {
+    return { default: res.ActiveDraws };
+  })
+);
 
-const DrawsCard = React.lazy(
-  () => import("../../../components/DrawsCard/DrawsCard")
+const InActiveDraws = React.lazy(() =>
+  import("../influencer/Profile").then((res) => {
+    return { default: res.InActiveDraws };
+  })
 );
 const data = [
   {
@@ -61,14 +78,41 @@ const data = [
 ];
 
 export const Header = () => {
+  const { isLoading, isError, data, error } = useQuery(
+    "socials",
+    ({ pageParam = 1 }) =>
+      fetchData({
+        page: pageParam,
+        endpoint: String(ENDPOINTS.API_INFLUENCER_VERIFY_ACCOUNT),
+      }),
+    {
+      onSuccess: (data) => {
+        if (data) toast.success("Successful");
+      },
+      onError: (err) => {
+        if (err) toast.error("An error occured");
+      },
+    }
+  );
+  if (isLoading) return <Spinner toggle={false} />;
+
+  if (isError) {
+    const errorMessage = (error as any).message || "An unknown error occurred";
+    return (
+      <div>
+        <p>There was an error fetching the data.</p>
+        <p>{errorMessage}</p>
+      </div>
+    );
+  }
   type socialCta = { imgUrl: string; cta: string; color?: string };
-//   const socailCta: socialCta[] = [
-//     { imgUrl: Google, cta: "" },
-//     { imgUrl: Twitter, cta: "", color: "#1D9BF0" },
-//     { imgUrl: Facebook, cta: "", color: "#1877F2" },
-//     { imgUrl: LinkedIn, cta: "", color: "#0A66C2" },
-//     { imgUrl: Instagram, cta: "" },
-//   ];
+  const socailCta: socialCta[] = [
+    { imgUrl: Google, cta: "" },
+    { imgUrl: Twitter, cta: data?.data?.twitter_url, color: "#1D9BF0" },
+    { imgUrl: Facebook, cta: data?.data?.facebook_url, color: "#1877F2" },
+    { imgUrl: LinkedIn, cta: data?.data?.linked_url, color: "" },
+    { imgUrl: Instagram, cta: data?.data?.instagram_url },
+  ];
   return (
     <div className="flex flex-wrap font-ubuntu ">
       <div className="w-full md:w-[80%] flex ">
@@ -97,87 +141,34 @@ export const Header = () => {
           </p>
         </div>
       </div>
-      <div className="w-full md:w-[0%] mt-5 lg:mt-0 ">
-        {/* {" "}
+      <div className="w-full md:w-[30%] mt-5 lg:mt-0 ">
+        {" "}
         <p className="text-[#000] text-sm lg:text-base text-center md:text-left">
           Connect with me:
         </p>
         <div className="flex flex-wrap justify-center md:justify-start  items-center  mt-[3rem]">
           {socailCta.map((item: socialCta, i: number) => (
-            <button
-              className="hover:opacity-80 rounded-full shadow-primary p-2 flex justify-center items-center ml-0 mr-2"
-              key={i}
-              style={{ background: item?.color }}
-            >
-              {" "}
-              <LazyLoadImage
-                className="w-[20px] md:w-[30px] h-[20px] md:h-[30px] object-contain"
-                src={item.imgUrl}
-                placeholderSrc={"https://via.placeholder.com/72x72"}
-                alt={item.imgUrl}
-              />
-            </button>
+            <div key={i}>
+              {item.cta && (
+                <a
+                  className="hover:opacity-80 rounded-full shadow-primary p-2 flex justify-center items-center ml-0 mr-2"
+                  style={{ background: item?.color }}
+                  href={item.cta}
+                  target="_blank"
+                >
+                  {" "}
+                  <LazyLoadImage
+                    className="w-[20px] md:w-[30px] h-[20px] md:h-[30px] object-contain"
+                    src={item.imgUrl}
+                    placeholderSrc={"https://via.placeholder.com/72x72"}
+                    alt={item.imgUrl}
+                  />
+                </a>
+              )}
+            </div>
           ))}
-        </div> */}
-      </div>
-    </div>
-  );
-};
-
-export const ActiveDraws = ({ data }: { data: any[] }) => {
-  const [visible, setVisbility] = useState<boolean>(false);
-  return (
-    <div className="w-full bg-bg rounded-[10px] p-[1rem] font-ubuntu">
-      <div
-        className="flex justify-between items-center cursor-pointer"
-        onClick={() => setVisbility(!visible)}
-      >
-        <h3 className="text-primary text-base lg:text-[1.25rem] font-semibold">
-          Active Draws
-        </h3>
-        <button>
-          <FontAwesomeIcon
-            icon={visible ? faArrowUp : faArrowDown}
-            className="text-[#646C79]"
-          />
-        </button>
-      </div>
-      {visible && (
-        <div className="flex overflow-x-auto space-x-8 w-full mt-5">
-          {data &&
-            data.length > 0 &&
-            data.map((item, i) => <DrawsCard key={i} {...item} />)}
         </div>
-      )}
-    </div>
-  );
-};
-
-export const InActiveDraws = ({ data }: { data: any[] }) => {
-  const [visible, setVisibility] = useState<boolean>(false);
-  return (
-    <div className="w-full bg-bg rounded-[10px] p-[1rem] font-ubuntu mt-[1rem]">
-      <div
-        className="flex justify-between items-center cursor-pointer"
-        onClick={() => setVisibility(!visible)}
-      >
-        <h3 className="text-primary text-base lg:text-[1.25rem] font-semibold">
-          Inactive Draws
-        </h3>
-        <button>
-          <FontAwesomeIcon
-            icon={visible ? faArrowUp : faArrowDown}
-            className="text-[#646C79]"
-          />
-        </button>
       </div>
-      {visible && (
-        <div className="flex overflow-x-auto space-x-8 w-full mt-5">
-          {data &&
-            data.length > 0 &&
-            data.map((item, i) => <DrawsCard key={i} {...item} />)}
-        </div>
-      )}
     </div>
   );
 };
@@ -187,8 +178,8 @@ const Body = ({ balance, data }: { balance: number; data: any[] }) => {
   return (
     <div className=" bg-white mt-[1rem] lg:mt-10 grid grid-cols-1 lg:grid-cols-6 gap-[1rem]  md:h-[calc(100vh-30vh)] font-ubuntu">
       <div className="col-span-6 lg:col-span-4">
-        <ActiveDraws data={data} />
-        <InActiveDraws data={data} />
+        <ActiveDraws />
+        <InActiveDraws />
       </div>
       <div className="col-span-6 lg:col-span-2 bg-bg rounded-[10px] p-[1rem] ">
         <h3 className="text-heading text-[1.2rem] lg:text-[1.5rem]">
@@ -199,7 +190,7 @@ const Body = ({ balance, data }: { balance: number; data: any[] }) => {
           <p className="text-[#8E939D] text-base text-[1.25rem]">
             Wallet Balance:
           </p>
-          <h2 className="text-primary text-[1.8rem] text-[2rem] mt-3">
+          <h2 className="text-primary text-[1.8rem] lg:text-[2rem] mt-3">
             {visible ? ` ₦ ${nFormatter(balance, 3)}` : "********"}
           </h2>
           <button

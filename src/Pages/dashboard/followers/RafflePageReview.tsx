@@ -47,7 +47,7 @@ const Header = () => {
         <li className={mobileNav ? "" : ""}>
           <Link
             onClick={handleMobileNav}
-            to="/"
+            to="/register"
             className={
               mobileNav
                 ? "bg-white rounded-[100px] text-primary text-base lg:text-[1.25rem] py-3 px-5 border-2 border-white"
@@ -64,7 +64,7 @@ const Header = () => {
               : "mx-1 rounded-[100px] text-primary text-base lg:text-[1.25rem] py-3 px-5 border-2 border-primary"
           }
         >
-          <Link onClick={handleMobileNav} to="register" className={"/services"}>
+          <Link onClick={handleMobileNav} to="/" className={"/services"}>
             Log in
           </Link>
         </li>

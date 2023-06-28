@@ -16,6 +16,16 @@ import { useQuery } from "react-query";
 import toast from "react-hot-toast";
 import { useParams, useNavigate } from "react-router-dom";
 import { _FOLLOWER_, _INFLUENCER_ } from "../../../constants";
+import { fetchData } from "../../../hooks/customGets";
+import { ENDPOINTS } from "../../../constants";
+import {
+  Google,
+  Twitter,
+  Facebook,
+  LinkedIn,
+  Instagram,
+} from "../../../assets";
+import { LazyLoadImage } from "react-lazy-load-image-component";
 const Modal = lazy(() => import("../../../components/Modal/Modal"));
 const Timer = lazy(() => import("../../../components/Timer/Timer"));
 const Table = lazy(() => import("../../../components/Table/DrawsTable"));
@@ -96,7 +106,7 @@ type BtnProp = {
   onClickShare?: React.MouseEventHandler<HTMLButtonElement> | undefined;
 };
 const Buttons: React.FC<BtnProp> = ({ onClickShare }) => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   return (
     <div className="mt-[1rem] flex justify-center items-center">
       <button
@@ -142,14 +152,71 @@ type ModalContent = {
   link: string;
 };
 export const ModalContent: React.FC<ModalContent> = ({ onclick, link }) => {
+  const { isLoading, isError, data, error } = useQuery(
+    "socials",
+    ({ pageParam = 1 }) =>
+      fetchData({
+        page: pageParam,
+        endpoint: String(ENDPOINTS.API_INFLUENCER_VERIFY_ACCOUNT),
+      }),
+    {
+      onSuccess: (data) => {
+        console.log(data);
+        if (data) toast.success("Successful");
+      },
+      onError: (err) => {
+        if (err) toast.error("An error occured");
+      },
+    }
+  );
+  if (isLoading) return <Spinner toggle={false} />;
+
+  if (isError) {
+    const errorMessage = (error as any).message || "An unknown error occurred";
+    return (
+      <div>
+        <p>There was an error fetching the data.</p>
+        <p>{errorMessage}</p>
+      </div>
+    );
+  }
+  type socialCta = { imgUrl: string; cta: string; color?: string };
+  const socailCta: socialCta[] = [
+    { imgUrl: Google, cta: "" },
+    { imgUrl: Twitter, cta: data?.data?.twitter_url, color: "#1D9BF0" },
+    { imgUrl: Facebook, cta: data?.data?.facebook_url, color: "#1877F2" },
+    { imgUrl: LinkedIn, cta: data?.data?.linked_url, color: "" },
+    { imgUrl: Instagram, cta: data?.data?.instagram_url },
+  ];
   return (
     <Suspense fallback={<Spinner toggle={false} />}>
       <BackDrop onclick={onclick}>
         <h3 className="text-primary text-center text-[1.8rem] md:text-[2rem]">
           Share Raffle Link
         </h3>
-        <div className="w-full  flex justify-center items-center  my-[1rem]">
-          <SocialComponent option={false} />
+        {/* <SocialComponent option={false} /> */}
+
+        <div className="w-full flex flex-wrap justify-center   items-center   my-[1rem]">
+          {socailCta.map((item: socialCta, i: number) => (
+            <div key={i}>
+              {item.cta && (
+                <a
+                  className="hover:opacity-80 rounded-full shadow-primary p-2 flex justify-center items-center ml-0 mr-2"
+                  style={{ background: item?.color }}
+                  href={item.cta}
+                  target="_blank"
+                >
+                  {" "}
+                  <LazyLoadImage
+                    className="w-[20px] md:w-[30px] h-[20px] md:h-[30px] object-contain"
+                    src={item.imgUrl}
+                    placeholderSrc={"https://via.placeholder.com/72x72"}
+                    alt={item.imgUrl}
+                  />
+                </a>
+              )}
+            </div>
+          ))}
         </div>
         <p className="text-[#394355] text-center text-sm md:text-base">
           Or Copy link here

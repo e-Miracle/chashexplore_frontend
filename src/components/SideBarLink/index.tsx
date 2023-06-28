@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 type Props = {
   path: string;
@@ -8,8 +8,8 @@ type Props = {
   isIconMode?: boolean;
 };
 
-
 function SidebarLink({ path, title, Icon, isIconMode = false }: Props) {
+  const { pathname } = useLocation();
   let body = (
     <div>
       <span>
@@ -31,8 +31,8 @@ function SidebarLink({ path, title, Icon, isIconMode = false }: Props) {
     <Suspense>
       <NavLink
         // style={({ isActive }) => (isActive ? activeStyle : emptyStyle)}
-        className={({ isActive }) =>
-          isActive
+        className={
+          path === pathname
             ? isIconMode
               ? "bg-white relative w-full bg-white text-primary  pl-9 my-2 py-3 rounded-l-[30px]"
               : "relative  rounded-l-[30px] my-3 py-5 pl-10 w-full ml-[5rem] bg-white text-primary "

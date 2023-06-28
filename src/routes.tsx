@@ -178,7 +178,7 @@ const router = createBrowserRouter([
         element: <InflunecersSingleDraw />,
       },
       {
-        path: `/my/dashboard/${_INFLUENCER_}/draws/results`,
+        path: `/my/dashboard/${_INFLUENCER_}/draws/results/:id`,
         element: <InflunecersResults />,
       },
       {

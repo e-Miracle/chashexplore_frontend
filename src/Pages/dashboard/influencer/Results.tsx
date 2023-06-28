@@ -10,7 +10,13 @@ import { ErrorMessage } from "@hookform/error-message";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheckCircle } from "@fortawesome/free-solid-svg-icons";
 import { BlueLogo } from "../../../assets";
-import moment from  "moment"
+import moment from "moment";
+import { useQuery } from "react-query";
+import { fetchSingleCampaign } from "../../../hooks/customGets";
+import toast from "react-hot-toast";
+import { getUserData, convertDateTime, countDown } from "../../../Utils";
+import { useMediaQuery } from "react-responsive";
+import { useParams } from "react-router-dom";
 const BackgroundDrop = React.lazy(() =>
   import("../influencer/Profile").then((res) => {
     return {
@@ -79,18 +85,42 @@ export const reviewArr = [
     amount: 1000000,
   },
 ];
-export const Header = ({ title, date }: { title: string; date: Date }) => {
+export const Header = ({ id }: { id: number }) => {
+  const { isLoading, isError, data, error } = useQuery(
+    "singleCampaign",
+    () => fetchSingleCampaign(id),
+    {
+      onSuccess: (data) => {
+        if (data) toast.success("successful");
+      },
+      onError: (err) => {
+        if (err) toast.error("An error occured");
+      },
+    }
+  );
+
+  if (isLoading) return <Spinner toggle={false} />;
+
+  if (isError) {
+    const errorMessage = (error as any).message || "An unknown error occurred";
+    return (
+      <div>
+        <p>There was an error fetching the data.</p>
+        <p>{errorMessage}</p>
+      </div>
+    );
+  }
   return (
     <div className="flex flex-col  items-center md:flex-row justify-between">
       <h1
         className={
-          "text-center md:text-left font-ubuntu text-heading font-medium lg:text-[1.5rem] text-[1.2rem]"
+          "text-center md:text-left font-ubuntu capitalize text-heading font-medium lg:text-[1.5rem] text-[1.2rem]"
         }
       >
-        {title}
+        {data?.data?.title}
       </h1>
       <p className=" text-center md:text-left mt-[1rem] md:mt-0 text-base lg:text-[1.25rem] text-labels">
-        Date Ended: {date.toString()}
+        Date Ended: {new Date(data?.data?.end_date).toISOString().split("T")[0]}
       </p>
     </div>
   );
@@ -271,12 +301,14 @@ export const Receipts = ({
             src={BlueLogo}
             alt={BlueLogo}
           />
-          <h1 className="w-full  md:w-auto text-center md:text-left  text-[1.2rem] lg:text-[1.5rem] text-[#232E43]">
-            Genevieve Doe{" "}
-            <FontAwesomeIcon
-              className="ml-2 text-primary"
-              icon={faCheckCircle}
-            />{" "}
+          <h1 className="w-full  md:w-auto text-center md:text-left capitalize  text-[1.2rem] lg:text-[1.5rem] text-[#232E43]">
+            {getUserData()?.first_name} {getUserData()?.last_name}{" "}
+            {getUserData()?.account_verfied != "0" && (
+              <FontAwesomeIcon
+                icon={faCheckCircle}
+                className="ml-2 text-primary"
+              />
+            )}{" "}
           </h1>
         </div>
         <h4 className="text-[1.2rem] lg:text-[1.5rem] mt-[1rem] md:mt-0 text-primary text-center font-semibold">
@@ -317,14 +349,13 @@ export const Reviews = ({ data }: { data: any[] }) => {
 
 const Results = () => {
   const [modalIsOpen, setIsOpen] = React.useState<boolean>(false);
+  const { id } = useParams();
+
   return (
     <Suspense fallback={<Spinner />}>
       <DashBoardLayout type="influencer">
         <BackgroundDrop>
-          <Header
-            title={"100,000 naira New Year Giveaway!"}
-            date={moment().toDate()}
-          />
+          <Header id={Number(id)} />
           <Hero />
           <Winners data={dataArr} columns={columnsArr} />
           <div className="flex justify-center items-center my-10">

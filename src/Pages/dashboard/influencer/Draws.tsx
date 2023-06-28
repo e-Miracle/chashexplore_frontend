@@ -239,7 +239,6 @@ const Body = () => {
         pageParams: [1],
       },
       onSuccess: (data) => {
-        console.log(data);
         if (data) toast.success(data?.pages[data?.pages.length - 1]?.message);
       },
       onError: (err) => {

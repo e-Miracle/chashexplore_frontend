@@ -237,13 +237,10 @@ const SingleDraw = () => {
             <ModalContent
               onclick={() => setIsOpen(false)}
               link={
-                "https://www.cashXplore/GenevieveDoe?100,000nairanewyeargiveaway"
+                import.meta.env.MODE === "development"
+                  ? `http://localhost:5173/raffle-page-preview/${id}`
+                  : `https://cashexplore.emiracle.me/raffle-page-preview/${id}`
               }
-              // link={
-              //   process.env.NODE === "development"
-              //     ? `http:localhost:5713/my/dashboard/${_FOLLOWER_}/draws/singledraw/${id}`
-              //     : "https://www.cashXplore/GenevieveDoe?100,000nairanewyeargiveaway"
-              // }
             />
           </Modal>
         </div>

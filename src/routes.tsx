@@ -104,6 +104,10 @@ const router = createBrowserRouter([
     element: <AccountVerification />,
   },
   {
+    path: `/raffle-page-preview/:id`,
+    element: <FollowersRafflePagePreview />,
+  },
+  {
     path: "/my/dashboard",
     element: <AuthorizedPages />,
     errorElement: <NotFound />,
@@ -116,10 +120,6 @@ const router = createBrowserRouter([
       {
         path: `/my/dashboard/${_FOLLOWER_}/view-raffle`,
         element: <FollowersViewRaffle />,
-      },
-      {
-        path: `/my/dashboard/${_FOLLOWER_}/raffle-page-preview`,
-        element: <FollowersRafflePagePreview />,
       },
       {
         path: `/my/dashboard/${_FOLLOWER_}/purchase-ticket`,

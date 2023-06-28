@@ -206,7 +206,12 @@ const SingleDraw = () => {
       link: `Ticket Cap: ${data?.data?.ticket?.ticket_sale_cap} tickets`,
     },
     { num: data?.data?.amount_raised, title: "raised" },
-    { num: 40, title: "participants", link: "View Participants", icon: true },
+    {
+      num: data?.data?.participants.length,
+      title: "participants",
+      link: "View Participants",
+      icon: true,
+    },
   ];
 
   if (isLoading) return <Spinner />;

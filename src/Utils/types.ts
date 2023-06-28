@@ -119,4 +119,6 @@ export interface Draws {
   participants_count: string;
   tickets_sold: number;
   amount_raised: number;
+  ticket: Ticket | null;
+  media: Media[];
 }

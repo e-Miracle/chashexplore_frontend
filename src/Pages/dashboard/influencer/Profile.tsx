@@ -26,6 +26,7 @@ import { fetchDraws } from "../../../hooks/customGets";
 import { useInfiniteQuery } from "react-query";
 import { Draws } from "../../../Utils";
 import { ENDPOINTS } from "../../../constants";
+import { useIntersection } from "@mantine/hooks";
 
 export const data = [
   {
@@ -147,8 +148,68 @@ export const Header = () => {
   );
 };
 
-export const ActiveDraws = ({ data }: { data: any[] }) => {
+export const ActiveDraws = () => {
+  const queryKey = ["draws", ENDPOINTS.API_INFLUENCER_ACTIVE_DRAWS];
   const [visible, setVisbility] = useState<boolean>(false);
+  const {
+    data,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isError,
+    error,
+    isLoading,
+  } = useInfiniteQuery(
+    queryKey,
+    async ({ pageParam = 1 }) => {
+      const res = await fetchDraws({
+        page: pageParam,
+        endpoint: String(ENDPOINTS.API_INFLUENCER_ACTIVE_DRAWS),
+      });
+      return res;
+    },
+
+    {
+      getNextPageParam: (_, allPages) => {
+        return allPages[allPages.length - 1]?.data.next_page_url
+          ? allPages[allPages.length - 1]?.data.current_page + 1
+          : null;
+      },
+      initialData: {
+        pages: [],
+        pageParams: [1],
+      },
+      onSuccess: (data) => {
+        console.log(data);
+        if (data) toast.success(data?.pages[data?.pages.length - 1]?.message);
+      },
+      onError: (err) => {
+        if (err) toast.error("An error occured");
+      },
+    }
+  );
+  const flattenedData = data?.pages.flatMap((page) => page.data.data) || [];
+  const observerRef = React.useRef<HTMLDivElement>(null);
+  const { ref, entry } = useIntersection({
+    root: observerRef.current,
+    threshold: 1,
+  });
+
+  React.useEffect(() => {
+    if (entry?.isIntersecting && hasNextPage && !isFetchingNextPage)
+      fetchNextPage();
+  }, [entry]);
+  if (isLoading) return <Spinner toggle={false} />;
+
+  if (isError) {
+    const errorMessage = (error as any).message || "An unknown error occurred";
+    return (
+      <div>
+        <p>There was an error fetching the data.</p>
+        <p>{errorMessage}</p>
+      </div>
+    );
+  }
   return (
     <div className="w-full bg-bg rounded-[10px] p-[1rem] font-ubuntu">
       <div
@@ -166,18 +227,94 @@ export const ActiveDraws = ({ data }: { data: any[] }) => {
         </button>
       </div>
       {visible && (
-        <div className="flex overflow-x-auto space-x-8 w-full mt-5">
-          {data &&
-            data.length > 0 &&
-            data.map((item, i) => <DrawsCard key={i} {...item} />)}
+        <div
+          className="flex overflow-x-auto space-x-8 w-full mt-5"
+          ref={observerRef}
+        >
+          {flattenedData && flattenedData.length > 0 ? (
+            <>
+              {flattenedData.map((item: Draws, i: number) => (
+                <DrawsCard
+                  key={i}
+                  noref={i === flattenedData.length - 1 ? ref : null}
+                  item={item}
+                />
+              ))}
+              {isFetchingNextPage && <Spinner toggle={false} />}
+            </>
+          ) : (
+            <h3 className="text-primary text-sm lg:text-base font-semibold">
+              No Active Draws
+            </h3>
+          )}
         </div>
       )}
     </div>
   );
 };
 
-export const InActiveDraws = ({ data }: { data: any[] }) => {
+export const InActiveDraws = () => {
+  const queryKey = ["draws", ENDPOINTS.API_INFLUENCER_INACTIVE_DRAWS];
   const [visible, setVisibility] = useState<boolean>(false);
+  const {
+    data,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isError,
+    error,
+    isLoading,
+  } = useInfiniteQuery(
+    queryKey,
+    async ({ pageParam = 1 }) => {
+      const res = await fetchDraws({
+        page: pageParam,
+        endpoint: String(ENDPOINTS.API_INFLUENCER_INACTIVE_DRAWS),
+      });
+      return res;
+    },
+
+    {
+      getNextPageParam: (_, allPages) => {
+        return allPages[allPages.length - 1]?.data.next_page_url
+          ? allPages[allPages.length - 1]?.data.current_page + 1
+          : null;
+      },
+      initialData: {
+        pages: [],
+        pageParams: [1],
+      },
+      onSuccess: (data) => {
+        console.log(data);
+        if (data) toast.success(data?.pages[data?.pages.length - 1]?.message);
+      },
+      onError: (err) => {
+        if (err) toast.error("An error occured");
+      },
+    }
+  );
+  const flattenedData = data?.pages.flatMap((page) => page.data.data) || [];
+  const observerRef = React.useRef<HTMLDivElement>(null);
+  const { ref, entry } = useIntersection({
+    root: observerRef.current,
+    threshold: 1,
+  });
+
+  React.useEffect(() => {
+    if (entry?.isIntersecting && hasNextPage && !isFetchingNextPage)
+      fetchNextPage();
+  }, [entry]);
+  if (isLoading) return <Spinner toggle={false} />;
+
+  if (isError) {
+    const errorMessage = (error as any).message || "An unknown error occurred";
+    return (
+      <div>
+        <p>There was an error fetching the data.</p>
+        <p>{errorMessage}</p>
+      </div>
+    );
+  }
   return (
     <div className="w-full bg-bg rounded-[10px] p-[1rem] font-ubuntu mt-[1rem]">
       <div
@@ -195,10 +332,26 @@ export const InActiveDraws = ({ data }: { data: any[] }) => {
         </button>
       </div>
       {visible && (
-        <div className="flex overflow-x-auto space-x-8 w-full mt-5">
-          {data &&
-            data.length > 0 &&
-            data.map((item, i) => <DrawsCard key={i} {...item} />)}
+        <div
+          className="flex overflow-x-auto space-x-8 w-full mt-5"
+          ref={observerRef}
+        >
+          {flattenedData && flattenedData.length > 0 ? (
+            <>
+              {flattenedData.map((item: Draws, i) => (
+                <DrawsCard
+                  key={i}
+                  item={item}
+                  noref={i === flattenedData.length - 1 ? ref : null}
+                />
+              ))}
+              {isFetchingNextPage && <Spinner toggle={false} />}
+            </>
+          ) : (
+            <h3 className="text-primary text-sm lg:text-base font-semibold">
+              No InActive Draws
+            </h3>
+          )}
         </div>
       )}
     </div>
@@ -210,8 +363,8 @@ const Body = ({ balance, data }: { balance: number; data: any[] }) => {
   return (
     <div className=" bg-white mt-[1rem] lg:mt-10 grid grid-cols-1 lg:grid-cols-6 gap-[1rem]  md:h-[calc(100vh-30vh)] font-ubuntu">
       <div className="col-span-6 lg:col-span-4">
-        <ActiveDraws data={data} />
-        <InActiveDraws data={data} />
+        <ActiveDraws />
+        <InActiveDraws />
       </div>
       <div className="col-span-6 lg:col-span-2 bg-bg rounded-[10px] p-[1rem] ">
         <h3 className="text-heading text-[1.2rem] lg:text-[1.5rem]">

@@ -95,11 +95,11 @@ const Index: React.FC<Props> = ({ mobileNav, expand, userImg, type }) => {
             ))}
         </ul>
 
-        <div className="mt-2 flex flex-col justify-center items-center">
+        <div className="mt-2 flex flex-col justify-center items-center ">
           {!expand && (
             <div
               onClick={() => navigate(`/my/dashboard/${type}/profile`)}
-              className="  w-[70px] lg:w-[100px] h-[70px] my-[1rem] lg:h-[100px] p-2 rounded-full border-[5px] border-[#fff] border-r-primary relative"
+              className="  w-[70px] lg:w-[100px] h-[70px] my-[1rem] lg:h-[100px] p-2 rounded-full border-[5px] border-[#fff] border-r-primary relative cursor-pointer hover:opacity-80"
             >
               <LazyLoadImage
                 className="  w-full h-full object-cover rounded-full "

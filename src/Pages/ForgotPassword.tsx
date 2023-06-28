@@ -9,8 +9,12 @@ import { Header } from "./Home";
 import { faTimesCircle } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { HeaderProps } from "./Home";
+import useAuthForgotPassword from "../hooks/auth/useForgotPassword";
+import useErrorHandler from "../hooks/useErrorHandler";
 
 const Form = () => {
+  const forgotPassword = useAuthForgotPassword();
+  useErrorHandler(forgotPassword, "Mail Sent Successfully", " Error");
   const formSchema = z.object({
     email: z
       .string()
@@ -31,6 +35,7 @@ const Form = () => {
 
   const onSubmit: SubmitHandler<FormSchmaType> = async (data) => {
     console.log(data);
+    await forgotPassword.mutateAsync(data);
   };
   return (
     <Suspense>

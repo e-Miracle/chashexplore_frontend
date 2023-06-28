@@ -5,8 +5,8 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ErrorMessage } from "@hookform/error-message";
 import { z } from "zod";
-import ReactQuill from "react-quill";
-import "react-quill/dist/quill.snow.css";
+// import ReactQuill from "react-quill";
+// import "react-quill/dist/quill.snow.css";
 import { Image } from "../../../components/DragandDrop";
 import { currency_list } from "../../../constants";
 import toast from "react-hot-toast";
@@ -396,12 +396,11 @@ const Draws = () => {
               </div>
 
               <div className="w-full lg:w-[70%] ">
-                <ReactQuill
-                  theme="snow"
-                  className="text-forms"
-                  {...(register("description"),
-                  { required: "This is required." })}
-                />
+                <textarea
+                  className="w-full bg-transparent border text-sm bg-bg lg:text-base text-forms border-formborder p-3 rounded-[10px] outline-none placeholder:text-forms placeholder:text-sm placeholder:opacity-[.6]"
+                  id="description"
+                  {...register("description")}
+                ></textarea>
               </div>
             </div>
 

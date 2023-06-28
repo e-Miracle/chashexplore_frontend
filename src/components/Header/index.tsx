@@ -10,6 +10,7 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Link, useLocation } from "react-router-dom";
 import { useMediaQuery } from "react-responsive";
+import { getUserData } from "../../Utils"
 type Props = {
   expand: boolean;
   setExpand: React.Dispatch<React.SetStateAction<boolean>>;
@@ -29,7 +30,7 @@ const index: React.FC<Props> = ({
   const isMobile: boolean = useMediaQuery({ query: `(max-width: 768px)` });
   return (
     <Suspense>
-      <div className="flex px-2 md:px-0 justify-between items-center py-[1rem] bg-white">
+      <div className="flex px-2 md:px-0 justify-between items-center py-[1rem] bg-white mb-0">
         <div className={" flex items-center  "}>
           <button
             className=" hidden lg:block text-icon text-2xl mr-5 hover:opacity-80 ease-in duration-300 "
@@ -48,11 +49,11 @@ const index: React.FC<Props> = ({
           ) : (
             <h1
               className={
-                "font-ubuntu text-heading font-medium lg:text-[1.5rem] text-[1.2rem] ml-2 lg:ml-0"
+                "font-ubuntu text-heading capitalize font-medium lg:text-[1.5rem] text-[1.2rem] ml-2 lg:ml-0"
               }
             >
               {location.pathname.includes("dashboard") ? (
-                <>{isMobile ? "Hello" : "Hello Genevieve"} &#128075;</>
+                <>{isMobile ? "Hello" : `Hello ${getUserData()?.first_name}`} &#128075;</>
               ) : (
                 <>
                   {isMobile

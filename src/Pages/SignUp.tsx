@@ -60,6 +60,15 @@ const RegisterForm = () => {
 
   const onSubmit: SubmitHandler<FormSchmaType> = async (data) => {
     console.log(data);
+<<<<<<< Updated upstream
+=======
+    await authSignup.mutateAsync({
+      first_name: data.firstname,
+      last_name: data.lastname,
+      email: data.email,
+      password: data.password,
+    });
+>>>>>>> Stashed changes
   };
   return (
     <Suspense>

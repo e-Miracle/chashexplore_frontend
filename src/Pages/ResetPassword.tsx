@@ -13,10 +13,22 @@ import {
 } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { HeaderProps } from "./Home";
+import useAuthResetPassword from "../hooks/auth/useAuthResetPassword";
+import useErrorHandler from "../hooks/useErrorHandler";
 
 const Form = () => {
+  const resetPassword = useAuthResetPassword();
+  useErrorHandler(resetPassword, "Password Reset Successful", " Error");
   const [visible, setVisibility] = React.useState<Boolean>(false);
   const formSchema = z.object({
+    email: z
+      .string()
+      .email("This is not a valid email.")
+      .trim()
+      .min(8, { message: "Email length must be at least 8." }),
+    token: z
+      .string()
+      .min(5, { message: "token must have at least five characters " }),
     password: z
       .string()
       .min(8, { message: "password must be at least 8 characters" })
@@ -42,6 +54,7 @@ const Form = () => {
 
   const onSubmit: SubmitHandler<FormSchmaType> = async (data) => {
     console.log(data);
+    await resetPassword.mutateAsync(data);
   };
   return (
     <Suspense>
@@ -82,6 +95,54 @@ const Form = () => {
             </p>
           )}
         />
+        <input
+          className={
+            errors.token && errors.token.message
+              ? "w-full font-ubuntu bg-[#FBFBFD] text-[#797F8A] border border-[#EA4335] rounded-[10px] p-5 outline-none placeholder:font-ubuntu placeholder:text-[#797F8A] lg:placeholder:text-[1rem] my-3"
+              : " w-full font-ubuntu bg-[#FBFBFD] text-[#797F8A] border border-[#F4F6F8] rounded-[10px] p-5 outline-none placeholder:font-ubuntu placeholder:text-[#797F8A] lg:placeholder:text-[1rem] my-3  "
+          }
+          aria-label="token"
+          placeholder="token"
+          type="text"
+          id="token"
+          {...register("token", { required: "This is required." })}
+          disabled={isSubmitting}
+        />
+        <ErrorMessage
+          errors={errors}
+          name="token"
+          render={({ message }) => (
+            <p className="my-1 text-[#E4033B] text-xs lg:text-sm flex items-center">
+              <FontAwesomeIcon icon={faTimesCircle} className="block mr-2" />
+              {message}
+            </p>
+          )}
+        />
+        <input
+          className={
+            errors.email && errors.email.message
+              ? "w-full font-ubuntu bg-[#FBFBFD] text-[#797F8A] border border-[#EA4335] rounded-[10px] p-5 outline-none placeholder:font-ubuntu placeholder:text-[#797F8A] lg:placeholder:text-[1rem] my-3"
+              : " w-full font-ubuntu bg-[#FBFBFD] text-[#797F8A] border border-[#F4F6F8] rounded-[10px] p-5 outline-none placeholder:font-ubuntu placeholder:text-[#797F8A] lg:placeholder:text-[1rem] my-3  "
+          }
+          aria-label="name"
+          placeholder="Email Address"
+          type="email"
+          id="name"
+          {...register("email", { required: "This is required." })}
+          disabled={isSubmitting}
+        />
+        {/* <ErrorMessage errors={errors} name="email" /> */}
+
+        <ErrorMessage
+          errors={errors}
+          name="email"
+          render={({ message }) => (
+            <p className="my-1 text-[#E4033B] text-xs lg:text-sm flex items-center">
+              <FontAwesomeIcon icon={faTimesCircle} className="block mr-2" />
+              {message}
+            </p>
+          )}
+        />
         <div className=" w-full">
           {isSubmitting ? (
             <div>
@@ -95,7 +156,7 @@ const Form = () => {
                 "w-full bg-[#819BC9] text-[#fff] text-sm lg:text-base outline-none  p-5 mt-5 rounded-[100px] cursor-pointer hover:opacity-80"
               }
             >
-              Login
+              Send
             </button>
           )}
         </div>

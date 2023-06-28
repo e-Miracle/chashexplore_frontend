@@ -44,6 +44,9 @@ const InflunecersDraws = lazy(() => import("./dashboard/influencer/Draws"));
 const InflunecersNewDraw = lazy(
   () => import("./dashboard/influencer/CreateDraw")
 );
+const InflunecersUpdateDraw = lazy(
+  () => import("./dashboard/influencer/UpdateDraw")
+);
 const InflunecersSingleDraw = lazy(
   () => import("./dashboard/influencer/SingleDraw")
 );
@@ -123,6 +126,7 @@ export {
   InflunecersDashboard,
   InflunecersDraws,
   InflunecersNewDraw,
+  InflunecersUpdateDraw,
   InflunecersPreviewDraw,
   InflunecersTransactions,
   InflunecersSettings,

@@ -11,10 +11,12 @@ export const PAGES = {
   VERIFY_PAGE: "/register",
 
   USER_PROFILE_PAGE: "/my/profile",
+  INFLUENCER_ACCOUNT_VALIDATION: "/account-verification",
 };
 
 export const USER = {
   _USER_TOKEN: "__user_auth__",
+  _INFLUENCER_IDENTIFICATION_TYPES_: "__INFLUENCER_IDENTIFICATION_TYPES__",
 };
 
 export const _FOLLOWER_ = "follower";
@@ -24,26 +26,27 @@ export const _ADMIN_ = "admin";
 export const USER_TYPES = {
   _FOLLOWER_: "follower",
   _INFLUENCER_: "influencer",
+  _ADMIN_: "admin",
 };
 
 export const dashBoardLinks = [
   {
-    path: "/my/dashboard",
+    path: `/my/dashboard/${_INFLUENCER_}`,
     title: "Dashboard",
     icon: "object-group",
   },
   {
-    path: "/my/draws",
+    path: `/my/dashboard/${_INFLUENCER_}/draws`,
     title: "My Draws",
     icon: "ticket",
   },
   {
-    path: "/my/transactions",
+    path: `/my/dashboard/${_INFLUENCER_}/transactions`,
     title: "Transactions",
     icon: "sleigh",
   },
   {
-    path: "/my/settings",
+    path: `/my/dashboard/${_INFLUENCER_}/settings`,
     title: "Settings",
     icon: "cog",
   },
@@ -51,22 +54,22 @@ export const dashBoardLinks = [
 
 export const followersdashBoardLinks = [
   {
-    path: "/my/dashboard",
+    path: `/my/dashboard/${_FOLLOWER_}`,
     title: "Dashboard",
     icon: "object-group",
   },
   {
-    path: "/my/draws",
+    path: `/my/dashboard/${_FOLLOWER_}/draws`,
     title: "My Draws",
     icon: "ticket",
   },
   {
-    path: "/my/transactions",
+    path: `/my/dashboard/${_FOLLOWER_}/transactions`,
     title: "My Tickets",
     icon: "sleigh",
   },
   {
-    path: "/my/settings",
+    path: `/my/dashboard/${_FOLLOWER_}/settings`,
     title: "Settings",
     icon: "cog",
   },
@@ -74,27 +77,27 @@ export const followersdashBoardLinks = [
 
 export const adminDashBoardLinks = [
   {
-    path: "/my/dashboard",
+    path: `/my/dashboard/${_ADMIN_}`,
     title: "Dashboard",
     icon: "object-group",
   },
   {
-    path: "/my/draws",
+    path: `/my/dashboard/${_ADMIN_}/draws`,
     title: "Draws",
     icon: "ticket",
   },
   {
-    path: "/my/transactions",
+    path: `/my/dashboard/${_ADMIN_}/transactions`,
     title: "Transactions",
     icon: "sleigh",
   },
   {
-    path: "/my/users",
+    path: `/my/dashboard/${_ADMIN_}/users`,
     title: "Users",
     icon: "users",
   },
   {
-    path: "/my/settings",
+    path: `/my/dashboard/${_ADMIN_}/setting`,
     title: "Settings",
     icon: "cog",
   },
@@ -329,3 +332,39 @@ export const currency_list: Object = {
   ZMK: { name: "Zambian Kwacha", symbol: "ZK" },
   ZWL: { name: "Zimbabwean dollar", symbol: "$" },
 };
+<<<<<<< Updated upstream
+=======
+
+export const ENDPOINTS: { [key: string]: string | Function } = {
+  API_BASE_URL: import.meta.env.VITE_APP_API_URL,
+
+  // influencer auth URL
+  API_INFLUENCER_AUTH_SIGNUP: "/auth/influencer-register",
+  API_INFLUENCER_AUTH_LOGIN: "/auth/influencer-login",
+  API_INFLUENCER_AUTH_VERIFY: "/auth/influencer-verify-email",
+  API_INFLUENCER_AUTH_FORGOT_PASSWORD: "/auth/influencer-forgot-password",
+  API_INFLUENCER_AUTH_SOCIAL: "/auth/social/",
+  API_INFLUENCER_VERIFY_ACCOUNT: "/account-verification",
+  API_INFLUENCER_VERIFYABLE_TYPES: (identificationType: number) =>
+    `/account-verification/${identificationType}`,
+  API_INFLUENCER_CREATE_CAMPAIGN: "/campaigns",
+  API_INFLUENCER_TOP_DRAWS: "/top-draws",
+  API_INFLUENCER_ACTIVE_DRAWS: "/active-draws",
+  API_INFLUENCER_INACTIVE_DRAWS: "/inactive-draws",
+  API_INFLUENCER_PENDING_DRAWS: "/pending-draws",
+
+  // follower Auth URl
+  API_FOLLOWER_AUTH: "auth/follower/",
+  API_FOLLOWER_AUTH_LOGIN: "/follower/register",
+  API_FOLLOWER_AUTH_SIGNUP: "/follower/login",
+};
+
+export const MAX_FILE_SIZE: number = 1000000;
+export const ACCEPTED_IMAGE_TYPES: string[] = [
+  "image/gif",
+  "image/jpeg",
+  "image/jpg",
+  "image/png",
+  "image/webp",
+];
+>>>>>>> Stashed changes

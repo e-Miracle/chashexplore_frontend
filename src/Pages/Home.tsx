@@ -5,7 +5,7 @@ import { z } from "zod";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ErrorMessage } from "@hookform/error-message";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Google, Twitter, Facebook, LinkedIn, Instagram } from "../assets";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import {
@@ -14,7 +14,15 @@ import {
   faEyeSlash,
 } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+<<<<<<< Updated upstream
 
+=======
+import useAuthLogin from "../hooks/auth/useAuthLogin";
+import useErrorHandler from "../hooks/useErrorHandler";
+import { socialRequest } from "../Utils";
+import { _FOLLOWER_, _INFLUENCER_ } from "../constants";
+import toast from "react-hot-toast";
+>>>>>>> Stashed changes
 export type HeaderProps = {
   title: string;
   text: string;
@@ -22,7 +30,7 @@ export type HeaderProps = {
   route?: string;
 };
 
-type socialCta = { imgUrl: string; cta: string; color?: string };
+type socialCta = { imgUrl: string; cta: string; color?: string; name: string };
 
 export const Header: React.FC<HeaderProps> = ({
   title,
@@ -45,6 +53,25 @@ export const Header: React.FC<HeaderProps> = ({
   );
 };
 
+const Select = ({ typeSelect }: { typeSelect: Function }) => {
+  type changeHandler = React.ChangeEventHandler<HTMLSelectElement>;
+
+  const onChange: changeHandler = (e) => {
+    typeSelect(e.target.value);
+  };
+
+  return (
+    <select
+      onChange={onChange}
+      className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 my-3"
+    >
+      <option value="">--------</option>
+      <option value={_FOLLOWER_}>{_FOLLOWER_}</option>
+      <option value={_INFLUENCER_}>{_INFLUENCER_}</option>
+    </select>
+  );
+};
+
 export const SocialComponent = ({
   text,
   option = true,
@@ -52,7 +79,12 @@ export const SocialComponent = ({
   text?: string;
   option?: boolean;
 }) => {
+  const [popup, UpdatePopup] = React.useState<boolean>(false);
+  const [spinner, updateSpinner] = React.useState<boolean>(false);
+  const [name, updateType] = React.useState<string>("");
+  const navigate = useNavigate();
   const socailCta: socialCta[] = [
+<<<<<<< Updated upstream
     { imgUrl: Google, cta: "" },
     { imgUrl: Twitter, cta: "", color: "#1D9BF0" },
     { imgUrl: Facebook, cta: "", color: "#1877F2" },
@@ -83,16 +115,78 @@ export const SocialComponent = ({
           </button>
         ))}
       </div>
+=======
+    { imgUrl: Google, cta: "", name: "google" },
+    { imgUrl: Twitter, cta: "", color: "#1D9BF0", name: "twitter" },
+    { imgUrl: Facebook, cta: "", color: "#1877F2", name: "facebook" },
+    { imgUrl: LinkedIn, cta: "", name: "linkedIn" },
+    { imgUrl: Instagram, cta: "", name: "instagram" },
+  ];
+>>>>>>> Stashed changes
 
-      {option && (
-        <div className="text-[#BABCC1] my-5 flex items-center justify-between font-ubuntu text-[1.2rem] lg:text-[1.5rem]">
-          {" "}
-          <hr className="border-[1px] w-[40%]" />
-          <span>0R</span>
-          <hr className="border-[1px] w-[40%]" />
-        </div>
-      )}
-    </div>
+  const typeSelect = async (type: typeof _FOLLOWER_ | typeof _INFLUENCER_) => {
+    console.log(type);
+    updateType(type);
+    UpdatePopup(false);
+    if (type) await makeRequest(name, type);
+  };
+
+  const makeRequest = async (
+    name: string,
+    type: typeof _FOLLOWER_ | typeof _INFLUENCER_
+  ) => {
+    const link = await socialRequest(name, type, () => {
+      updateSpinner(false);
+      updateType('');
+    });
+    if (link) window.location.replace(link);
+  };
+
+  return (
+    <>
+      {popup && <Select typeSelect={typeSelect} />}
+      <div className="my-[1.5rem]">
+        {text && (
+          <h4 className="text-[#797F8A] font-ubuntu text-[1.2rem] lg:text-[1.5rem] my-3 text-center lg:text-left">
+            {text}
+          </h4>
+        )}
+        {spinner ? (
+          <Spinner toggle={false} />
+        ) : (
+          <div className="flex flex-wrap justify-between items-center">
+            {socailCta.map((item: socialCta, i: number) => (
+              <button
+                className="hover:opacity-80 rounded-[4px] shadow-primary p-2 flex justify-center items-center mr-2"
+                key={i}
+                style={{ background: item?.color }}
+                onClick={async () => {
+                  UpdatePopup(true);
+                  updateSpinner(true);
+                  updateType(item.name);
+                }}
+              >
+                <LazyLoadImage
+                  className="w-[30px] lg:w-[40px] h-[30px] lg:h-[40px] object-contain"
+                  src={item.imgUrl}
+                  placeholderSrc={"https://via.placeholder.com/72x72"}
+                  alt={item.imgUrl}
+                />
+              </button>
+            ))}
+          </div>
+        )}
+
+        {option && (
+          <div className="text-[#BABCC1] my-5 flex items-center justify-between font-ubuntu text-[1.2rem] lg:text-[1.5rem]">
+            {" "}
+            <hr className="border-[1px] w-[40%]" />
+            <span>0R</span>
+            <hr className="border-[1px] w-[40%]" />
+          </div>
+        )}
+      </div>
+    </>
   );
 };
 
@@ -129,6 +223,10 @@ const LoginForm = () => {
 
   const onSubmit: SubmitHandler<FormSchmaType> = async (data) => {
     console.log(data);
+<<<<<<< Updated upstream
+=======
+    await authLogin.mutateAsync(data);
+>>>>>>> Stashed changes
   };
 
   return (
@@ -237,7 +335,7 @@ const Login = () => {
           <LoginForm />
           <Link
             className=" block  text-right mt-5 text-primary hover:opacity-80 text-sm lg:text-base"
-            to={"/terms"}
+            to={"/forgot-password"}
           >
             Forgot Password?
           </Link>

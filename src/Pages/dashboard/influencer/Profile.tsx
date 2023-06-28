@@ -18,9 +18,14 @@ import {
   LinkedIn,
   Instagram,
 } from "../../../assets";
-import { nFormatter } from "../../../Utils";
+import { nFormatter, getUserData } from "../../../Utils";
 import DrawsCard from "../../../components/DrawsCard/DrawsCard";
 import { Raffle } from "../../../assets";
+import toast from "react-hot-toast";
+import { fetchDraws } from "../../../hooks/customGets";
+import { useInfiniteQuery } from "react-query";
+import { Draws } from "../../../Utils";
+import { ENDPOINTS } from "../../../constants";
 
 export const data = [
   {
@@ -96,9 +101,14 @@ export const Header = () => {
         </div>
         <div className="lg:ml-5 w-full lg:w-[70%] ">
           <div className=" flex items-center w-full">
-            <h3 className="text-labels text-[1.5rem] lg:text-[2rem]">
-              Genevieve Doe{" "}
-              <FontAwesomeIcon icon={faCheckCircle} className="text-primary" />{" "}
+            <h3 className="text-labels text-[1.5rem] lg:text-[2rem] capitalize">
+              {getUserData()?.first_name} {getUserData()?.last_name}{" "}
+              {getUserData()?.account_verfied != "0" && (
+                <FontAwesomeIcon
+                  icon={faCheckCircle}
+                  className="text-primary"
+                />
+              )}{" "}
             </h3>
             <button className="ml-3 lg:ml-10 text-[#797F8A] text-[1.5rem] lg:text-[2rem] cursor-pointer hover:opacity-90">
               <FontAwesomeIcon icon={faPen} />
@@ -106,7 +116,7 @@ export const Header = () => {
           </div>
 
           <p className="text-icon text-sm lg:text-base rounded-[100px] bg-[#F4F6F8] px-7 py-3 text-center mt-3">
-            genevievedoe@gmail.com
+            {getUserData()?.email}
           </p>
         </div>
       </div>

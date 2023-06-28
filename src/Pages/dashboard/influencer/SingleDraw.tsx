@@ -8,21 +8,21 @@ import {
   faShare,
   faTimesCircle,
 } from "@fortawesome/free-solid-svg-icons";
-import { nFormatter } from "../../../Utils";
+import { nFormatter, countDown } from "../../../Utils";
 import { PreviewImage } from "../../../assets";
 import { SocialComponent } from "../../Home";
-import { BackgroundDrop } from "./Profile";
+import { fetchSingleCampaign } from "../../../hooks/customGets";
+import { useQuery } from "react-query";
+import toast from "react-hot-toast";
+import { useParams } from "react-router-dom";
+import { _FOLLOWER_ } from "../../../constants";
 const Modal = lazy(() => import("../../../components/Modal/Modal"));
 const Timer = lazy(() => import("../../../components/Timer/Timer"));
 const Table = lazy(() => import("../../../components/Table/DrawsTable"));
 const CopyText = lazy(() => import("../../../components/CopyText/CopyText"));
+// const port = require("./vite.config.js").port;
 
-const data = [
-  { num: 108, title: "tickets sold", link: "Ticket Cap: 700 tickets" },
-  { num: 108000, title: "raised" },
-  { num: 40, title: "participants", link: "View Participants", icon: true },
-];
-const Header = () => {
+const Header = ({ title, endDate }: { title: string; endDate: string }) => {
   const header = (
     <div className="">
       <h1
@@ -30,7 +30,7 @@ const Header = () => {
           "font-ubuntu text-heading font-medium lg:text-[1.5rem] text-[1.2rem]"
         }
       >
-        100,000 naira New Year Giveaway!
+        {title}
       </h1>
     </div>
   );
@@ -38,7 +38,17 @@ const Header = () => {
     <div className="flex flex-col  items-center md:flex-row justify-between">
       <>{header}</>
       <div className="flex justify-center items-center">
-        <Timer color="#394355" background="#FBFBFD" />
+        <Timer
+          countDownDate={
+            new Date(
+              countDown(endDate).year,
+              countDown(endDate).month,
+              countDown(endDate).day
+            )
+          }
+          color="#394355"
+          background="#FBFBFD"
+        />
       </div>
     </div>
   );
@@ -148,6 +158,20 @@ export const ModalContent: React.FC<ModalContent> = ({ onclick, link }) => {
   );
 };
 const SingleDraw = () => {
+  const { id } = useParams();
+  const { isLoading, isError, data, error } = useQuery(
+    "singleCampaign",
+    () => fetchSingleCampaign(Number(id)),
+    {
+      onSuccess: (data) => {
+        console.log(data?.data);
+        if (data) toast.success("Successfully fetched campaign");
+      },
+      onError: (err) => {
+        if (err) toast.error("An error occured");
+      },
+    }
+  );
   const [modalIsOpen, setIsOpen] = React.useState<boolean>(false);
   const dataArr = [
     {
@@ -170,18 +194,47 @@ const SingleDraw = () => {
     { Header: "Participants’ Username", accessor: "email" },
     { Header: "Tickets Bought", accessor: "score" },
   ];
+
+  const dataCop = [
+    {
+      num: data?.data?.tickets_sold,
+      title: "tickets sold",
+      link: `Ticket Cap: ${data?.data?.ticket?.ticket_sale_cap} tickets`,
+    },
+    { num: data?.data?.amount_raised, title: "raised" },
+    { num: 40, title: "participants", link: "View Participants", icon: true },
+  ];
+
+  if (isLoading) return <Spinner />;
+
+  if (isError) {
+    const errorMessage = (error as any).message || "An unknown error occurred";
+    return (
+      <div>
+        <p>There was an error fetching the data.</p>
+        <p>{errorMessage}</p>
+      </div>
+    );
+  }
   return (
     <Suspense fallback={<Spinner />}>
       <DashBoardLayout type="influencer" backbtn={true}>
         <div className="bg-bg p-[1rem] mt-5 rounded-[10px] ">
-          <Header />
-          <Boxes data={data} />
+          <Header title={data?.data.title} endDate={data?.data?.end_date} />
+          <Boxes data={dataCop} />
           <Table dataArr={dataArr} columnsArr={columnsArr} />
           <Buttons onClickShare={() => setIsOpen(true)} />
           <Modal visible={modalIsOpen}>
             <ModalContent
               onclick={() => setIsOpen(false)}
-              link="https://www.cashXplore/GenevieveDoe?100,000nairanewyeargiveaway"
+              link={
+                "https://www.cashXplore/GenevieveDoe?100,000nairanewyeargiveaway"
+              }
+              // link={
+              //   process.env.NODE === "development"
+              //     ? `http:localhost:5713/my/dashboard/${_FOLLOWER_}/draws/singledraw/${id}`
+              //     : "https://www.cashXplore/GenevieveDoe?100,000nairanewyeargiveaway"
+              // }
             />
           </Modal>
         </div>

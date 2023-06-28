@@ -51,8 +51,15 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { _FOLLOWER_, _INFLUENCER_, _ADMIN_ } from "./constants";
 import Spinner from "./components/Spinner";
 import { Toaster } from "react-hot-toast";
+<<<<<<< Updated upstream
 initFontAwesome();
 
+=======
+import router from "./routes";
+import { setAuthToken } from "./Utils";
+initFontAwesome();
+setAuthToken();
+>>>>>>> Stashed changes
 function App() {
   const router = createBrowserRouter([
     {

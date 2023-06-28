@@ -64,7 +64,7 @@ const Index: React.FC<Props> = ({ mobileNav, expand, userImg, type }) => {
                 isIconMode={expand}
                 Icon={link.icon}
                 {...link}
-                path={`/${type}${link.path}`}
+                path={link.path}
               />
             ))}
 
@@ -76,7 +76,7 @@ const Index: React.FC<Props> = ({ mobileNav, expand, userImg, type }) => {
                 isIconMode={expand}
                 Icon={link.icon}
                 {...link}
-                path={`/${type}${link.path}`}
+                path={link.path}
               />
             ))}
 
@@ -88,7 +88,7 @@ const Index: React.FC<Props> = ({ mobileNav, expand, userImg, type }) => {
                 isIconMode={expand}
                 Icon={link.icon}
                 {...link}
-                path={`/${type}${link.path}`}
+                path={link.path}
               />
             ))}
         </ul>

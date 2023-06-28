@@ -1,14 +1,18 @@
 import React from "react";
 import { isExpired } from "react-jwt";
-import { Navigate, Outlet } from "react-router-dom";
-import { PAGES } from "../../constants";
+import { Navigate, Outlet, } from "react-router-dom";
 import { getUserData } from "../../Utils";
 
-// this checkes if you are loggedIn and redirects to the dashboard
-const ProtectedPages = () => {
-  /* this checks if the  token gotten from the user object in session storage is expired and the token exists then it redirects  */
-  if (!isExpired(getUserData()?.token) && getUserData()?.token) {
-    return <Navigate to={PAGES.DASHBOARD_PAGE} />;
+type Props = {
+  children: React.ReactNode;
+};
+
+const ProtectedPages: React.FC<Props> = ({ children }) => {
+  // if (!isExpired(getUserData()?.token) && getUserData()?.token) {
+  //   return <Navigate to={`${getUserData()?.role}/my/dashboard`} />;
+  // }
+  if (getUserData()?.token) {
+    return <Navigate to={`/influencer/my/dashboard`} />;
   }
 
   return <Outlet />;

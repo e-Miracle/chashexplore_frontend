@@ -18,6 +18,9 @@
   -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
 }
+::-webkit-scrollbar {
+  display: none;
+}
 
 .custom-bg {
   background: url('./assets/pngs/background.png'), linear-gradient(0deg, rgba(157, 221, 255, 0.7) 0.31%, #1345A6 98.1%);

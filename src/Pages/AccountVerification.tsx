@@ -9,35 +9,89 @@ import { Link } from "react-router-dom";
 import { faCheckCircle, faCamera } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimesCircle } from "@fortawesome/free-regular-svg-icons";
+import toast from "react-hot-toast";
+import useAuthVerifyAccount from "../hooks/auth/useAuthVerifyAccount";
+import useAuthUpdateVerifyAccount from "../hooks/auth/useUpdateVerifyAccountVerfication";
+import useCustomInfluencerTypes from "../hooks/utils/useCustomInfluncerTypes";
+import useErrorHandler from "../hooks/useErrorHandler";
+import {
+  getUserData,
+  getIdentificationTypes,
+  changeContentTypeHeader,
+} from "../Utils";
+import {
+  PAGES,
+  USER_TYPES,
+  MAX_FILE_SIZE,
+  ACCEPTED_IMAGE_TYPES,
+  _INFLUENCER_,
+} from "../constants";
+import { Navigate, useLocation } from "react-router-dom";
+
+interface Types {
+  id: number;
+  name: string;
+  created_at: null;
+  updated_at: null;
+}
+
 const Form = () => {
-  const [imageUrl, setImageUrl] = React.useState<string>("");
-  const MAX_FILE_SIZE: number = 1000000;
-  const ACCEPTED_IMAGE_TYPES: string[] = [
-    "image/gif",
-    "image/jpeg",
-    "image/jpg",
-    "image/png",
-    "image/webp",
-  ];
+  const location = useLocation();
+  const useCustomTypes = useCustomInfluencerTypes();
+  useErrorHandler(
+    useCustomTypes,
+    "Influencer Types fetched Successfully",
+    "Influencer Types Error"
+  );
+  React.useEffect(() => {
+    const types: Types[] = getIdentificationTypes();
+    if (types) setTypes(types);
+    else useCustomTypes.mutateAsync();
+  }, []);
+
+  const [types, setTypes] = React.useState<Types[]>([]);
+  const [currentType, setCurrentType] = React.useState<number>();
+
+  const authVerifyAccount = useAuthVerifyAccount();
+  const authUpdateVerifyAccount = useAuthUpdateVerifyAccount(
+    currentType as number
+  );
+  useErrorHandler(
+    authVerifyAccount,
+    "Influencer Verification Successful",
+    "Influencer Verification Error"
+  );
+  useErrorHandler(
+    authUpdateVerifyAccount,
+    "Updating Influencer Verification Successful",
+    "Updating Influencer Verification Error"
+  );
+  const [imageUrl, setImageUrl] =
+    React.useState<{ image: string; file: File | null }>();
+
   const formSchema = z.object({
-    file: z
-      .instanceof(File)
-      .refine((file) => file?.size <= MAX_FILE_SIZE, `Max image size is 5MB.`)
-      .refine(
-        (file) => ACCEPTED_IMAGE_TYPES.includes(file?.type),
-        `Only .jpg, .jpeg, and .png  formats are supported.`
-      ),
     phone: z.string().refine(validator.isMobilePhone),
-    size: z
+    audience_size: z
       .string()
-      .min(2, { message: "size must have at least two characters " }),
-    validId: z
+      .refine(
+        (value) => /^[1-9][0-9]*$/.test(value),
+        "Invalid audience audience_size"
+      )
+      .refine(
+        (value) => Number(value) <= 1000000,
+        "Audience audience_size must be less than or equal to 1,000,000"
+      ),
+    id_type: z
       .string()
-      .min(3, { message: "size must have at least three characters " }),
-    facebook: z
+      .refine((value) => /^[1-9][0-9]*$/.test(value), "Invalid id type")
+      .refine(
+        (value) => Number(value) <= 1000000,
+        "id_type type must be a number"
+      ),
+    facebook_url: z
       .string()
       .url()
-      .min(3, { message: "facebook must have at least three characters " })
+      .min(3, { message: "facebook_url must have at least three characters " })
       .refine(
         (value) =>
           /(?:https?:\/\/)?(?:www\.)?(?:facebook|fb|m\.facebook)\.(?:com|me)\/(?:(?:\w)*#!\/)?(?:pages\/)?(?:[\w\-]*\/)*([\w\-\.]+)(?:\/)?/.test(
@@ -45,10 +99,10 @@ const Form = () => {
           ),
         "Invalid Facebook link"
       ),
-    instagram: z
+    instagram_url: z
       .string()
       .url()
-      .min(3, { message: "instagram must have at least three characters " })
+      .min(3, { message: "instagram_url must have at least three characters " })
       .refine(
         (value) =>
           /(?:(?:http|https):\/\/)?(?:www.)?(?:instagram.com|instagr.am|instagr.com)\/(\w+)/.test(
@@ -56,10 +110,10 @@ const Form = () => {
           ),
         "Invalid Instagram link"
       ),
-    twitter: z
+    twitter_url: z
       .string()
       .url()
-      .min(3, { message: "twitter must have at least three characters " })
+      .min(3, { message: "twitter_url must have at least three characters " })
       .refine(
         (value) =>
           /^(?:https?:\/\/)?(?:www\.)?twitter\.com\/(#!\/)?[a-zA-Z0-9_]+$/.test(
@@ -67,37 +121,14 @@ const Form = () => {
           ),
         "Invalid Twitter link"
       ),
-    LinkedIn: z
+    linked_url: z
       .string()
       .url()
-      .min(3, { message: "LinkedIn must have at least three characters " })
+      .min(3, { message: "linked_url must have at least three characters " })
       .refine(
         (value) => /^https:\/\/[a-z]{2,3}\.linkedin\.com\/.*$/.test(value),
-        "Invalid LinkedIn link"
+        "Invalid linked_url link"
       ),
-    // file: z.instanceof(File).superRefine((f, ctx) => {
-    //   // First, add an issue if the mime type is wrong.
-    //   if (!ACCEPTED_IMAGE_TYPES.includes(f.type)) {
-    //     ctx.addIssue({
-    //       code: z.ZodIssueCode.custom,
-    //       message: `File must be one of [${ACCEPTED_IMAGE_TYPES.join(
-    //         ", "
-    //       )}] but was ${f.type}`,
-    //     });
-    //   }
-    //   // Next add an issue if the file size is too large.
-    //   if (f.size > 3 * MAX_FILE_SIZE) {
-    //     ctx.addIssue({
-    //       code: z.ZodIssueCode.too_big,
-    //       type: "array",
-    //       message: `The file must not be larger than ${
-    //         3 * MAX_FILE_SIZE
-    //       } bytes: ${f.size}`,
-    //       maximum: 3 * MAX_FILE_SIZE,
-    //       inclusive: true,
-    //     });
-    //   }
-    // }),
   });
   type FormSchmaType = z.infer<typeof formSchema>;
 
@@ -110,23 +141,43 @@ const Form = () => {
     resolver: zodResolver(formSchema),
   });
 
-  const handleImageChange = (e: any) => {
-    setImageUrl(URL.createObjectURL(e.target.files[0]));
+  type changeHandler = React.ChangeEventHandler<HTMLInputElement>;
+  const handleImageChange: changeHandler = (e) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImageUrl({ image: reader.result as string, file });
+      };
+      reader.readAsDataURL(file);
+    }
   };
-
-  React.useEffect(() => {
-    return () => {
-      if (imageUrl) URL.revokeObjectURL(imageUrl);
-    };
-  }, [imageUrl]);
 
   const onSubmit: SubmitHandler<FormSchmaType> = async (data) => {
-    // console.log("hiiiiiiiiiii")
-    // data.file
-    console.log(data);
-  };
+    if (!imageUrl?.file) return toast.error("Please add an image");
+    if (imageUrl?.file?.size > MAX_FILE_SIZE)
+      return toast.error("Max image audience_size is 5MB");
+    if (!ACCEPTED_IMAGE_TYPES.includes(imageUrl?.file.type))
+      return toast.error(
+        "`Only .jpg, .jpeg, and .png  formats are supported.`"
+      );
 
-  
+    changeContentTypeHeader(true);
+    const formData = new FormData();
+    const newdata = {
+      ...data,
+      id_image: imageUrl?.file,
+    };
+    console.log(newdata);
+    for (const key in newdata) {
+      formData.append(key, newdata[key as keyof FormSchmaType]);
+    }
+    console.log(formData);
+    if (location.pathname.includes("update")) {
+      setCurrentType(Number(data.id_type));
+      await authUpdateVerifyAccount.mutateAsync(formData);
+    } else await authVerifyAccount.mutateAsync(formData);
+  };
 
   return (
     <Suspense>
@@ -176,34 +227,44 @@ const Form = () => {
         <div className="flex  flex-Wrap flex-col lg:flex-row mt-[1rem]">
           <div className="w-full lg:w-1/2">
             <label
-              htmlFor="validId"
+              htmlFor="id_type"
               className="inline-block text-labels font-ubuntu text-[1.2rem] lg:text-[1.5rem]"
             >
-              Valid Identification
+              Image
             </label>
             <p className="text-labelLight font-ubuntu lg:text-base text-sm">
-              Please select a valid ID and upload an image of your selected ID.
+              Please select a recent image.
             </p>
           </div>
           <div className="w-full lg:w-1/2">
             <select
-              id="validId"
-              {...register("validId", { required: "This is required." })}
+              id="id_type"
+              {...register("id_type", {
+                required: "This is required.",
+                onChange: (e) => {
+                  setCurrentType(Number(e.target.value));
+                },
+              })}
+              onClick={() => setTypes(types)}
               className={
-                errors.validId && errors.validId.message
+                errors.id_type && errors.id_type.message
                   ? "w-full text-lg font-ubuntu bg-[#FBFBFD] text-[#797F8A] border border-[#EA4335] rounded-[10px] p-5 outline-none placeholder:font-ubuntu placeholder:text-[#797F8A] lg:placeholder:text-[1rem] my-3"
                   : " w-full text-lg font-ubuntu bg-[#FBFBFD] text-[#797F8A] border border-[#F4F6F8] rounded-[10px] p-5 outline-none placeholder:font-ubuntu placeholder:text-[#797F8A] lg:placeholder:text-[1rem] my-3  "
               }
             >
               <option value="">Select Valid ID</option>
-              <option value="license">license</option>
-              <option value="license">license</option>
-              <option value="license">license</option>
+              {types &&
+                types.length > 0 &&
+                types.map((type: Types) => (
+                  <option key={type.id} value={type.id}>
+                    {type.name}
+                  </option>
+                ))}
             </select>
 
             <ErrorMessage
               errors={errors}
-              name="validId"
+              name="id_type"
               render={({ message }) => (
                 <p className="my-1 text-[#E4033B] text-xs lg:text-sm flex items-center">
                   <FontAwesomeIcon
@@ -217,13 +278,13 @@ const Form = () => {
 
             {imageUrl ? (
               <img
-                src={imageUrl}
+                src={imageUrl?.image}
                 className="  w-full h-[150px]  lg:h-[200px] object-contain mt-1 border border-dashed border-[#F4F6F8] rounded-[10px]"
                 alt="Image Alt"
               />
             ) : (
               <label
-                htmlFor="image"
+                htmlFor="file"
                 className="flex items-center justify-center cursor-pointer text-xl text-labels lg:text-3xl  mt-1 h-[150px]  lg:h-[200px] w-full rounded-[10px] bg-[#8E939D] border border-dashed border-[#F4F6F8]"
               >
                 <FontAwesomeIcon className="" icon={faCamera} />
@@ -233,24 +294,9 @@ const Form = () => {
             <input
               type="file"
               accept="photo/*"
-              id="image"
-              {...register("file", { required: true })}
+              id="file"
               onChange={handleImageChange}
               className="hidden"
-            />
-
-            <ErrorMessage
-              errors={errors}
-              name="image"
-              render={({ message }) => (
-                <p className="my-1 text-[#E4033B] text-xs lg:text-sm flex items-center">
-                  <FontAwesomeIcon
-                    icon={faTimesCircle}
-                    className="block mr-2"
-                  />
-                  {message}
-                </p>
-              )}
             />
           </div>
         </div>
@@ -268,21 +314,21 @@ const Form = () => {
           <div className="w-full lg:w-1/2">
             <input
               className={
-                errors.facebook && errors.facebook.message
+                errors.facebook_url && errors.facebook_url.message
                   ? "w-full  font-ubuntu bg-[#FBFBFD] text-[#797F8A] border border-[#EA4335] rounded-[10px] p-5 outline-none placeholder:font-ubuntu placeholder:text-[#797F8A] lg:placeholder:text-[1rem] my-3"
                   : " w-full  font-ubuntu bg-[#FBFBFD] text-[#797F8A] border border-[#F4F6F8] rounded-[10px] p-5 outline-none placeholder:font-ubuntu placeholder:text-[#797F8A] lg:placeholder:text-[1rem] my-3  "
               }
-              aria-label="facebook"
+              aria-label="facebook_url"
               placeholder="Facebook"
               type="text"
-              id="facebook"
-              {...register("facebook", { required: "This is required." })}
+              id="facebook_url"
+              {...register("facebook_url", { required: "This is required." })}
               disabled={isSubmitting}
             />
 
             <ErrorMessage
               errors={errors}
-              name="facebook"
+              name="facebook_url"
               render={({ message }) => (
                 <p className="my-1 text-[#E4033B] text-xs lg:text-sm flex items-center">
                   <FontAwesomeIcon
@@ -296,21 +342,21 @@ const Form = () => {
 
             <input
               className={
-                errors.instagram && errors.instagram.message
+                errors.instagram_url && errors.instagram_url.message
                   ? "w-full  font-ubuntu bg-[#FBFBFD] text-[#797F8A] border border-[#EA4335] rounded-[10px] p-5 outline-none placeholder:font-ubuntu placeholder:text-[#797F8A] lg:placeholder:text-[1rem] my-3"
                   : " w-full  font-ubuntu bg-[#FBFBFD] text-[#797F8A] border border-[#F4F6F8] rounded-[10px] p-5 outline-none placeholder:font-ubuntu placeholder:text-[#797F8A] lg:placeholder:text-[1rem] my-3  "
               }
-              aria-label="instagram"
+              aria-label="instagram_url"
               placeholder="Instagram"
               type="text"
-              id="instagram"
-              {...register("instagram", { required: "This is required." })}
+              id="instagram_url"
+              {...register("instagram_url", { required: "This is required." })}
               disabled={isSubmitting}
             />
 
             <ErrorMessage
               errors={errors}
-              name="instagram"
+              name="instagram_url"
               render={({ message }) => (
                 <p className="my-1 text-[#E4033B] text-xs lg:text-sm flex items-center">
                   <FontAwesomeIcon
@@ -324,21 +370,21 @@ const Form = () => {
 
             <input
               className={
-                errors.twitter && errors.twitter.message
+                errors.twitter_url && errors.twitter_url.message
                   ? "w-full  font-ubuntu bg-[#FBFBFD] text-[#797F8A] border border-[#EA4335] rounded-[10px] p-5 outline-none placeholder:font-ubuntu placeholder:text-[#797F8A] lg:placeholder:text-[1rem] my-3"
                   : " w-full  font-ubuntu bg-[#FBFBFD] text-[#797F8A] border border-[#F4F6F8] rounded-[10px] p-5 outline-none placeholder:font-ubuntu placeholder:text-[#797F8A] lg:placeholder:text-[1rem] my-3  "
               }
-              aria-label="twitter"
+              aria-label="twitter_url"
               placeholder="Twitter"
               type="text"
-              id="twitter"
-              {...register("twitter", { required: "This is required." })}
+              id="twitter_url"
+              {...register("twitter_url", { required: "This is required." })}
               disabled={isSubmitting}
             />
 
             <ErrorMessage
               errors={errors}
-              name="twitter"
+              name="twitter_url"
               render={({ message }) => (
                 <p className="my-1 text-[#E4033B] text-xs lg:text-sm flex items-center">
                   <FontAwesomeIcon
@@ -352,21 +398,21 @@ const Form = () => {
 
             <input
               className={
-                errors.twitter && errors.twitter.message
+                errors.twitter_url && errors.twitter_url.message
                   ? "w-full  font-ubuntu bg-[#FBFBFD] text-[#797F8A] border border-[#EA4335] rounded-[10px] p-5 outline-none placeholder:font-ubuntu placeholder:text-[#797F8A] lg:placeholder:text-[1rem] my-3"
                   : " w-full  font-ubuntu bg-[#FBFBFD] text-[#797F8A] border border-[#F4F6F8] rounded-[10px] p-5 outline-none placeholder:font-ubuntu placeholder:text-[#797F8A] lg:placeholder:text-[1rem] my-3  "
               }
-              aria-label="LinkedIn"
-              placeholder="LinkedIn"
+              aria-label="linked_url"
+              placeholder="linked_url"
               type="text"
-              id="LinkedIn"
-              {...register("LinkedIn", { required: "This is required." })}
+              id="linked_url"
+              {...register("linked_url", { required: "This is required." })}
               disabled={isSubmitting}
             />
 
             <ErrorMessage
               errors={errors}
-              name="LinkedIn"
+              name="linked_url"
               render={({ message }) => (
                 <p className="my-1 text-[#E4033B] text-xs lg:text-sm flex items-center">
                   <FontAwesomeIcon
@@ -382,32 +428,33 @@ const Form = () => {
 
         <div className="flex  flex-Wrap flex-col lg:flex-row mt-[1rem]">
           <div className="w-full lg:w-1/2">
-            <label className="inline-block text-labels font-ubuntu text-[1.2rem] lg:text-[1.5rem]">
-              Audience Size
+            <label
+              htmlFor="audience_size"
+              className="inline-block text-labels font-ubuntu text-[1.2rem] lg:text-[1.5rem]"
+            >
+              Audience audience_size
             </label>
             <p className="text-labelLight font-ubuntu lg:text-base text-sm">
-              What is your audience size?
+              What is your audience audience_size?
             </p>
           </div>
-          <div className="w-full lg:w-1/2">
-            <select
+          <div className="w-full lg:w-1/2 ">
+            <input
               className={
-                errors.size && errors.size.message
-                  ? "w-full text-lg font-ubuntu bg-[#FBFBFD] text-[#797F8A] border border-[#EA4335] rounded-[10px] p-5 outline-none placeholder:font-ubuntu placeholder:text-[#797F8A] lg:placeholder:text-[1rem] my-3"
-                  : " w-full text-lg font-ubuntu bg-[#FBFBFD] text-[#797F8A] border border-[#F4F6F8] rounded-[10px] p-5 outline-none placeholder:font-ubuntu placeholder:text-[#797F8A] lg:placeholder:text-[1rem] my-3  "
+                errors.phone && errors.phone.message
+                  ? " w-full font-ubuntu bg-[#FBFBFD] text-[#797F8A] border border-[#EA4335] rounded-[10px] p-5 outline-none placeholder:font-ubuntu placeholder:text-[#797F8A] lg:placeholder:text-[1rem] my-3"
+                  : " w-full font-ubuntu bg-[#FBFBFD] text-[#797F8A] border border-[#F4F6F8] rounded-[10px] p-5 outline-none placeholder:font-ubuntu placeholder:text-[#797F8A] lg:placeholder:text-[1rem] my-3  "
               }
-              id="size"
-              {...register("size", { required: "This is required." })}
-            >
-              <option value="">Select your audience size range</option>
-              <option value="50">50</option>
-              <option value="100">100</option>
-              <option value="200">200</option>
-            </select>
-
+              aria-label="phone"
+              placeholder="Your audience audience_size range"
+              type="number"
+              id="phone"
+              {...register("audience_size", { required: "This is required." })}
+              disabled={isSubmitting}
+            />
             <ErrorMessage
               errors={errors}
-              name="size"
+              name="audience_size"
               render={({ message }) => (
                 <p className="my-1 text-[#E4033B] text-xs lg:text-sm flex items-center">
                   <FontAwesomeIcon
@@ -419,11 +466,41 @@ const Form = () => {
               )}
             />
           </div>
+          {/* <div className="w-full lg:w-1/2">
+            <select
+              className={
+                errors.audience_size && errors.audience_size.message
+                  ? "w-full text-lg font-ubuntu bg-[#FBFBFD] text-[#797F8A] border border-[#EA4335] rounded-[10px] p-5 outline-none placeholder:font-ubuntu placeholder:text-[#797F8A] lg:placeholder:text-[1rem] my-3"
+                  : " w-full text-lg font-ubuntu bg-[#FBFBFD] text-[#797F8A] border border-[#F4F6F8] rounded-[10px] p-5 outline-none placeholder:font-ubuntu placeholder:text-[#797F8A] lg:placeholder:text-[1rem] my-3  "
+              }
+              id="audience_size"
+              {...register("audience_size", { required: "This is required." })}
+            >
+              <option value="">Select your audience audience_size range</option>
+              <option value="50">50</option>
+              <option value="100">100</option>
+              <option value="200">200</option>
+            </select>
+
+            <ErrorMessage
+              errors={errors}
+              name="audience_size"
+              render={({ message }) => (
+                <p className="my-1 text-[#E4033B] text-xs lg:text-sm flex items-center">
+                  <FontAwesomeIcon
+                    icon={faTimesCircle}
+                    className="block mr-2"
+                  />
+                  {message}
+                </p>
+              )}
+            />
+          </div> */}
         </div>
 
         <div className="mt-5 flex flex-col lg:flex-row items-center justify-end">
           <Link
-            to="/"
+            to={`/my/dashboard/${_INFLUENCER_}`}
             className=" text-center font-ubuntu text-primary text-[1.2rem] lg:text-[1.5rem] hover:opacity-80 p-5 block"
           >
             Skip
@@ -452,6 +529,16 @@ const Form = () => {
 };
 
 const AccountVerification = () => {
+  if (
+    !getUserData()?.token ||
+    getUserData()?.role !== USER_TYPES._INFLUENCER_
+  ) {
+    toast.error(`Unauthorized`, {
+      icon: "❌",
+    });
+    return <Navigate to={PAGES.LOGIN_PAGE} />;
+  }
+
   return (
     <PageLayout>
       <div className="bg-white shadow-normal rounded-[20px] lg:p-10 p-5 ">
@@ -462,3 +549,5 @@ const AccountVerification = () => {
 };
 
 export default AccountVerification;
+
+

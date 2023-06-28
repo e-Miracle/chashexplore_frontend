@@ -17,7 +17,7 @@ const CreateNewDraw = () => {
           alt={Draw}
         />
         <Link
-          to={`/${_INFLUENCER_}/my/draws`}
+          to={`/my/dashboard/${_INFLUENCER_}/draws`}
           className=" text-primary  font-ubuntu text-base lg:text-lg text-center"
         >
           {" "}

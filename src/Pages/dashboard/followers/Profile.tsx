@@ -11,7 +11,7 @@ import {
   faArrowDown,
   faArrowUp,
 } from "@fortawesome/free-solid-svg-icons";
-import { nFormatter } from "../../../Utils";
+import { nFormatter, getUserData } from "../../../Utils";
 import { Raffle } from "../../../assets";
 
 const DrawsCard = React.lazy(
@@ -83,7 +83,8 @@ export const Header = () => {
         <div className="lg:ml-5 w-full lg:w-[80%] ">
           <div className=" flex items-center w-full">
             <h3 className="text-labels text-[1.5rem] lg:text-[2rem]">
-              Genevieve Doe{" "}
+              {getUserData()?.first_name}
+              {getUserData()?.last_name}{" "}
               <FontAwesomeIcon icon={faCheckCircle} className="text-primary" />{" "}
             </h3>
             <button className="ml-3 lg:ml-10 text-[#797F8A] text-[1.5rem] lg:text-[2rem] cursor-pointer hover:opacity-90">
@@ -92,7 +93,7 @@ export const Header = () => {
           </div>
 
           <p className="text-icon text-sm lg:text-base rounded-[100px] bg-[#F4F6F8] px-7 py-3 text-center mt-3">
-            genevievedoe@gmail.com
+            {getUserData()?.email}
           </p>
         </div>
       </div>

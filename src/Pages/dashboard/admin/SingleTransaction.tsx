@@ -1,11 +1,7 @@
 import React, { Suspense, lazy } from "react";
 import { DashBoardLayout } from "../../";
 import Spinner from "../../../components/Spinner";
-import { Raffle } from "../../../assets";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCheckCircle } from "@fortawesome/free-solid-svg-icons";
-import { BlueLogo } from "../../../assets";
-import moment from "moment";
+import { useParams } from "react-router-dom";
 import { dataArr, columnsArr, reviewArr } from "../influencer/Results";
 const Table = lazy(() => import("../../../components/Table/WinnersTable"));
 const Modal = lazy(() => import("../../../components/Modal/Modal"));
@@ -80,14 +76,12 @@ const ModalContent: React.FC<ModalContent> = ({ onclick }) => {
 
 const SingleTransaction = () => {
   const [modalIsOpen, setIsOpen] = React.useState<boolean>(false);
+  const { id } = useParams();
   return (
     <Suspense fallback={<Spinner />}>
       <DashBoardLayout type="influencer">
         <BackgroundDrop>
-          <Header
-            title={"100,000 naira New Year Giveaway!"}
-            date={moment().toDate()}
-          />
+          <Header id={Number(id)} />
           <Hero />
           <Winners data={dataArr} columns={columnsArr} />
           <div className="flex justify-center items-center my-10">

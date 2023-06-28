@@ -52,8 +52,8 @@ const Body = ({ data, onClick }: { data: any[]; onClick: () => void }) => {
   return (
     <div className=" bg-white mt-[1rem] lg:mt-10   md:h-[calc(100vh-30vh)] font-ubuntu">
       <div className="w-full">
-        <ActiveDraws data={data} />
-        <InActiveDraws data={data} />
+        <ActiveDraws />
+        <InActiveDraws />
         <div
           className="flex justify-center items-center my-3"
           onClick={onClick}

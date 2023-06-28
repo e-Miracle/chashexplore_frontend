@@ -1,18 +1,33 @@
-import React from "react";
-import { isExpired } from "react-jwt";
-import { Navigate, Outlet, } from "react-router-dom";
+import React, { useEffect } from "react";
+import { Navigate, useNavigate, Outlet } from "react-router-dom";
 import { getUserData } from "../../Utils";
+import { PAGES, USER_TYPES } from "../../constants";
 
-type Props = {
-  children: React.ReactNode;
-};
-
-const ProtectedPages: React.FC<Props> = ({ children }) => {
-  // if (!isExpired(getUserData()?.token) && getUserData()?.token) {
-  //   return <Navigate to={`${getUserData()?.role}/my/dashboard`} />;
+const ProtectedPages = () => {
+  // if (
+  //   getUserData()?.token &&
+  //   getUserData()?.role === USER_TYPES._INFLUENCER_ &&
+  //   getUserData()?.account_verfied === "0"
+  // ) {
+  //   console.log("account verification");
+  //   return <Navigate to={`/account-verification`} />;
   // }
-  if (getUserData()?.token) {
-    return <Navigate to={`/influencer/my/dashboard`} />;
+
+  //  if (
+  //    getUserData()?.token &&
+  //    getUserData()?.role === USER_TYPES._INFLUENCER_ &&
+  //    getUserData()?.account_verfied !== "0"
+  //  ) {
+  //    console.log("influencer dashboard");
+  //   return <Navigate to={`/${getUserData()?.role}/my/dashboard`} />;
+  //  }
+
+  // if (getUserData()?.token && getUserData()?.role === USER_TYPES._FOLLOWER_) {
+  //   return <Navigate to={`/${getUserData()?.role}/my/dashboard`} />;
+  // }
+
+  if (getUserData()?.token && getUserData()?.role) {
+    return <Navigate to={`/my/dashboard/${getUserData()?.role}`} />;
   }
 
   return <Outlet />;

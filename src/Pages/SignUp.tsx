@@ -14,8 +14,13 @@ import {
 } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { HeaderProps } from "./Home";
+import useAuthSignUp from "../hooks/auth/useAuthSignUp";
+import useErrorHandler from "../hooks/useErrorHandler";
 
 const RegisterForm = () => {
+  const authSignup = useAuthSignUp();
+  useErrorHandler(authSignup, "Signup Successful", "Signup Error");
+
   const [visible, setVisibility] = React.useState<Boolean>(false);
   const formSchema = z.object({
     firstname: z
@@ -60,19 +65,17 @@ const RegisterForm = () => {
 
   const onSubmit: SubmitHandler<FormSchmaType> = async (data) => {
     console.log(data);
-<<<<<<< Updated upstream
-=======
     await authSignup.mutateAsync({
       first_name: data.firstname,
       last_name: data.lastname,
       email: data.email,
       password: data.password,
     });
->>>>>>> Stashed changes
   };
   return (
     <Suspense>
       <form onSubmit={handleSubmit(onSubmit)}>
+        shhshsh
         <div className="flex flex-col lg:flex-row justify-between items-center">
           <input
             className={
@@ -208,7 +211,7 @@ const RegisterForm = () => {
       </form>
     </Suspense>
   );
-}
+};
 
 const SignUp = () => {
   const headerProps: HeaderProps = {

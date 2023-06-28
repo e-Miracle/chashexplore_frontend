@@ -7,10 +7,6 @@ import { ErrorMessage } from "@hookform/error-message";
 import { z } from "zod";
 import toast from "react-hot-toast";
 import { BackgroundDrop } from "./Profile";
-<<<<<<< Updated upstream
-const DropBox = React.lazy(() => import("../../../components/DragandDrop"));
-const colors: string[] = ["#211DEC", "#716EEA", "#DDDCEF"];
-=======
 import { useDropzone } from "react-dropzone";
 import { MAX_FILE_SIZE, ACCEPTED_IMAGE_TYPES } from "../../../constants";
 import { getDateIsoString } from "../../../Utils";
@@ -18,7 +14,6 @@ import { faTimesCircle } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import useCreateInfluencerCampaign from "../../../hooks/influencer/useCustomInfluencerCampaign";
 import useErrorHandler from "../../../hooks/useErrorHandler";
->>>>>>> Stashed changes
 
 const Draws = () => {
   const createCampaign = useCreateInfluencerCampaign();
@@ -34,19 +29,9 @@ const Draws = () => {
         invalid_type_error: "title must be a string",
       })
       .min(3, { message: "title must have at least three characters " })
-      .max(30, {
+      .max(50, {
         message: "title must not be greater than 30 characters",
       }),
-<<<<<<< Updated upstream
-    start: dateSchema,
-    stop: dateSchema,
-    recurring: z
-      .string()
-      .min(3, { message: "recurring must have at least three characters " })
-      .nullable()
-      .optional(),
-    winners: z
-=======
     start_date: z.coerce
       .date({
         required_error: "date is required",
@@ -97,20 +82,10 @@ const Draws = () => {
       .string()
       .min(3, { message: "recurring must have at least three characters " }),
     number_of_winners: z
->>>>>>> Stashed changes
       .number({
         required_error: "number of winners  is required",
         invalid_type_error: "number of winners must be a number",
       })
-<<<<<<< Updated upstream
-      .positive(),
-    drawType: z
-      .string({
-        required_error: "drawType is required",
-        invalid_type_error: "drawType must be a string",
-      })
-      .min(3, { message: "drawType must have at least three characters " }),
-=======
       .positive()
       .refine((value) => Number(value) <= 1000000, "winners must be a number"),
     draw_type: z
@@ -119,27 +94,12 @@ const Draws = () => {
         invalid_type_error: "draw_type must be a string",
       })
       .min(3, { message: "draw_type must have at least three characters " }),
->>>>>>> Stashed changes
     description: z
       .string({
         required_error: "description is required",
         invalid_type_error: "description must be a string",
       })
       .min(3, { message: "description must have at least three characters " }),
-<<<<<<< Updated upstream
-    currency: z.string({
-      required_error: "currency is required",
-      invalid_type_error: "currency must be a string",
-    }),
-    // .min(1, { message: "currency must have at least one character" }),
-    amount: z
-      .number({
-        required_error: "number of winners  is required",
-        invalid_type_error: "number of winners must be a number",
-      })
-      .positive(),
-    noOfTickets: z
-=======
     ticket_prize: z
       .number({
         required_error: "Ticket Price  is required",
@@ -155,14 +115,10 @@ const Draws = () => {
     //   })
     //   .positive(),
     ticket_sale_cap: z
->>>>>>> Stashed changes
       .number({
         required_error: "number of tickets  is required",
         invalid_type_error: "number of tickets must be a number",
       })
-<<<<<<< Updated upstream
-      .positive(),
-=======
       .positive()
       .refine((value) => Number(value) <= 1000000, "number of tickets must be a number"),
     brand_colors: z
@@ -171,7 +127,6 @@ const Draws = () => {
         (value) => value.length === 3,
         "Brand Colors contain exactly three colors"
       ),
->>>>>>> Stashed changes
   });
 
   type FormSchmaType = z.infer<typeof formSchema>;
@@ -207,14 +162,6 @@ const Draws = () => {
   };
 
   const onSubmit: SubmitHandler<FormSchmaType> = async (data) => {
-<<<<<<< Updated upstream
-    // if (raffleimages && raffleimages.length < 0)
-    //   return toast.error("Please add Images for the raffle");
-    // if (PageIcons && PageIcons.length < 0)
-    //   return toast.error("Please add Images for the icon");
-    // if (!brandColor) return toast.error("Please add brand colors");
-    console.log({ data, raffleimages, PageIcons, brandColor });
-=======
     if (images.length === 0) {
       return toast.error("Please add Images for the campaign");
     }
@@ -236,7 +183,6 @@ const Draws = () => {
     };
     console.log(req);
     createCampaign.mutateAsync(req);
->>>>>>> Stashed changes
   };
   return (
     <Suspense fallback={<Spinner />}>
@@ -362,36 +308,6 @@ const Draws = () => {
                 </p>
               )}
             />
-<<<<<<< Updated upstream
-            <ErrorMessage
-              errors={errors}
-              name="start.time"
-              render={({ message }) => (
-                <p className="my-1 font-ubuntu text-[#E4033B] text-xs lg:text-sm">
-                  {message}
-                </p>
-              )}
-            />
-            <ErrorMessage
-              errors={errors}
-              name="stop.date"
-              render={({ message }) => (
-                <p className="my-1 font-ubuntu text-[#E4033B] text-xs lg:text-sm">
-                  {message}
-                </p>
-              )}
-            />
-            <ErrorMessage
-              errors={errors}
-              name="stop.time"
-              render={({ message }) => (
-                <p className="my-1 font-ubuntu text-[#E4033B] text-xs lg:text-sm">
-                  {message}
-                </p>
-              )}
-            />
-=======
->>>>>>> Stashed changes
 
             <div className="flex flex-col lg:flex-row justify-between mt-[1rem] lg:mt-[2rem]">
               <div className="lg:w-[30%]">
@@ -538,7 +454,7 @@ const Draws = () => {
 
             <ErrorMessage
               errors={errors}
-              name="snow"
+              name="description"
               render={({ message }) => (
                 <p className="my-1 font-ubuntu text-[#E4033B] text-xs lg:text-sm">
                   {message}
@@ -776,8 +692,6 @@ const Draws = () => {
               </div>
             </div>
           </div>
-<<<<<<< Updated upstream
-=======
 
           <ErrorMessage
             errors={errors}
@@ -788,7 +702,6 @@ const Draws = () => {
               </p>
             )}
           />
->>>>>>> Stashed changes
 
           <div className=" w-full p-[1rem] lg:p-0">
             {isSubmitting ? (

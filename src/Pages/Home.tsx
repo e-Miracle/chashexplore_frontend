@@ -14,15 +14,11 @@ import {
   faEyeSlash,
 } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-<<<<<<< Updated upstream
-
-=======
 import useAuthLogin from "../hooks/auth/useAuthLogin";
 import useErrorHandler from "../hooks/useErrorHandler";
 import { socialRequest } from "../Utils";
 import { _FOLLOWER_, _INFLUENCER_ } from "../constants";
 import toast from "react-hot-toast";
->>>>>>> Stashed changes
 export type HeaderProps = {
   title: string;
   text: string;
@@ -84,45 +80,12 @@ export const SocialComponent = ({
   const [name, updateType] = React.useState<string>("");
   const navigate = useNavigate();
   const socailCta: socialCta[] = [
-<<<<<<< Updated upstream
-    { imgUrl: Google, cta: "" },
-    { imgUrl: Twitter, cta: "", color: "#1D9BF0" },
-    { imgUrl: Facebook, cta: "", color: "#1877F2" },
-    { imgUrl: LinkedIn, cta: "",  },
-    { imgUrl: Instagram, cta: "" },
-  ];
-  return (
-    <div className="my-[1.5rem]">
-      {text && (
-        <h4 className="text-[#797F8A] font-ubuntu text-[1.2rem] lg:text-[1.5rem] my-3 text-center lg:text-left">
-          {text}
-        </h4>
-      )}
-      <div className="flex flex-wrap justify-between items-center">
-        {socailCta.map((item: socialCta, i: number) => (
-          <button
-            className="hover:opacity-80 rounded-[4px] shadow-primary p-2 flex justify-center items-center mr-2"
-            key={i}
-            style={{ background: item?.color }}
-          >
-           
-            <LazyLoadImage
-              className="w-[30px] lg:w-[40px] h-[30px] lg:h-[40px] object-contain"
-              src={item.imgUrl}
-              placeholderSrc={"https://via.placeholder.com/72x72"}
-              alt={item.imgUrl}
-            />
-          </button>
-        ))}
-      </div>
-=======
     { imgUrl: Google, cta: "", name: "google" },
     { imgUrl: Twitter, cta: "", color: "#1D9BF0", name: "twitter" },
     { imgUrl: Facebook, cta: "", color: "#1877F2", name: "facebook" },
     { imgUrl: LinkedIn, cta: "", name: "linkedIn" },
     { imgUrl: Instagram, cta: "", name: "instagram" },
   ];
->>>>>>> Stashed changes
 
   const typeSelect = async (type: typeof _FOLLOWER_ | typeof _INFLUENCER_) => {
     console.log(type);
@@ -191,6 +154,8 @@ export const SocialComponent = ({
 };
 
 const LoginForm = () => {
+  const authLogin = useAuthLogin();
+  useErrorHandler(authLogin, "Login Successful", "Login Error");
   const [visible, setVisibility] = React.useState<Boolean>(false);
   const formSchema = z.object({
     email: z
@@ -223,10 +188,7 @@ const LoginForm = () => {
 
   const onSubmit: SubmitHandler<FormSchmaType> = async (data) => {
     console.log(data);
-<<<<<<< Updated upstream
-=======
     await authLogin.mutateAsync(data);
->>>>>>> Stashed changes
   };
 
   return (

@@ -158,8 +158,8 @@ type Object = {
   [key: string]: {
     name: string;
     symbol: string;
-  }
-}
+  };
+};
 
 // count 168
 export const currency_list: Object = {
@@ -332,8 +332,6 @@ export const currency_list: Object = {
   ZMK: { name: "Zambian Kwacha", symbol: "ZK" },
   ZWL: { name: "Zimbabwean dollar", symbol: "$" },
 };
-<<<<<<< Updated upstream
-=======
 
 export const ENDPOINTS: { [key: string]: string | Function } = {
   API_BASE_URL: import.meta.env.VITE_APP_API_URL,
@@ -367,4 +365,3 @@ export const ACCEPTED_IMAGE_TYPES: string[] = [
   "image/png",
   "image/webp",
 ];
->>>>>>> Stashed changes

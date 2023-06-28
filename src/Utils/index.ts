@@ -1,22 +1,11 @@
-<<<<<<< Updated upstream
-import { USER } from "../constants"
-=======
 import { USER, ENDPOINTS, _FOLLOWER_, _INFLUENCER_ } from "../constants";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { Influencer } from "./types";
->>>>>>> Stashed changes
 
 export const getUserData = (): Influencer => {
   const user = sessionStorage.getItem(USER._USER_TOKEN);
-
   // console.log(JSON.parse(user));
-<<<<<<< Updated upstream
-  return JSON.parse(user ? user : '');
-};
-
-export function nFormatter(num:number, digits: number) {
-=======
   return JSON.parse(user as any) as Influencer;
 };
 
@@ -60,7 +49,6 @@ export const convertEndpointToTitle = (endpoint: string) => {
 };
 
 export function nFormatter(num: number, digits: number) {
->>>>>>> Stashed changes
   const lookup = [
     { value: 1, symbol: "" },
     { value: 1e3, symbol: "k" },
@@ -80,9 +68,6 @@ export function nFormatter(num: number, digits: number) {
   return item
     ? (num / item.value).toFixed(digits).replace(rx, "$1") + item.symbol
     : "0";
-<<<<<<< Updated upstream
-}
-=======
 }
 
 export const toTimeString = (serverDate: string) => {
@@ -233,4 +218,3 @@ export const socialRequest = async (
 };
 
 export * from "./types";
->>>>>>> Stashed changes

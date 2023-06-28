@@ -45,7 +45,7 @@ const index = () => {
         pageParams: [1],
       },
       onSuccess: (data) => {
-        if (data) toast.success("Successfully fetched draws");
+        if (data) toast.success(data?.pages[data?.pages.length - 1]?.message);
       },
       onError: (err) => {
         if (err) toast.error("An error occured");

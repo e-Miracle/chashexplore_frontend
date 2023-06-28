@@ -12,6 +12,7 @@ import {
   adminDashBoardLinks,
   followersdashBoardLinks,
 } from "../../constants";
+import { useNavigate } from "react-router-dom";
 
 const SideBarLink = React.lazy(() => import("../SideBarLink"));
 
@@ -24,6 +25,7 @@ type Props = {
 
 const Index: React.FC<Props> = ({ mobileNav, expand, userImg, type }) => {
   const isMobile: boolean = useMediaQuery({ query: `(max-width: 768px)` });
+  const navigate = useNavigate();
   return (
     <Suspense>
       <div
@@ -95,7 +97,10 @@ const Index: React.FC<Props> = ({ mobileNav, expand, userImg, type }) => {
 
         <div className="mt-2 flex flex-col justify-center items-center">
           {!expand && (
-            <div className="  w-[70px] lg:w-[100px] h-[70px] my-[1rem] lg:h-[100px] p-2 rounded-full border-[5px] border-[#fff] border-r-primary relative">
+            <div
+              onClick={() => navigate(`/my/dashboard/${type}/profile`)}
+              className="  w-[70px] lg:w-[100px] h-[70px] my-[1rem] lg:h-[100px] p-2 rounded-full border-[5px] border-[#fff] border-r-primary relative"
+            >
               <LazyLoadImage
                 className="  w-full h-full object-cover rounded-full "
                 src={userImg ? userImg : "https://via.placeholder.com/100x100"}

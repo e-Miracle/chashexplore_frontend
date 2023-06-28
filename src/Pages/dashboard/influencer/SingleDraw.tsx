@@ -14,8 +14,8 @@ import { SocialComponent } from "../../Home";
 import { fetchSingleCampaign } from "../../../hooks/customGets";
 import { useQuery } from "react-query";
 import toast from "react-hot-toast";
-import { useParams } from "react-router-dom";
-import { _FOLLOWER_ } from "../../../constants";
+import { useParams, useNavigate } from "react-router-dom";
+import { _FOLLOWER_, _INFLUENCER_ } from "../../../constants";
 const Modal = lazy(() => import("../../../components/Modal/Modal"));
 const Timer = lazy(() => import("../../../components/Timer/Timer"));
 const Table = lazy(() => import("../../../components/Table/DrawsTable"));
@@ -96,9 +96,13 @@ type BtnProp = {
   onClickShare?: React.MouseEventHandler<HTMLButtonElement> | undefined;
 };
 const Buttons: React.FC<BtnProp> = ({ onClickShare }) => {
+  const navigate = useNavigate()
   return (
     <div className="mt-[1rem] flex justify-center items-center">
-      <button className="w-full md:w-auto md:ml-5 mt-5 md:mt-0 inline-block text-center border-[2px] border-primary bg-primary text-white rounded-[100px] py-5 px-10 text-sm lg:text-base hover:opacity-80">
+      <button
+        onClick={() => navigate(`/my/dashboard/${_INFLUENCER_}/create`)}
+        className="w-full md:w-auto md:ml-5 mt-5 md:mt-0 inline-block text-center border-[2px] border-primary bg-primary text-white rounded-[100px] py-5 px-10 text-sm lg:text-base hover:opacity-80"
+      >
         Host Live Draw
       </button>
       <button

@@ -115,7 +115,7 @@ const router = createBrowserRouter([
     children: [
       { index: true, path: "/my/dashboard", element: <DashBaordHome /> },
       {
-        path: `/my/dashboard/${_FOLLOWER_}`,
+        path: `/my/dashboard/${_FOLLOWER_}/home`,
         element: <FollowersDashboard />,
       },
       {
@@ -155,7 +155,7 @@ const router = createBrowserRouter([
         element: <FollowersNotification />,
       },
       {
-        path: `/my/dashboard/${_INFLUENCER_}`,
+        path: `/my/dashboard/${_INFLUENCER_}/home`,
         element: <InflunecersDashboard />,
       },
       {
@@ -203,11 +203,11 @@ const router = createBrowserRouter([
         element: <InflunecersSettings />,
       },
       {
-        path: `/my/dashboard/${_INFLUENCER_}/participants`,
+        path: `/my/dashboard/${_INFLUENCER_}/draws/participants/:id`,
         element: <InflunecersParticipants />,
       },
       {
-        path: `/my/dashboard/${_ADMIN_}/dashboard`,
+        path: `/my/dashboard/${_ADMIN_}/home`,
         element: <AdminDashboard />,
       },
       {

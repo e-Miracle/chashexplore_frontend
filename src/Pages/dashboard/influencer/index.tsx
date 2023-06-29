@@ -26,7 +26,7 @@ const index = () => {
               {" "}
               <InfluencerDraws />
             </div>
-            <div className="col-span-6 lg:col-span-2 flex flex-col justify-between mb-5 lg:mb-0">
+            <div className="col-span-6 lg:col-span-2   mb-5 lg:mb-0">
               {" "}
               <CreateNewDraw />
               <PendingCampaigns />

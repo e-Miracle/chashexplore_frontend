@@ -32,7 +32,7 @@ function SidebarLink({ path, title, Icon, isIconMode = false }: Props) {
       <NavLink
         // style={({ isActive }) => (isActive ? activeStyle : emptyStyle)}
         className={
-          path === pathname
+          pathname.includes(path)
             ? isIconMode
               ? "bg-white relative w-full bg-white text-primary  pl-9 my-2 py-3 rounded-l-[30px]"
               : "relative  rounded-l-[30px] my-3 py-5 pl-10 w-full ml-[5rem] bg-white text-primary "

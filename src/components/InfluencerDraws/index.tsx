@@ -193,7 +193,7 @@ const index = () => {
                                   background: "#FBFBFD",
                                 }}
                                 >
-                                  f
+                                  
                                 {item.participants_count}
                               </div>
                             </div>

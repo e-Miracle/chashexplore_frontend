@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 const index = () => {
   return (
     <Suspense>
-      <div className="md:h-[calc(100%-51.5%)] h-[200px] mt-[1rem] md:mt-0 bg-secondary rounded-[10px] flex flex-col justify-center items-center">
+      <div className="md:h-[300px] h-[200px] mt-[1rem]  bg-secondary rounded-[10px] flex flex-col justify-center items-center">
         <p className="font-ubuntu text-base lg:text-lg text-center my-[3rem] text-[#0D1A31]">
           Your Pending campaign has been approved and published.
         </p>

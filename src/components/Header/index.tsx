@@ -79,7 +79,7 @@ const index: React.FC<Props> = ({
             </Link>
 
             <Link
-              to={`/${type}/my/notifications`}
+              to={`/my/dashboard/${type}/notifications`}
               className="mr-5 text-icon lg:text-2xl text-xl hover:opacity-80 ease-in duration-300"
             >
               <FontAwesomeIcon icon={faBell} />

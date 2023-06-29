@@ -63,7 +63,18 @@ const Header = ({ title, endDate }: { title: string; endDate: string }) => {
   );
 };
 
-const Boxes = ({ data }: { data: any[] }) => {
+const Boxes = ({
+  data,
+  id,
+  participants,
+}: {
+  data: any[];
+  id: number;
+  participants: any[];
+}) => {
+
+  const alertUser = () =>
+    participants.length === 0 && toast.error("No participants data");
   return (
     <div className=" grid gap-[1rem] grid-cols-1 md:grid-cols-2 lg:grid-cols-3 mt-[1rem] ">
       {data &&
@@ -83,7 +94,12 @@ const Boxes = ({ data }: { data: any[] }) => {
 
             {item.link && (
               <Link
-                to={"/"}
+                to={
+                  participants.length > 0
+                    ? `/my/dashboard/${_INFLUENCER_}/draws/participants/${id}`
+                    : ""
+                }
+                onClick={alertUser}
                 className="block text-center mt-[4rem] text-[#646C79] hover:opacity-80"
               >
                 {item.link}
@@ -302,7 +318,11 @@ const SingleDraw = () => {
       <DashBoardLayout type="influencer" backbtn={true}>
         <div className="bg-bg p-[1rem] mt-5 rounded-[10px] ">
           <Header title={data?.data.title} endDate={data?.data?.end_date} />
-          <Boxes data={dataCop} />
+          <Boxes
+            data={dataCop}
+            id={Number(id)}
+            participants={data?.data?.participants}
+          />
           <Table dataArr={flattenedData} columnsArr={columnsArr} />
           <Buttons onClickShare={() => setIsOpen(true)} />
           <Modal visible={modalIsOpen}>

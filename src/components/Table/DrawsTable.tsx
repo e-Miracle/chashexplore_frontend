@@ -6,8 +6,15 @@ type Props = {
     Header: string;
     accessor: string;
   }[];
+  observerRef?: React.RefObject<HTMLDivElement>;
+  itemRef?: any;
 };
-const Index: React.FC<Props> = ({ dataArr, columnsArr }) => {
+const Index: React.FC<Props> = ({
+  dataArr,
+  columnsArr,
+  observerRef,
+  itemRef,
+}) => {
   const data = React.useMemo(() => dataArr, []);
   const columns: any = React.useMemo(() => columnsArr, []);
 
@@ -15,7 +22,10 @@ const Index: React.FC<Props> = ({ dataArr, columnsArr }) => {
     useTable({ columns, data });
   return (
     <Suspense>
-      <div className="relative overflow-x-auto bg-white rounded-[10px] mt-10">
+      <div
+        ref={observerRef}
+        className="relative overflow-x-auto bg-white rounded-[10px] mt-10"
+      >
         <table
           className="w-full text-sm text-white text-gray-500 dark:text-gray-400 z-[1]"
           {...getTableProps()}
@@ -35,20 +45,21 @@ const Index: React.FC<Props> = ({ dataArr, columnsArr }) => {
             ))}
           </thead>
           <tbody {...getTableBodyProps()}>
-            {rows.map((row) => {
+            {rows.map((row, i: number) => {
               prepareRow(row);
               return (
                 <tr
-                  className="overflow-hidden whitespace-nowrap  h-[100px] rounded-[10px]  bg-white font-ubuntu rounded-[10px]  bg-white border-b dark:bg-gray-900 dark:border-gray-700 mb-5 "
+                  className="overflow-hidden whitespace-nowrap  h-[100px]   bg-white font-ubuntu rounded-[10px]  bg-white border-b dark:bg-gray-900 dark:border-gray-700 mb-5 "
                   {...row.getRowProps()}
                 >
                   {row.cells.map((cell) => (
                     <td
+                      ref={i === data.length - 1 ? itemRef : null}
                       className="text-[#232E43]  font-ubuntu text-sm lg:text-base  px-6 py-4"
                       {...cell.getCellProps()}
                     >
-                      {cell.render("Cell") === "email" ? (
-                        <>H{cell.render("Cell")}</>
+                      {cell.column.id === "name" ? (
+                        <>@{cell.render("Cell")}</>
                       ) : (
                         cell.render("Cell")
                       )}{" "}

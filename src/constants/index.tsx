@@ -31,7 +31,7 @@ export const USER_TYPES = {
 
 export const dashBoardLinks = [
   {
-    path: `/my/dashboard/${_INFLUENCER_}`,
+    path: `/my/dashboard/${_INFLUENCER_}/home`,
     title: "Dashboard",
     icon: "object-group",
   },
@@ -54,7 +54,7 @@ export const dashBoardLinks = [
 
 export const followersdashBoardLinks = [
   {
-    path: `/my/dashboard/${_FOLLOWER_}`,
+    path: `/my/dashboard/${_FOLLOWER_}/home`,
     title: "Dashboard",
     icon: "object-group",
   },
@@ -77,7 +77,7 @@ export const followersdashBoardLinks = [
 
 export const adminDashBoardLinks = [
   {
-    path: `/my/dashboard/${_ADMIN_}`,
+    path: `/my/dashboard/${_ADMIN_}/home`,
     title: "Dashboard",
     icon: "object-group",
   },
@@ -346,6 +346,7 @@ export const ENDPOINTS: { [key: string]: string | Function } = {
   API_INFLUENCER_VERIFYABLE_TYPES: (identificationType: number) =>
     `/account-verification/${identificationType}`,
   API_INFLUENCER_CREATE_CAMPAIGN: "/campaigns",
+  API_INFLUENCER_CAMPAIGN: '/campaign',
   API_INFLUENCER_TOP_DRAWS: "/top-draws",
   API_INFLUENCER_ACTIVE_DRAWS: "/active-draws",
   API_INFLUENCER_INACTIVE_DRAWS: "/inactive-draws",

@@ -26,8 +26,8 @@ const NotifyToast: React.FC<Props> = ({
             : ` before:content-[''] before:border-l-[10px] before:border-primary before:absolute before:top-0 before:left-0 before:h-full before:rounded-l-[8px]   relative cursor-pointer bg-[#F4F6F8] mb-[1rem] rounded-[8px] p-[1rem] hover:opacity-80`
         }
       >
-        <div className="w-full flex flex-col md:flex-row items-center justify-between ml-0 md:ml-[5rem] ">
-          <div className="w-full">
+        <div className="w-full flex flex-col md:flex-row items-center justify-between ml-0 md:ml-[0rem] md:pl-[3rem]  ">
+          <div className="w-auto  ">
             <h1 className="text-heading text-bold text-base lg:text-[1.25rem]">
               {title}
             </h1>
@@ -35,7 +35,7 @@ const NotifyToast: React.FC<Props> = ({
               {paragraph}
             </p>
           </div>
-          <div className="w-full flex items-center justify-between ">
+          <div className="w-auto flex lg:flex-col items-end justify-between    ">
             <h5 className="text-[0.75rem] lg:text-[0.875rem] capitalize">
               {status ? (
                 <span className=" text-[#18FD66]">Read</span>

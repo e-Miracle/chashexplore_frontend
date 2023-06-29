@@ -27,7 +27,7 @@ const ProtectedPages = () => {
   // }
 
   if (getUserData()?.token && getUserData()?.role) {
-    return <Navigate to={`/my/dashboard/${getUserData()?.role}`} />;
+    return <Navigate to={`/my/dashboard/${getUserData()?.role}/home`} />;
   }
 
   return <Outlet />;

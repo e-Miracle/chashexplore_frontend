@@ -4,7 +4,7 @@ import Spinner from "../../../components/Spinner";
 import { BackgroundDrop } from "./Profile";
 import NotifyToast from "../../../components/NotifyToast/NotifyToast";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEllipsisV, faArrowCircleLeft } from "@fortawesome/free-solid-svg-icons";
+import { faEllipsisV, faLongArrowLeft, faArrowCircleLeft } from "@fortawesome/free-solid-svg-icons";
 const data = [
   {
     title: "100,000naira New Year Giveaway Update",
@@ -71,7 +71,7 @@ const Body = ({}: { data: any[] }) => {
                 onClick={() => setVisibility(false)}
                 className="bg-[#DBDDE2] text-primary hover:opacity-90 cursor-pointer  w-[24px] h-[24px] rounded-full"
               >
-                <FontAwesomeIcon icon={faEllipsisV} />
+                <FontAwesomeIcon icon={faLongArrowLeft} />
               </button>
             </div>
           )}

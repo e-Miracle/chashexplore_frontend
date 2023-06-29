@@ -22,6 +22,11 @@ export const storeUserData = (data: any) =>
     JSON.stringify({ ...data?.message?.user, token: data?.message?.token })
     // JSON.stringify({ token: data?.access_token, isVerified: data?.isVerified })
   );
+  export const storeSocialData = async (data: any) =>
+    await sessionStorage.setItem(
+      USER._USER_TOKEN,
+      JSON.stringify({ ...data?.user, token: data?.token })
+    );
 
 export const storeIdentificationTypes = (data: any) =>
   sessionStorage.setItem(

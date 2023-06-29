@@ -11,6 +11,7 @@ const ResetPassword = lazy(() => import("./ResetPassword"));
 const AccountVerification = lazy(() => import("./AccountVerification"));
 const VerifyEmail = lazy(() => import("./VerifyEmail"));
 const ResendEmailVerification = lazy(() => import("./resendEmailVerification"));
+const Google = lazy(() => import("./Google"));
 const DashBaordHome = lazy(() => import("./dashboard"));
 
 //followers pages
@@ -71,7 +72,9 @@ const InflunecersNotifications = lazy(
 const InflunecersActiveTransaction = lazy(
   () => import("./dashboard/influencer/ActiveTransaction")
 );
-const InflunecersParticipants = lazy(() => import("./dashboard/influencer/Participants"));
+const InflunecersParticipants = lazy(
+  () => import("./dashboard/influencer/Participants")
+);
 
 //admin section
 const AdminDashboard = lazy(() => import("./dashboard/admin"));
@@ -119,6 +122,7 @@ export {
   AccountVerification,
   VerifyEmail,
   ResendEmailVerification,
+  Google,
   PageLayout,
   DashBoardLayout,
   DashBaordHome,

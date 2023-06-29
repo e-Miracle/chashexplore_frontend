@@ -57,6 +57,7 @@ const index = () => {
         if (data) toast.success(data?.pages[data?.pages.length - 1]?.message);
       },
       onError: (err) => {
+        console.log(err)
         if (err) toast.error("An error occured");
       },
     }

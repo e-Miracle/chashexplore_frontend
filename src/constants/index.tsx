@@ -342,17 +342,18 @@ export const ENDPOINTS: { [key: string]: string | Function } = {
   API_INFLUENCER_AUTH_VERIFY: "/auth/influencer-verify-email",
   API_INFLUENCER_AUTH_FORGOT_PASSWORD: "/auth/influencer-forgot-password",
   API_INFLUENCER_AUTH_SOCIAL: "/auth/social/",
+  API_INFLUENCER_AUTH_GOOGLE: "/auth/google-authenticate",
   API_INFLUENCER_VERIFY_ACCOUNT: "/account-verification",
   API_INFLUENCER_VERIFYABLE_TYPES: (identificationType: number) =>
     `/account-verification/${identificationType}`,
   API_INFLUENCER_CREATE_CAMPAIGN: "/campaigns",
-  API_INFLUENCER_CAMPAIGN: '/campaign',
+  API_INFLUENCER_CAMPAIGN: "/campaign",
   API_INFLUENCER_TOP_DRAWS: "/top-draws",
   API_INFLUENCER_ACTIVE_DRAWS: "/active-draws",
   API_INFLUENCER_INACTIVE_DRAWS: "/inactive-draws",
   API_INFLUENCER_PENDING_DRAWS: "/pending-draws",
   API_REVIEWS: "/reviews",
-  API_SINGLE_REVIEW: '/api/reviews',
+  API_SINGLE_REVIEW: "/api/reviews",
   API_WINNERS: "/api/winners/all",
 
   // follower Auth URl

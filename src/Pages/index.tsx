@@ -12,6 +12,7 @@ const AccountVerification = lazy(() => import("./AccountVerification"));
 const VerifyEmail = lazy(() => import("./VerifyEmail"));
 const ResendEmailVerification = lazy(() => import("./resendEmailVerification"));
 const Google = lazy(() => import("./Google"));
+const GoogleFollower = lazy(() => import("./GoogleFollower"));
 const DashBaordHome = lazy(() => import("./dashboard"));
 
 //followers pages
@@ -123,6 +124,7 @@ export {
   VerifyEmail,
   ResendEmailVerification,
   Google,
+  GoogleFollower,
   PageLayout,
   DashBoardLayout,
   DashBaordHome,

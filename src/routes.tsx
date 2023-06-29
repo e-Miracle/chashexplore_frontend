@@ -11,7 +11,8 @@ import {
   FollowersDashboard,
   FollowersDraws,
   VerifyEmail,
-  Google ,
+  Google,
+  GoogleFollower,
   ResendEmailVerification,
   FollowersTransactions,
   FollowersSettings,
@@ -110,8 +111,12 @@ const router = createBrowserRouter([
     element: <FollowersRafflePagePreview />,
   },
   {
-    path: `/google`,
+    path: `/google/${_INFLUENCER_}`,
     element: <Google />,
+  },
+  {
+    path: `/google/${_FOLLOWER_}`,
+    element: <GoogleFollower />,
   },
   {
     path: "/my/dashboard",

@@ -3,9 +3,9 @@ import { Spinner } from ".";
 import { useLocation, Navigate } from "react-router-dom";
 import { useQuery } from "react-query";
 import toast from "react-hot-toast";
-import { ENDPOINTS } from "../constants";
+import { ENDPOINTS, _INFLUENCER_ } from "../constants";
 import { fetchAuth } from "../hooks/customGets";
-import { storeUserData, storeSocialData, getUserData } from "../Utils";
+import { storeSocialData, getUserData } from "../Utils";
 import axios from "axios";
 
 const Google = () => {
@@ -13,9 +13,8 @@ const Google = () => {
   const queryParams = new URLSearchParams(location.search);
   const url =
     ENDPOINTS.API_BASE_URL +
-    String(ENDPOINTS.API_INFLUENCER_AUTH_GOOGLE) +
+    String(ENDPOINTS.API_FOLLOWER_AUTH_GOOGLE) +
     `?${queryParams.toString()}`;
-  //i need a way to differentiate between influencer and follower
   const { isLoading, isError, data, error } = useQuery(
     "google",
     () => fetchAuth(url),

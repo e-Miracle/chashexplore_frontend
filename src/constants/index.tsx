@@ -360,6 +360,7 @@ export const ENDPOINTS: { [key: string]: string | Function } = {
   API_FOLLOWER_AUTH: "auth/follower/",
   API_FOLLOWER_AUTH_LOGIN: "/follower/register",
   API_FOLLOWER_AUTH_SIGNUP: "/follower/login",
+  API_FOLLOWER_AUTH_GOOGLE: "/auth/follower/google-authenticate",
 };
 
 export const MAX_FILE_SIZE: number = 1000000;

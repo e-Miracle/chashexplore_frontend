@@ -22,11 +22,11 @@ export const storeUserData = (data: any) =>
     JSON.stringify({ ...data?.message?.user, token: data?.message?.token })
     // JSON.stringify({ token: data?.access_token, isVerified: data?.isVerified })
   );
-  export const storeSocialData = async (data: any) =>
-    await sessionStorage.setItem(
-      USER._USER_TOKEN,
-      JSON.stringify({ ...data?.user, token: data?.token })
-    );
+export const storeSocialData = async (data: any) =>
+  await sessionStorage.setItem(
+    USER._USER_TOKEN,
+    JSON.stringify({ ...data?.user, token: data?.token })
+  );
 
 export const storeIdentificationTypes = (data: any) =>
   sessionStorage.setItem(
@@ -209,14 +209,11 @@ export const socialRequest = async (
   type: typeof _FOLLOWER_ | typeof _INFLUENCER_,
   cb?: Function
 ) => {
-  let reqUrl;
-  type === _FOLLOWER_
-    ? (reqUrl =
-        (((ENDPOINTS.API_BASE_URL as string) +
-          ENDPOINTS.API_FOLLOWER_AUTH) as string) + `${name}-authenticate`)
-    : (reqUrl =
-        (((ENDPOINTS.API_BASE_URL as string) +
-          ENDPOINTS.API_INFLUENCER_AUTH_SOCIAL) as string) + name);
+  const reqUrl =
+    (((ENDPOINTS.API_BASE_URL as string) +
+      ENDPOINTS.API_INFLUENCER_AUTH_SOCIAL) as string) +
+    name +
+    `/${type}`;
   try {
     const res = await axios.get(reqUrl);
     console.log(res.data);

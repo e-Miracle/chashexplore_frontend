@@ -8,7 +8,7 @@ import {
   faShare,
   faTimesCircle,
 } from "@fortawesome/free-solid-svg-icons";
-import { nFormatter, countDown } from "../../../Utils";
+import { nFormatter, countDown, getUserData } from "../../../Utils";
 import { PreviewImage } from "../../../assets";
 import { SocialComponent } from "../../Home";
 import { fetchSingleCampaign } from "../../../hooks/customGets";
@@ -72,7 +72,6 @@ const Boxes = ({
   id: number;
   participants: any[];
 }) => {
-
   const alertUser = () =>
     participants.length === 0 && toast.error("No participants data");
   return (
@@ -167,6 +166,7 @@ type ModalContent = {
   link: string;
 };
 export const ModalContent: React.FC<ModalContent> = ({ onclick, link }) => {
+  const navigate = useNavigate();
   const { isLoading, isError, data, error } = useQuery(
     "socials",
     ({ pageParam = 1 }) =>
@@ -210,29 +210,43 @@ export const ModalContent: React.FC<ModalContent> = ({ onclick, link }) => {
           Share Raffle Link
         </h3>
         {/* <SocialComponent option={false} /> */}
-
-        <div className="w-full flex flex-wrap justify-center   items-center   my-[1rem]">
-          {socailCta.map((item: socialCta, i: number) => (
-            <div key={i}>
-              {item.cta && (
-                <a
-                  className="hover:opacity-80 rounded-full shadow-primary p-2 flex justify-center items-center ml-0 mr-2"
-                  style={{ background: item?.color }}
-                  href={item.cta}
-                  target="_blank"
-                >
-                  {" "}
-                  <LazyLoadImage
-                    className="w-[20px] md:w-[30px] h-[20px] md:h-[30px] object-contain"
-                    src={item.imgUrl}
-                    placeholderSrc={"https://via.placeholder.com/72x72"}
-                    alt={item.imgUrl}
-                  />
-                </a>
-              )}
-            </div>
-          ))}
-        </div>
+        {getUserData()?.account_verfied === "1" ? (
+          <div className="w-full flex flex-wrap justify-center   items-center   my-[1rem]">
+            {socailCta.map((item: socialCta, i: number) => (
+              <div key={i}>
+                {item.cta && (
+                  <a
+                    className="hover:opacity-80 rounded-full shadow-primary p-2 flex justify-center items-center ml-0 mr-2"
+                    style={{ background: item?.color }}
+                    href={item.cta}
+                    target="_blank"
+                  >
+                    {" "}
+                    <LazyLoadImage
+                      className="w-[20px] md:w-[30px] h-[20px] md:h-[30px] object-contain"
+                      src={item.imgUrl}
+                      placeholderSrc={"https://via.placeholder.com/72x72"}
+                      alt={item.imgUrl}
+                    />
+                  </a>
+                )}
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="w-full flex flex-wrap items-center justify-center">
+            <h3 className="text-[#394355] text-center text-base lg:text-lg mt-5">
+              Account Verification not done or incomplete for your socials sharing.
+              Click on the button to verify
+            </h3>
+            <button
+              onClick={() => navigate(`/my/dashboard/${_INFLUENCER_}/create`)}
+              className="w-full md:w-auto  my-5  inline-block text-center border-[2px] border-primary bg-primary text-white rounded-[100px] py-3 px-5 text-sm lg:text-base hover:opacity-80"
+            >
+              Verify Account
+            </button>
+          </div>
+        )}
         <p className="text-[#394355] text-center text-sm md:text-base">
           Or Copy link here
         </p>

@@ -1,9 +1,8 @@
-import { USER, ENDPOINTS, _FOLLOWER_, _INFLUENCER_ } from "../constants";
+import { USER, ENDPOINTS, _FOLLOWER_, _INFLUENCER_, PAGES } from "../constants";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { Influencer } from "./types";
-
-
+import { Navigate } from "react-router-dom";
 
 export const getUserData = (): Influencer => {
   const user = sessionStorage.getItem(USER._USER_TOKEN);
@@ -192,6 +191,12 @@ export const changeContentTypeHeader = (isImage: boolean = false) => {
   } else {
     axios.defaults.headers.common["Content-Type"] = `application/json`;
   }
+};
+
+export const logout = () => {
+  sessionStorage.clear();
+  delete axios.defaults.headers.common["Authorization"];
+  return <Navigate to={PAGES.LOGIN_PAGE} />;
 };
 
 export const socialRequest = async (

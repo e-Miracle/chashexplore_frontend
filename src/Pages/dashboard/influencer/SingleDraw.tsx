@@ -133,7 +133,7 @@ type ModalProp = {
 export const BackDrop: React.FC<ModalProp> = ({ onclick, children }) => {
   return (
     <Suspense fallback={<Spinner toggle={false} />}>
-      <div className="bg-white shadow-normal w-[90%] md:w-1/2 rounded-[10px] p-[2rem] relative max-w-[768px] font-ubuntu">
+      <div className="bg-white shadow-normal w-[90%] md:w-1/2 rounded-[10px] p-[2rem] relative max-w-[768px] font-ubuntu z-[999999]">
         <button
           onClick={onclick}
           className="absolute top-[.5rem] right-[.2rem] md:top-[1rem] md:right-[1rem] text-xl lg:text-3xl text-[#4E5767]"

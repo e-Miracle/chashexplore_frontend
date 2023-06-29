@@ -155,7 +155,7 @@ const Transactions = () => {
       fetchNextPage();
   }, [entry]);
 
-  if (isFetching) return <Spinner toggle={false} />;
+  if (isFetching) return <Spinner />;
 
   if (isError) {
     const errorMessage = (error as any).message || "An unknown error occurred";
@@ -187,7 +187,9 @@ const Transactions = () => {
               {isFetchingNextPage ? (
                 <Spinner toggle={false} />
               ) : (
-                <div className="text-[black]">Your transactions would appear here</div>
+                <div className="text-[black]">
+                  Your transactions would appear here
+                </div>
               )}
             </>
           )}

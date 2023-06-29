@@ -12,9 +12,17 @@ import { faEye, faShareSquare } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useMediaQuery } from "react-responsive";
 import { useIntersection } from "@mantine/hooks";
+const Modal = React.lazy(() => import("../Modal/Modal"));
+const ModalContent = React.lazy(() =>
+  import("../../Pages/dashboard/influencer/SingleDraw").then((res) => {
+    return { default: res.ModalContent };
+  })
+);
 
 const index = () => {
   const isMobile: boolean = useMediaQuery({ query: `(max-width: 768px)` });
+  const [modalIsOpen, setIsOpen] = React.useState<boolean>(false);
+  const [id, setId] = React.useState<number | null>(null);
   const navigate = useNavigate();
   const {
     data,
@@ -45,7 +53,7 @@ const index = () => {
         pageParams: [1],
       },
       onSuccess: (data) => {
-        console.log(data)
+        console.log(data);
         if (data) toast.success(data?.pages[data?.pages.length - 1]?.message);
       },
       onError: (err) => {
@@ -61,11 +69,20 @@ const index = () => {
     threshold: 1,
   });
 
+  const openModal = (id: number) => {
+    setId(id);
+    setIsOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsOpen(false);
+    setId(null);
+  };
+
   React.useEffect(() => {
     if (entry?.isIntersecting && hasNextPage && !isFetchingNextPage)
       fetchNextPage();
   }, [entry]);
-
 
   if (isFetching) return <Spinner toggle={false} />;
 
@@ -147,14 +164,14 @@ const index = () => {
                         <td className="px-6 py-4 text-[#232E43]  font-ubuntu text-sm lg:text-base text-center">
                           {item.brand_colors &&
                           JSON.parse(item.brand_colors).length > 0 ? (
-                            <div className="flex items-center relative ">
+                            <div className="flex items-center relative  ">
                               {JSON.parse(item.brand_colors).map(
                                 (it: string | number, i: number) => (
                                   <div
                                     key={i}
-                                    className={` rounded-full border  w-[30px] h-[30px] border-0 flex items-center justify-center text-xs`}
+                                    className={` rounded-full   w-[30px] h-[30px] border-0 flex items-center justify-center text-xs`}
                                     style={{
-                                      zIndex: i > 0 ? i + 1 : 0,
+                                      // zIndex: i > 0 ? i + 1 : 0,
                                       marginLeft:
                                         i > 0
                                           ? isMobile
@@ -168,14 +185,15 @@ const index = () => {
                                 )
                               )}
                               <div
-                                className={` rounded-full border  w-[30px] h-[30px] border-0 flex items-center justify-center text-xs`}
+                                className={` relative rounded-full   w-[30px] h-[30px] border-0 flex items-center justify-center text-xs`}
                                 style={{
-                                  zIndex: i > 0 ? i + 1 : 0,
+                                  // zIndex: i > 0 ? i + 1 : 0,
                                   marginLeft:
                                     i > 0 ? (isMobile ? "-1rem" : "-1rem") : "",
                                   background: "#FBFBFD",
                                 }}
-                              >
+                                >
+                                  f
                                 {item.participants_count}
                               </div>
                             </div>
@@ -220,7 +238,10 @@ const index = () => {
                           </button>
                         </td>
                         <td className="px-6 py-4 text-heading text-center">
-                          <button className="flex items-center text-white bg-primary rounded-[100px] text-primary p-5 hover:opacity-80">
+                          <button
+                            onClick={() => openModal(item.id)}
+                            className="flex items-center text-white bg-primary rounded-[100px] text-primary p-5 hover:opacity-80"
+                          >
                             <FontAwesomeIcon
                               className="mr-2"
                               icon={faShareSquare}
@@ -260,6 +281,16 @@ const index = () => {
           </div>
         )}
       </div>
+      <Modal visible={modalIsOpen}>
+        <ModalContent
+          onclick={closeModal}
+          link={
+            import.meta.env.MODE === "development"
+              ? `http://localhost:5173/raffle-page-preview/${id}`
+              : `https://cashexplore.emiracle.me/raffle-page-preview/${id}`
+          }
+        />
+      </Modal>
     </Suspense>
   );
 };

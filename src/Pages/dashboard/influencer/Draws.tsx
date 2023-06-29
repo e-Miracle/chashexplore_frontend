@@ -19,6 +19,12 @@ import { Campaign, convertEndpointToTitle } from "../../../Utils";
 import { useNavigate } from "react-router-dom";
 import { useMediaQuery } from "react-responsive";
 import { useIntersection } from "@mantine/hooks";
+const Modal = React.lazy(() => import("../../../components/Modal/Modal"));
+const ModalContent = React.lazy(() =>
+  import("./SingleDraw").then((res) => {
+    return { default: res.ModalContent };
+  })
+);
 const Pagination = React.lazy(
   () => import("../../../components/Paginate/Paginate")
 );
@@ -52,11 +58,13 @@ const Table = ({
   observerRef,
   normalRef,
   title = String(ENDPOINTS.API_INFLUENCER_TOP_DRAWS),
+  openModal,
 }: {
   data: Campaign[];
   observerRef: any;
   normalRef: any;
   title: string;
+  openModal: any;
 }) => {
   const navigate = useNavigate();
   const isMobile: boolean = useMediaQuery({ query: `(max-width: 768px)` });
@@ -189,7 +197,10 @@ const Table = ({
                     </button>
                   </td>
                   <td className="px-6 py-4 text-heading text-center">
-                    <button className="flex items-center text-white bg-primary rounded-[100px] text-primary p-5 hover:opacity-80">
+                    <button
+                      onClick={() => openModal(item.id)}
+                      className="flex items-center text-white bg-primary rounded-[100px] text-primary p-5 hover:opacity-80"
+                    >
                       <FontAwesomeIcon className="mr-2" icon={faShareSquare} />
                       Share
                     </button>
@@ -203,7 +214,7 @@ const Table = ({
   );
 };
 
-const Body = () => {
+const Body = ({ openModal }: { openModal: (id: number) => void }) => {
   const [currentUrl, setCurrentUrl] = React.useState<string>(
     String(ENDPOINTS.API_INFLUENCER_TOP_DRAWS)
   );
@@ -239,6 +250,7 @@ const Body = () => {
         pageParams: [1],
       },
       onSuccess: (data) => {
+        console.log(data);
         if (data) toast.success(data?.pages[data?.pages.length - 1]?.message);
       },
       onError: (err) => {
@@ -313,6 +325,7 @@ const Body = () => {
               observerRef={observerRef}
               normalRef={ref}
               title={currentUrl}
+              openModal={openModal}
             />
             {isFetchingNextPage && <Spinner toggle={false} />}
             {/* <Pagination
@@ -351,11 +364,32 @@ const Body = () => {
   );
 };
 const Index = () => {
+  const [id, setId] = React.useState<number | null>(null);
+  const [modalIsOpen, setIsOpen] = React.useState<boolean>(false);
+  const openModal = (id: number) => {
+    setId(id);
+    setIsOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsOpen(false);
+    setId(null);
+  };
   return (
     <Suspense fallback={<Spinner />}>
       <DashBoardLayout type="influencer">
         <Header />
-        <Body />
+        <Body openModal={openModal} />
+        <Modal visible={modalIsOpen}>
+          <ModalContent
+            onclick={closeModal}
+            link={
+              import.meta.env.MODE === "development"
+                ? `http://localhost:5173/raffle-page-preview/${id}`
+                : `https://cashexplore.emiracle.me/raffle-page-preview/${id}`
+            }
+          />
+        </Modal>
       </DashBoardLayout>
     </Suspense>
   );

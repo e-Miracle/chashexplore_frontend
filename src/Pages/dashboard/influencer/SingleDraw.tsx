@@ -30,7 +30,6 @@ const Modal = lazy(() => import("../../../components/Modal/Modal"));
 const Timer = lazy(() => import("../../../components/Timer/Timer"));
 const Table = lazy(() => import("../../../components/Table/DrawsTable"));
 const CopyText = lazy(() => import("../../../components/CopyText/CopyText"));
-// const port = require("./vite.config.js").port;
 
 const Header = ({ title, endDate }: { title: string; endDate: string }) => {
   const header = (

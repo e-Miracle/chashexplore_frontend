@@ -20,6 +20,7 @@ import {
   InflunecersUpdateDraw,
   InflunecersTransactions,
   InflunecersSettings,
+  InflunecersParticipants,
   InflunecersPreviewDraw,
   InflunecersSingleDraw,
   InflunecersResults,
@@ -200,6 +201,10 @@ const router = createBrowserRouter([
       {
         path: `/my/dashboard/${_INFLUENCER_}/settings`,
         element: <InflunecersSettings />,
+      },
+      {
+        path: `/my/dashboard/${_INFLUENCER_}/participants`,
+        element: <InflunecersParticipants />,
       },
       {
         path: `/my/dashboard/${_ADMIN_}/dashboard`,

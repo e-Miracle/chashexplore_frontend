@@ -71,6 +71,7 @@ const InflunecersNotifications = lazy(
 const InflunecersActiveTransaction = lazy(
   () => import("./dashboard/influencer/ActiveTransaction")
 );
+const InflunecersParticipants = lazy(() => import("./dashboard/influencer/Participants"));
 
 //admin section
 const AdminDashboard = lazy(() => import("./dashboard/admin"));
@@ -141,6 +142,7 @@ export {
   InflunecersProfile,
   InflunecersActiveTransaction,
   InflunecersNotifications,
+  InflunecersParticipants,
   FollowersRafflePagePreview,
   FollowersResults,
   FollowersProfile,

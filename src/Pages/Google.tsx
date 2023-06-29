@@ -5,7 +5,7 @@ import { useQuery } from "react-query";
 import toast from "react-hot-toast";
 import { ENDPOINTS } from "../constants";
 import { fetchAuth } from "../hooks/customGets";
-import { storeUserData, storeSocialData, getUserData } from "../Utils";
+import { storeSocialData, getUserData } from "../Utils";
 import axios from "axios";
 
 const Google = () => {
@@ -21,7 +21,7 @@ const Google = () => {
     () => fetchAuth(url),
     {
       onSuccess: (data) => {
-        storeSocialData(data?.data);
+        data?.data && storeSocialData(data?.data);
         axios.defaults.headers.common[
           "Authorization"
         ] = `Bearer ${data?.data?.token}`;

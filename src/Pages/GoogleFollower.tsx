@@ -20,7 +20,7 @@ const Google = () => {
     () => fetchAuth(url),
     {
       onSuccess: (data) => {
-        storeSocialData(data?.data);
+        data?.data && storeSocialData(data?.data);
         axios.defaults.headers.common[
           "Authorization"
         ] = `Bearer ${data?.data?.token}`;

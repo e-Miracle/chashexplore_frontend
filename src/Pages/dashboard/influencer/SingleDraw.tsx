@@ -261,6 +261,12 @@ const SingleDraw = () => {
       score: 10,
     },
   ];
+  const flattenedData =
+    data?.data?.participants.flatMap(({ name, number_of_tickets }: any) => ({
+      imgSrc: PreviewImage,
+      email: "@" + name,
+      score: number_of_tickets,
+    })) || [];
   const columnsArr = [
     { Header: "Participants’ Username", accessor: "email" },
     { Header: "Tickets Bought", accessor: "score" },
@@ -298,7 +304,7 @@ const SingleDraw = () => {
         <div className="bg-bg p-[1rem] mt-5 rounded-[10px] ">
           <Header title={data?.data.title} endDate={data?.data?.end_date} />
           <Boxes data={dataCop} />
-          <Table dataArr={dataArr} columnsArr={columnsArr} />
+          <Table dataArr={flattenedData} columnsArr={columnsArr} />
           <Buttons onClickShare={() => setIsOpen(true)} />
           <Modal visible={modalIsOpen}>
             <ModalContent

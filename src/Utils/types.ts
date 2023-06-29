@@ -79,6 +79,21 @@ export interface Ticket {
   ticket_sale_cap: string;
   updated_at: Date;
 }
+export interface Partcipants {
+  amount: string;
+  created_at: Date;
+  deleted_at: null | Date;
+  follower_id: string;
+  id: number;
+  laravel_through_key: string;
+  name: string;
+  number_of_tickets: string;
+  phone: string;
+  status: string;
+  ticket_id: string;
+  ticket_uid: string;
+  updated_at: Date;
+}
 export interface Campaign {
   id: number;
   title: string;
@@ -98,7 +113,7 @@ export interface Campaign {
   ticket: Ticket | null;
   tickets_sold: number;
   amount_raised: number;
-  participants: any[];
+  participants: Partcipants[];
   participants_count: string;
 }
 
@@ -121,4 +136,5 @@ export interface Draws {
   amount_raised: number;
   ticket: Ticket | null;
   media: Media[];
+  participants: Partcipants[];
 }

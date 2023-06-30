@@ -17,6 +17,7 @@ export const PAGES = {
 export const USER = {
   _USER_TOKEN: "__user_auth__",
   _INFLUENCER_IDENTIFICATION_TYPES_: "__INFLUENCER_IDENTIFICATION_TYPES__",
+  __TOKEN__: "token"
 };
 
 export const _FOLLOWER_ = "follower";

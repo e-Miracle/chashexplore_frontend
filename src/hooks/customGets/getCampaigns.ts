@@ -1,6 +1,7 @@
 import axios from "axios";
 import { ENDPOINTS } from "../../constants";
 import toast from "react-hot-toast";
+import { logout } from "../../Utils";
 export const fetchCampaigns = async (page: number = 1) => {
   const route =
     (ENDPOINTS.API_BASE_URL as string) +
@@ -12,6 +13,10 @@ export const fetchCampaigns = async (page: number = 1) => {
   } catch (err: any) {
     toast.error(err.message);
     toast.error(err.response.data.message);
+    if (err.response && err.response.status === 401) {
+      toast.error("Unauthorized");
+      logout();
+    }
     return err;
   }
 };
@@ -26,6 +31,10 @@ export const fetchSingleCampaign = async (id: number) => {
   } catch (err: any) {
     toast.error(err.message);
     toast.error(err.response.data.message);
+    if (err.response && err.response.status === 401) {
+      toast.error("Unauthorized");
+      logout();
+    }
     return err;
   }
 };

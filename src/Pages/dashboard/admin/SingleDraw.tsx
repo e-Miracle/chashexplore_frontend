@@ -147,7 +147,9 @@ const SingleDraw = () => {
     ticketsPurchased: 3,
     ticketsAvaliable: 400,
     ticketCap: 400,
-    ticketPurchased: 40,
+    ticketParticpants: 40,
+    ticket: ticketTable,
+    participant: partcipantsTable,
   };
   return (
     <Suspense fallback={<Spinner />}>
@@ -165,8 +167,14 @@ const SingleDraw = () => {
             toggleTicketTables={toggleTicketTables}
             {...BoxesProps}
           />
-          {ticketTable && <TicketTable onclick={updateTicketDetails} />}
-          {partcipantsTable && <ParticipantsTable />}
+          {ticketTable && (
+            <TicketTable
+              data={[]}
+              title="N100,000 New Year Giveaway!"
+              onclick={updateTicketDetails}
+            />
+          )}
+          {partcipantsTable && <ParticipantsTable data={[]} />}
           <Modal visible={modalIsOpen}>
             <ModalContent
               onclick={() => setIsOpen(false)}

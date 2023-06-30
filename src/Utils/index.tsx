@@ -16,17 +16,23 @@ export function getRandomInt(max: number) {
 
 export const toNum = (num: number) => (num ? Number(num).toLocaleString() : 0);
 
-export const storeUserData = (data: any) =>
-  sessionStorage.setItem(
-    USER._USER_TOKEN,
-    JSON.stringify({ ...data?.message?.user, token: data?.message?.token })
-    // JSON.stringify({ token: data?.access_token, isVerified: data?.isVerified })
-  );
-export const storeSocialData = async (data: any) =>
-  await sessionStorage.setItem(
-    USER._USER_TOKEN,
-    JSON.stringify({ ...data?.user, token: data?.token })
-  );
+export const storeUserData = (data: any) => {
+  localStorage.setItem(USER.__TOKEN__, data?.message?.token);
+   sessionStorage.setItem(
+     USER._USER_TOKEN,
+     JSON.stringify({ ...data?.message?.user, token: data?.message?.token })
+     // JSON.stringify({ token: data?.access_token, isVerified: data?.isVerified })
+   );
+}
+ 
+export const storeSocialData = async (data: any) => {
+  localStorage.setItem(USER.__TOKEN__, data?.token);
+   await sessionStorage.setItem(
+     USER._USER_TOKEN,
+     JSON.stringify({ ...data?.user, token: data?.token })
+   );
+}
+ 
 
 export const storeIdentificationTypes = (data: any) =>
   sessionStorage.setItem(
@@ -174,7 +180,12 @@ export const setAuthToken = () => {
     axios.defaults.headers.common["Authorization"] = `Bearer ${
       getUserData()?.token
     }`;
-  } else {
+  } else if (localStorage.token) {
+    axios.defaults.headers.common["Authorization"] = `Bearer ${
+      localStorage.token
+      }`;
+  }
+  else {
     delete axios.defaults.headers.common["Authorization"];
   }
 };
@@ -199,6 +210,7 @@ export const changeContentTypeHeader = (isImage: boolean = false) => {
 };
 
 export const logout = () => {
+  localStorage.clear();
   sessionStorage.clear();
   delete axios.defaults.headers.common["Authorization"];
   return <Navigate to={PAGES.LOGIN_PAGE} />;
@@ -227,8 +239,11 @@ export const socialRequest = async (
 };
 
 export const loadUser = () => {
-  if (getUserData()?.token)
+  if (localStorage.token) {
+    //i want to fetch user data here, so i need a fucntion
     return <Navigate to={`/my/dashboard/${getUserData()?.role}/home`} />;
+  }
+   
   return;
 };
 

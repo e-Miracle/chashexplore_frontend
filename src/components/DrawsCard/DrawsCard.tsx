@@ -102,7 +102,7 @@ const DrawsCard: React.FC<Props> = (props) => {
               </h2>
             </div>
             <Link
-              to={`/my/dashboard/${_INFLUENCER_}/draws/singledraw/${props.item.id}`}
+              to={`/my/dashboard/${getUserData()?.role}/draws/singledraw/:id`}
               className="text-primary text-sm lg:text-base hover:opacity-80"
             >
               View Raffle Here{" "}

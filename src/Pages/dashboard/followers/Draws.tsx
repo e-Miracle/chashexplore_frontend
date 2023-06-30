@@ -6,49 +6,13 @@ import DrawsCard from "../../../components/DrawsCard/DrawsCardAlt";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowDown, faArrowUp } from "@fortawesome/free-solid-svg-icons";
 import { Raffle } from "../../../assets";
+import { fetchDraws, fetchData } from "../../../hooks/customGets";
+import { useInfiniteQuery } from "react-query";
+import { useIntersection } from "@mantine/hooks";
+import { ENDPOINTS } from "../../../constants";
+import toast from "react-hot-toast";
+import { Draws } from "../../../Utils";
 
-const data = [
-  {
-    imgSrc: Raffle,
-    name: "Genevieve Doe",
-    title: "500,000naira New Year Giveaway",
-    endIn: "14:48:27",
-    id: 1,
-    price: 150,
-  },
-  {
-    imgSrc: Raffle,
-    name: "Genevieve Doe",
-    title: "500,000naira New Year Giveaway",
-    endIn: "14:48:27",
-    id: 2,
-    price: 150,
-  },
-  {
-    imgSrc: Raffle,
-    name: "Genevieve Doe",
-    title: "500,000naira New Year Giveaway",
-    endIn: "14:48:27",
-    id: 3,
-    price: 150,
-  },
-  {
-    imgSrc: Raffle,
-    name: "Genevieve Doe",
-    title: "500,000naira New Year Giveaway",
-    endIn: "14:48:27",
-    id: 4,
-    price: 150,
-  },
-  {
-    imgSrc: Raffle,
-    name: "Genevieve Doe",
-    title: "500,000naira New Year Giveaway",
-    endIn: "14:48:27",
-    id: 5,
-    price: 150,
-  },
-];
 export const Title = ({ text }: { text: string }) => {
   return (
     <h2 className="text-primary font-ubuntu text-[1.5rem] lg:text-[2rem] capitalize">
@@ -57,8 +21,69 @@ export const Title = ({ text }: { text: string }) => {
   );
 };
 
-const UserDraws = ({ text, data }: { text: string; data: any[] }) => {
+const ActiveDraws = ({ text }: { text: string }) => {
   const [visible, setVisbility] = useState<boolean>(true);
+  const {
+    data,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isError,
+    error,
+    isFetching,
+  } = useInfiniteQuery(
+    "followerActiveDraws",
+    async ({ pageParam = 1 }) => {
+      const res = await fetchDraws({
+        page: pageParam,
+        endpoint: ENDPOINTS.API_INFLUENCER_ACTIVE_DRAWS as string,
+      });
+      return res;
+    },
+
+    {
+      getNextPageParam: (_, allPages) => {
+        return allPages[allPages.length - 1]?.data.next_page_url
+          ? allPages[allPages.length - 1]?.data.current_page + 1
+          : null;
+      },
+      initialData: {
+        pages: [],
+        pageParams: [1],
+      },
+      onSuccess: (data) => {
+        console.log(data);
+        if (data) toast.success(data?.pages[data?.pages.length - 1]?.message);
+      },
+      onError: (err) => {
+        console.log(err);
+        if (err) toast.error("An error occured");
+      },
+    }
+  );
+  const flattenedData = data?.pages.flatMap((page) => page.data.data) || [];
+  const observerRef = React.useRef<HTMLDivElement>(null);
+  const { ref, entry } = useIntersection({
+    root: observerRef.current,
+    threshold: 1,
+  });
+
+  React.useEffect(() => {
+    if (entry?.isIntersecting && hasNextPage && !isFetchingNextPage)
+      fetchNextPage();
+  }, [entry]);
+
+  if (isFetching) return <Spinner toggle={false} />;
+
+  if (isError) {
+    const errorMessage = (error as any).message || "An unknown error occurred";
+    return (
+      <div>
+        <p>There was an error fetching the data.</p>
+        <p>{errorMessage}</p>
+      </div>
+    );
+  }
   return (
     <Suspense fallback={<Spinner toggle={false} />}>
       <div className="w-full bg-bg rounded-[10px] p-[1rem] font-ubuntu">
@@ -72,28 +97,142 @@ const UserDraws = ({ text, data }: { text: string; data: any[] }) => {
           </h3>
         </button>
         {visible && (
-          <div className="grid gap-[1rem] grid-cols-1 md:grid-cols-2 lg:grid-cols-3 mt-[1rem] lg:mt-0">
-            {data &&
-              data.length > 0 &&
-              data.map((item, i) => <DrawsCard key={i} {...item} />)}
-          </div>
+          <>
+            {flattenedData && flattenedData.length > 0 ? (
+              <div className="grid gap-[1rem] grid-cols-1 md:grid-cols-2 lg:grid-cols-3 mt-[1rem] lg:mt-0 h-[80vh]">
+                {flattenedData.map((item: Draws, i: number) => (
+                  <DrawsCard
+                    key={i}
+                    noref={i === flattenedData.length - 1 ? ref : null}
+                    item={item}
+                    name={"john Doe"}
+                  />
+                ))}
+                {isFetchingNextPage && <Spinner toggle={false} />}
+              </div>
+            ) : (
+              <h3 className="text-primary text-sm lg:text-base font-semibold">
+                No Active Draws
+              </h3>
+            )}
+          </>
         )}
       </div>
     </Suspense>
   );
 };
-const Draws = () => {
+const InactiveDraws = ({ text }: { text: string }) => {
+  const [visible, setVisbility] = useState<boolean>(true);
+  const {
+    data,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isError,
+    error,
+    isFetching,
+  } = useInfiniteQuery(
+    "followerInactiveDraws",
+    async ({ pageParam = 1 }) => {
+      const res = await fetchDraws({
+        page: pageParam,
+        endpoint: ENDPOINTS.API_INFLUENCER_INACTIVE_DRAWS as string,
+      });
+      return res;
+    },
+
+    {
+      getNextPageParam: (_, allPages) => {
+        return allPages[allPages.length - 1]?.data.next_page_url
+          ? allPages[allPages.length - 1]?.data.current_page + 1
+          : null;
+      },
+      initialData: {
+        pages: [],
+        pageParams: [1],
+      },
+      onSuccess: (data) => {
+        console.log(data);
+        if (data) toast.success(data?.pages[data?.pages.length - 1]?.message);
+      },
+      onError: (err) => {
+        console.log(err);
+        if (err) toast.error("An error occured");
+      },
+    }
+  );
+  const flattenedData = data?.pages.flatMap((page) => page.data.data) || [];
+  const observerRef = React.useRef<HTMLDivElement>(null);
+  const { ref, entry } = useIntersection({
+    root: observerRef.current,
+    threshold: 1,
+  });
+
+  React.useEffect(() => {
+    if (entry?.isIntersecting && hasNextPage && !isFetchingNextPage)
+      fetchNextPage();
+  }, [entry]);
+
+  if (isFetching) return <Spinner toggle={false} />;
+
+  if (isError) {
+    const errorMessage = (error as any).message || "An unknown error occurred";
+    return (
+      <div>
+        <p>There was an error fetching the data.</p>
+        <p>{errorMessage}</p>
+      </div>
+    );
+  }
+  return (
+    <Suspense fallback={<Spinner toggle={false} />}>
+      <div className="w-full bg-bg rounded-[10px] p-[1rem] font-ubuntu">
+        <button onClick={() => setVisbility(!visible)}>
+          <h3 className="text-primary text-base lg:text-[1.25rem] font-semibold">
+            {text}{" "}
+            <FontAwesomeIcon
+              icon={visible ? faArrowUp : faArrowDown}
+              className="text-[#646C79]"
+            />
+          </h3>
+        </button>
+        {visible && (
+          <>
+            {flattenedData && flattenedData.length > 0 ? (
+              <div className="grid gap-[1rem] grid-cols-1 md:grid-cols-2 lg:grid-cols-3 mt-[1rem] lg:mt-0 h-[80vh]">
+                {flattenedData.map((item: Draws, i: number) => (
+                  <DrawsCard
+                    key={i}
+                    noref={i === flattenedData.length - 1 ? ref : null}
+                    item={item}
+                    name={"john Doe"}
+                  />
+                ))}
+                {isFetchingNextPage && <Spinner toggle={false} />}
+              </div>
+            ) : (
+              <h3 className="text-primary text-sm lg:text-base font-semibold">
+                No Active Draws
+              </h3>
+            )}
+          </>
+        )}
+      </div>
+    </Suspense>
+  );
+};
+const Index = () => {
   return (
     <Suspense fallback={<Spinner />}>
       <DashBoardLayout type="follower">
         <Title text="My Draws" />
         <BackgroundDrop>
-          <UserDraws text="Active Draws" data={data} />
-          <UserDraws text="Inactive  Draws" data={data} />
+          <ActiveDraws text="Active Draws" />
+          <InactiveDraws text="Inactive  Draws" />
         </BackgroundDrop>
       </DashBoardLayout>
     </Suspense>
   );
 };
 
-export default Draws;
+export default Index;

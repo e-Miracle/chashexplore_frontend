@@ -14,7 +14,7 @@ type Props = {
   item: Draws;
   noref: any;
 };
-const responsive = {
+export const responsive = {
   superLargeDesktop: {
     // the naming can be any, depends on you.
     breakpoint: { max: 4000, min: 3000 },
@@ -102,7 +102,15 @@ const DrawsCard: React.FC<Props> = (props) => {
               </h2>
             </div>
             <Link
-              to={`/my/dashboard/${getUserData()?.role}/draws/singledraw/:id`}
+              to={
+                getUserData()?.role === _INFLUENCER_
+                  ? `/my/dashboard/${getUserData()?.role}/draws/singledraw/${
+                      props.item.id
+                    }`
+                  : `/my/dashboard/${getUserData()?.role}/draws/preview/${
+                      props.item.id
+                    }`
+              }
               className="text-primary text-sm lg:text-base hover:opacity-80"
             >
               View Raffle Here{" "}

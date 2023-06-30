@@ -34,7 +34,7 @@ const Google = () => {
     }
   );
 
-  if (isLoading) return <Spinner toggle={false} />;
+  if (isLoading) return <Spinner  />;
 
   if (isError) {
     const errorMessage = (error as any).message || "An unknown error occurred";

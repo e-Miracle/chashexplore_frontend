@@ -11,25 +11,25 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ErrorMessage } from "@hookform/error-message";
 import { nFormatter } from "../../../Utils";
-import { Link, useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLongArrowRight } from "@fortawesome/free-solid-svg-icons";
-import { PreviewImage } from "../../../assets";
+import { _FOLLOWER_, _INFLUENCER_ } from "../../../constants";
+import { fetchSingleCampaign } from "../../../hooks/customGets";
+import { useParams, useNavigate } from "react-router-dom";
+import { useQuery } from "react-query";
+import toast from "react-hot-toast";
+
 const Modal = lazy(() => import("../../../components/Modal/Modal"));
 
-const data = [
-  { num: 3, title: "tickets purchased", link: "Hide My Tickets" },
-  { num: 400, title: "tickets avaliable", link: "Ticket Cap: 700 tickets" },
-  { num: 40, title: "participants", link: "View Participants", icon: true },
-];
-
-const ticketTableData = [
-  { ticketId: "NYG123456HJ", status: "Pending" },
-  { ticketId: "PYG123456HF", status: "Pending" },
-  { ticketId: "JYG123456HA", status: "Pending" },
-];
-
-export const TicketTable = ({ onclick }: { onclick: (data: any) => void }) => {
+export const TicketTable = ({
+  onclick,
+  data,
+  title,
+}: {
+  data: any;
+  title: string;
+  onclick: (data: any) => void;
+}) => {
   return (
     <Suspense fallback={<Spinner toggle={false} />}>
       <div className="relative overflow-x-auto  sm:rounded-lg font-ubuntu">
@@ -45,19 +45,19 @@ export const TicketTable = ({ onclick }: { onclick: (data: any) => void }) => {
             </tr>
           </thead>
           <tbody>
-            {ticketTableData &&
-              ticketTableData.length > 0 &&
-              ticketTableData.map((item, i: number) => (
+            {data &&
+              data.length > 0 &&
+              data.map((item: any, i: number) => (
                 <tr
                   key={i}
                   className="bg-white hover:opacity-80 cursor-pointer "
-                  onClick={() => onclick(item)}
+                  onClick={() => onclick({ ...item, title })}
                 >
                   <th
                     scope="row"
                     className="px-6 py-4 font-medium  text-heading whitespace-nowrap text-center"
                   >
-                    {item.ticketId}
+                    {item.ticket_uid}
                   </th>
                   <td className="px-6 py-4 text-heading text-center">
                     {item.status}
@@ -71,15 +71,7 @@ export const TicketTable = ({ onclick }: { onclick: (data: any) => void }) => {
   );
 };
 
-const ParticipantsTableData = [
-  { imgSrc: PreviewImage, username: "@johnnkobo346", amount: "1" },
-  { imgSrc: PreviewImage, username: "@johnnkobo346", amount: "1" },
-  { imgSrc: PreviewImage, username: "@johnnkobo346", amount: "1" },
-  { imgSrc: PreviewImage, username: "@johnnkobo346", amount: "1" },
-  { imgSrc: PreviewImage, username: "@johnnkobo346", amount: "1" },
-];
-
-export const ParticipantsTable = () => {
+export const ParticipantsTable = ({ data }: { data: any }) => {
   return (
     <Suspense fallback={<Spinner toggle={false} />}>
       <div className="relative overflow-x-auto  sm:rounded-lg font-ubuntu">
@@ -95,9 +87,9 @@ export const ParticipantsTable = () => {
             </tr>
           </thead>
           <tbody>
-            {ParticipantsTableData &&
-              ParticipantsTableData.length > 0 &&
-              ParticipantsTableData.map((item, i: number) => (
+            {data &&
+              data.length > 0 &&
+              data.map((item: any, i: number) => (
                 <tr
                   key={i}
                   className="bg-bg border-b dark:bg-gray-900 dark:border-gray-700"
@@ -106,15 +98,15 @@ export const ParticipantsTable = () => {
                     scope="row"
                     className="px-6 py-4 font-medium  text-heading whitespace-nowrap text-center flex items-center"
                   >
-                    <img
+                    {/* <img
                       className="w-[32px] h-[32px] rounded-full object-cover mr-3"
                       src={item.imgSrc}
                       alt={item.imgSrc}
-                    />{" "}
-                    {item.username}
+                    />{" "} */}
+                    @{item.name}
                   </th>
                   <td className="px-6 py-4 text-heading text-center">
-                    {item.amount}
+                    {item.number_of_tickets}
                   </td>
                 </tr>
               ))}
@@ -129,14 +121,18 @@ export const Boxes = ({
   ticketsPurchased,
   ticketsAvaliable,
   ticketCap,
-  ticketPurchased,
+  ticketParticpants,
   togglePartcipantTables,
   toggleTicketTables,
+  ticket,
+  participant,
 }: {
   ticketsPurchased: number;
   ticketsAvaliable: number;
   ticketCap: number;
-  ticketPurchased: number;
+  ticketParticpants: number;
+  ticket: boolean;
+  participant: boolean;
   toggleTicketTables: () => void;
   togglePartcipantTables: () => void;
 }) => {
@@ -156,7 +152,7 @@ export const Boxes = ({
             onClick={toggleTicketTables}
             className="block text-center mt-[4rem] text-[#646C79] hover:opacity-80"
           >
-            View My Tickets
+            {ticket ? "Hide" : "View"} My Tickets
             <FontAwesomeIcon className="ml-2" icon={faLongArrowRight} />
           </button>
         </div>
@@ -175,7 +171,7 @@ export const Boxes = ({
         </div>
         <div className="p-5 rounded-[10px] font-ubuntu bg-white cursor-pointer flex flex-col items-center ">
           <h2 className="text-primary text-[1.7rem] md:text-[2rem] font-bold">
-            {nFormatter(ticketsPurchased, 3)}
+            {nFormatter(ticketParticpants, 3)}
           </h2>
 
           <p className="text-labels text-base md:text-lg font-bold">
@@ -186,7 +182,7 @@ export const Boxes = ({
             onClick={togglePartcipantTables}
             className="block text-center mt-[4rem] text-[#646C79] hover:opacity-80"
           >
-            Hide Participants
+            {participant ? "Hide" : "View"} Participants
             <FontAwesomeIcon className="ml-2" icon={faLongArrowRight} />
           </button>
         </div>
@@ -365,6 +361,8 @@ const ModalContentAlt: React.FC<ModalContentAlt> = ({
 };
 
 const SingleDraw = () => {
+  const { id } = useParams();
+  const navigate = useNavigate();
   const [modalIsOpen, setIsOpen] = useState<boolean>(false);
   const [modalIsOpenAlt, setIsOpenAlt] = useState<boolean>(false);
   const [ticketTable, setTicketTable] = useState<boolean>(true);
@@ -385,13 +383,32 @@ const SingleDraw = () => {
     bank: "",
   });
 
+  const { isLoading, isError, data, error } = useQuery(
+    "singleCampaign",
+    () => fetchSingleCampaign(Number(id)),
+    {
+      onSuccess: (data) => {
+        console.log(data)
+        if (data) toast.success("Successfully fetched campaign");
+      },
+      onError: (err) => {
+        if (err) toast.error("An error occured");
+      },
+    }
+  );
+  const soldTickets: number = data?.data?.participants.reduce(
+    (accumulator: number, currentItem: any) =>
+      accumulator + Number(currentItem.number_of_tickets),
+    0
+  );
+
   const updateTicketDetails = (data: any) => {
     setTicketDetails({
       ...ticketDetails,
-      ticketId: data.ticketId,
+      ticketId: data.ticket_id,
       status: data.status,
-      username: "@judikay789",
-      title: "N100,000 New Year Giveaway!",
+      username: data.name,
+      title: data.title,
       bank: " GTBank",
       acctNumber: "9998098907",
     });
@@ -409,19 +426,33 @@ const SingleDraw = () => {
   };
 
   const BoxesProps = {
-    ticketsPurchased: 3,
-    ticketsAvaliable: 400,
-    ticketCap: 400,
-    ticketPurchased: 40,
+    ticketsPurchased: soldTickets,
+    ticketsAvaliable: data?.data?.ticket?.ticket_sale_cap - soldTickets,
+    ticketCap: data?.data?.ticket?.ticket_sale_cap,
+    ticketParticpants: data?.data?.participants.length,
+    ticket: ticketTable,
+    participant: partcipantsTable,
   };
+
+  if (isLoading) return <Spinner />;
+
+  if (isError) {
+    const errorMessage = (error as any).message || "An unknown error occurred";
+    return (
+      <div>
+        <p>There was an error fetching the data.</p>
+        <p>{errorMessage}</p>
+      </div>
+    );
+  }
   return (
     <Suspense fallback={<Spinner />}>
       <DashBoardLayout type="follower" backbtn={true}>
         <Title text="My Draws" />
         <BackgroundDrop>
           <Header
-            text="N100,000 New Year Giveaway!"
-            time={moment().add(3, "d").toDate()}
+            text={data?.data?.title}
+            time={data?.data?.end_date}
             color="#394355"
             headerColor="#4E5767"
           />
@@ -430,13 +461,22 @@ const SingleDraw = () => {
             toggleTicketTables={toggleTicketTables}
             {...BoxesProps}
           />
-          {ticketTable && <TicketTable onclick={updateTicketDetails} />}
-          {partcipantsTable && <ParticipantsTable />}
+          {data?.data?.participants.length > 0 && <></>}
+          {ticketTable && (
+            <TicketTable
+              data={data?.data?.participants}
+              title={data?.data?.title}
+              onclick={updateTicketDetails}
+            />
+          )}
+          {partcipantsTable && (
+            <ParticipantsTable data={data?.data?.participants} />
+          )}
           <Modal visible={modalIsOpen}>
             <ModalContent
               onclick={() => setIsOpen(false)}
-              title="N100,000 New Year Giveaway!"
-              price={50000}
+              title={data?.data?.title}
+              price={data?.data?.ticket?.ticket_prize}
             />
           </Modal>
           <Modal visible={modalIsOpenAlt}>
@@ -450,7 +490,17 @@ const SingleDraw = () => {
               onClick={() => setIsOpen(true)}
               className=" w-full md:w-auto bg-primary text-white text-sm lg:text-base  py-3 px-10 my-5 rounded-[100px] cursor-pointer hover:opacity-80"
             >
-              Buy More Tickets
+              Withdraw
+            </button>
+            <button
+              onClick={() =>
+                navigate(
+                  `/my/dashboard/${_FOLLOWER_}/home/purchase-ticket/${id}/${data?.data?.title}/${data?.data?.end_date}/${data?.data?.ticket?.ticket_prize}`
+                )
+              }
+              className=" w-full md:w-auto bg-primary text-white text-sm lg:text-base  py-3 px-10 my-5 rounded-[100px] cursor-pointer hover:opacity-80"
+            >
+              Buy Tickets(s)
             </button>
           </div>
         </BackgroundDrop>

@@ -15,6 +15,13 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { BackDrop } from "../influencer/SingleDraw";
+import { countDown, getUserData } from "../../../Utils";
+import { fetchSingleCampaign } from "../../../hooks/customGets";
+import { useParams, useNavigate } from "react-router-dom";
+import { useQuery } from "react-query";
+import toast from "react-hot-toast";
+import useBuyTicket from "../../../hooks/utils/useCustomBankPayment";
+import useErrorHandler from "../../../hooks/useErrorHandler";
 const Timer = lazy(() => import("../../../components/Timer/Timer"));
 const Modal = lazy(() => import("../../../components/Modal/Modal"));
 
@@ -35,14 +42,23 @@ export const Header = ({
 }) => {
   return (
     <Suspense fallback={<Spinner toggle={false} />}>
-      <div className="flex flex-col lg:flex-row items-center justify-between">
+      <div className="flex flex-col lg:flex-row items-center justify-between text-pr">
         <h2
-          className=" text-[1.2rem] lg:text-[1.5rem]"
+          className=" text-[1.2rem] lg:text-[1.5rem] text-primary"
           style={{ color: headerColor }}
         >
           {text}
         </h2>
-        <Timer countDownDate={time} color={color} />
+        <Timer
+          countDownDate={
+            new Date(
+              countDown(time).year,
+              countDown(time).month,
+              countDown(time).day
+            )
+          }
+          color={color}
+        />
       </div>
     </Suspense>
   );
@@ -51,10 +67,16 @@ export const Header = ({
 const Form = ({
   submit,
   toggleModal,
+  id,
+  amount,
 }: {
   submit: any;
   toggleModal: () => void;
+  id: number;
+  amount: number;
 }) => {
+  const buyticket = useBuyTicket();
+  useErrorHandler(buyticket, "Purchase Successful", "Purchase Error");
   const formSchema = z.object({
     phone: z.string().refine(validator.isMobilePhone),
     name: z
@@ -63,7 +85,7 @@ const Form = ({
       .max(20, {
         message: "name must not be greater than 20 characters",
       }),
-    noOfTickets: z
+    number_of_tickets: z
       .number({
         required_error: "number of tickets  is required",
         invalid_type_error: "number of tickets must be a number",
@@ -75,15 +97,28 @@ const Form = ({
     register,
     watch,
     handleSubmit,
+    reset,
     formState: { errors, isSubmitting },
   } = useForm<FormSchemaType>({
     resolver: zodResolver(formSchema),
   });
+  const noOfTickets = watch("number_of_tickets");
 
   const onSubmit: SubmitHandler<FormSchemaType> = async (data) => {
     console.log(data);
     submit(data);
     toggleModal();
+    await buyticket.mutateAsync({
+      ...data,
+      campaign_id: id,
+      ticket_id: id,
+      amount: amount * Number(data.number_of_tickets),
+    });
+    reset({
+      phone: "",
+      name: getUserData()?.first_name + " " + getUserData()?.last_name,
+      number_of_tickets: 0,
+    });
   };
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -107,6 +142,9 @@ const Form = ({
             id="name"
             {...register("name", { required: "This is required." })}
             disabled={isSubmitting}
+            defaultValue={
+              getUserData()?.first_name + " " + getUserData()?.last_name
+            }
           />
           <ErrorMessage
             errors={errors}
@@ -156,7 +194,7 @@ const Form = ({
       <div className="flex flex-col lg:flex-row justify-between mt-[1rem] lg:mt-[2rem]">
         <div className="lg:w-[30%]">
           <label
-            htmlFor="noOfTickets"
+            htmlFor="number_of_tickets"
             className="font-ubuntu text-rand text-sm lg:text-base mb-3 lg:mb-0"
           >
             Number of Tickets
@@ -172,8 +210,8 @@ const Form = ({
             aria-label="winners"
             placeholder="How many tickets are you purchasing?"
             type="number"
-            id="noOfTickets"
-            {...register("noOfTickets", {
+            id="number_of_tickets"
+            {...register("number_of_tickets", {
               required: "This is required.",
               valueAsNumber: true,
               validate: (value) => value > 0,
@@ -182,7 +220,7 @@ const Form = ({
           />
           <ErrorMessage
             errors={errors}
-            name="noOfTickets"
+            name="number_of_tickets"
             render={({ message }) => (
               <p className="my-1 font-ubuntu text-[#E4033B] text-xs lg:text-sm flex items-center">
                 <FontAwesomeIcon icon={faTimesCircle} className="block mr-2" />
@@ -192,6 +230,13 @@ const Form = ({
           />
         </div>
       </div>
+
+      <h1 className=" text-[1.2rem] lg:text-[1.5rem] text-primary mt-5">
+        Amount :{" "}
+        {Number(
+          amount * (noOfTickets ? Number(noOfTickets) : 0)
+        ).toLocaleString()}
+      </h1>
 
       <div className=" w-full p-[1rem] lg:p-0 md:flex md:items-end md:justify-end">
         {isSubmitting ? (
@@ -261,6 +306,7 @@ const ModalContent: React.FC<ModalContent> = ({
   );
 };
 const PurchaseTicket = () => {
+  const { id, name, time, amount } = useParams();
   const [modalIsOpen, setIsOpen] = React.useState<boolean>(false);
   const [mainData, setData] = React.useState<Data>({
     price: 4000,
@@ -272,8 +318,8 @@ const PurchaseTicket = () => {
     setData({
       ...mainData,
       phone: data.phone,
-      numberOfTickets: data.noOfTickets,
-      price: data.noOfTickets * 1000,
+      numberOfTickets: data.number_of_tickets,
+      price: data.number_of_tickets * 1000,
     });
   };
   return (
@@ -283,12 +329,14 @@ const PurchaseTicket = () => {
           Ticket Purchase
         </h1>
         <BackgroundDrop>
-          <Header
-            text="N100,000 New Year Giveaway!"
-            time={moment().add(3, "d").toDate()}
-          />
+          <Header text={String(name)} time={time} />
 
-          <Form toggleModal={() => setIsOpen(true)} submit={updateData} />
+          <Form
+            id={Number(id)}
+            amount={Number(amount)}
+            toggleModal={() => setIsOpen(true)}
+            submit={updateData}
+          />
           <Modal visible={modalIsOpen}>
             <ModalContent onclick={() => setIsOpen(false)} data={mainData} />
           </Modal>

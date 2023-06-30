@@ -335,6 +335,7 @@ export const currency_list: Object = {
 
 export const ENDPOINTS: { [key: string]: string | Function } = {
   API_BASE_URL: import.meta.env.VITE_APP_API_URL,
+  API_BUY_TICKET: "/buy-ticket/wallet",
 
   // influencer auth URL
   API_INFLUENCER_AUTH_SIGNUP: "/auth/influencer-register",

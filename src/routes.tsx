@@ -129,11 +129,11 @@ const router = createBrowserRouter([
         element: <FollowersDashboard />,
       },
       {
-        path: `/my/dashboard/${_FOLLOWER_}/view-raffle`,
+        path: `/my/dashboard/${_FOLLOWER_}/draws/preview/:id`,
         element: <FollowersViewRaffle />,
       },
       {
-        path: `/my/dashboard/${_FOLLOWER_}/purchase-ticket`,
+        path: `/my/dashboard/${_FOLLOWER_}/home/purchase-ticket/:id/:name/:time/:amount`,
         element: <FollowersPurchaseTicket />,
       },
       {
@@ -177,7 +177,7 @@ const router = createBrowserRouter([
         element: <InflunecersNewDraw />,
       },
       {
-        path: `/my/dashboard/${_INFLUENCER_}/preview/:id`,
+        path: `/my/dashboard/${_INFLUENCER_}/draws/preview/:id`,
         element: <InflunecersPreviewDraw />,
       },
       {

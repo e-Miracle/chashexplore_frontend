@@ -78,41 +78,41 @@ const data = [
 ];
 
 export const Header = () => {
-  const { isLoading, isError, data, error } = useQuery(
-    "socials",
-    ({ pageParam = 1 }) =>
-      fetchData({
-        page: pageParam,
-        endpoint: String(ENDPOINTS.API_INFLUENCER_VERIFY_ACCOUNT),
-      }),
-    {
-      onSuccess: (data) => {
-        if (data) toast.success("Successful");
-      },
-      onError: (err) => {
-        if (err) toast.error("An error occured");
-      },
-    }
-  );
-  if (isLoading) return <Spinner toggle={false} />;
+  // const { isLoading, isError, data, error } = useQuery(
+  //   "socials",
+  //   ({ pageParam = 1 }) =>
+  //     fetchData({
+  //       page: pageParam,
+  //       endpoint: String(ENDPOINTS.API_INFLUENCER_VERIFY_ACCOUNT),
+  //     }),
+  //   {
+  //     onSuccess: (data) => {
+  //       if (data) toast.success("Successful");
+  //     },
+  //     onError: (err) => {
+  //       if (err) toast.error("An error occured");
+  //     },
+  //   }
+  // );
+  // if (isLoading) return <Spinner toggle={false} />;
 
-  if (isError) {
-    const errorMessage = (error as any).message || "An unknown error occurred";
-    return (
-      <div>
-        <p>There was an error fetching the data.</p>
-        <p>{errorMessage}</p>
-      </div>
-    );
-  }
-  type socialCta = { imgUrl: string; cta: string; color?: string };
-  const socailCta: socialCta[] = [
-    { imgUrl: Google, cta: "" },
-    { imgUrl: Twitter, cta: data?.data?.twitter_url, color: "#1D9BF0" },
-    { imgUrl: Facebook, cta: data?.data?.facebook_url, color: "#1877F2" },
-    { imgUrl: LinkedIn, cta: data?.data?.linked_url, color: "" },
-    { imgUrl: Instagram, cta: data?.data?.instagram_url },
-  ];
+  // if (isError) {
+  //   const errorMessage = (error as any).message || "An unknown error occurred";
+  //   return (
+  //     <div>
+  //       <p>There was an error fetching the data.</p>
+  //       <p>{errorMessage}</p>
+  //     </div>
+  //   );
+  // }
+  // type socialCta = { imgUrl: string; cta: string; color?: string };
+  // const socailCta: socialCta[] = [
+  //   { imgUrl: Google, cta: "" },
+  //   { imgUrl: Twitter, cta: data?.data?.twitter_url, color: "#1D9BF0" },
+  //   { imgUrl: Facebook, cta: data?.data?.facebook_url, color: "#1877F2" },
+  //   { imgUrl: LinkedIn, cta: data?.data?.linked_url, color: "" },
+  //   { imgUrl: Instagram, cta: data?.data?.instagram_url },
+  // ];
   return (
     <div className="flex flex-wrap font-ubuntu ">
       <div className="w-full md:w-[80%] flex ">
@@ -129,7 +129,7 @@ export const Header = () => {
             <h3 className="text-labels text-[1.5rem] lg:text-[2rem]">
               {getUserData()?.first_name}
               {getUserData()?.last_name}{" "}
-              <FontAwesomeIcon icon={faCheckCircle} className="text-primary" />{" "}
+              {/* <FontAwesomeIcon icon={faCheckCircle} className="text-primary" />{" "} */}
             </h3>
             <button className="ml-3 lg:ml-10 text-[#797F8A] text-[1.5rem] lg:text-[2rem] cursor-pointer hover:opacity-90">
               <FontAwesomeIcon icon={faPen} />
@@ -141,7 +141,7 @@ export const Header = () => {
           </p>
         </div>
       </div>
-      <div className="w-full md:w-[30%] mt-5 lg:mt-0 ">
+      {/* <div className="w-full md:w-[30%] mt-5 lg:mt-0 ">
         {" "}
         <p className="text-[#000] text-sm lg:text-base text-center md:text-left">
           Connect with me:
@@ -168,7 +168,7 @@ export const Header = () => {
             </div>
           ))}
         </div>
-      </div>
+      </div> */}
     </div>
   );
 };

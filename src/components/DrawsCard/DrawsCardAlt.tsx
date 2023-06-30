@@ -1,36 +1,58 @@
 import React from "react";
-import { LazyLoadImage } from "react-lazy-load-image-component";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faCheckCircle,
   faLongArrowAltRight,
 } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
+import { Draws, getUserData, countDown } from "../../Utils";
+import Carousel from "react-multi-carousel";
+import "react-multi-carousel/lib/styles.css";
+import { responsive } from "./DrawsCard";
+const Timer = React.lazy(() => import("../Timer/Timer"));
 type Props = {
-  imgSrc: string;
+  item: Draws;
+  noref: any;
   name: string;
-  title: string;
-  endIn: string;
-  id: string;
-  price: number;
 };
 const DrawsCard: React.FC<Props> = (props) => {
   return (
-    <div className=" w-full  relative bg-white rounded-[10px] font-ubuntu mt-5 p-[1rem] shadow-drawCard">
+    <div
+      ref={props.noref}
+      className=" w-full  relative bg-white rounded-[10px] font-ubuntu mt-5 p-[1rem] shadow-drawCard"
+    >
       <span className="absolute top-0 right-0 text-[#45AD20] text-sm lg:text-base bg-white p-1 rounded-tr-[10px]">
-        ₦{props.price}
+        ₦{Number(props.item.ticket?.ticket_prize).toLocaleString()}
       </span>
-      <div className=" w-full h-[120px] md:h-[155px]">
-        <img
-          src={props.imgSrc}
-          alt={props.imgSrc}
-          className=" w-full h-full  object-cover rounded-t-[10px]"
-          loading="lazy"
-        />
+      <div className=" w-full ">
+        <Carousel
+          responsive={responsive}
+          swipeable={true}
+          draggable={true}
+          showDots={true}
+          infinite={true}
+          autoPlay={true}
+          autoPlaySpeed={5000}
+          keyBoardControl={true}
+          customTransition="all .5"
+          transitionDuration={500}
+          containerClass="carousel-container"
+          removeArrowOnDeviceType={["tablet", "mobile"]}
+        >
+          {props.item.media.map((item, i: number) => (
+            <img
+              key={i}
+              src={item.original_url}
+              alt={item.file_name}
+              className="w-full h-[120px] md:h-[155px]  object-cover rounded-t-[10px]"
+              loading="lazy"
+            />
+          ))}
+        </Carousel>
       </div>
 
       <h3 className="text-heading my-3 text-sm lg:text-base font-bold">
-        {props.title}
+        {props.item.title}
       </h3>
       <h2 className="text-heading my-3">
         {props.name}{" "}
@@ -42,11 +64,22 @@ const DrawsCard: React.FC<Props> = (props) => {
             Ends in:
           </h4>
           <h2 className="text-[#0D1A31] text-sm lg:text-base mt-1">
-            {props.endIn}
+            <Timer
+              countDownDate={
+                new Date(
+                  countDown(props.item.end_date).year,
+                  countDown(props.item.end_date).month,
+                  countDown(props.item.end_date).day
+                )
+              }
+              small={true}
+            />
           </h2>
         </div>
         <Link
-          to={`/${props.id}`}
+          to={`/my/dashboard/${getUserData()?.role}/draws/preview/${
+            props.item.id
+          }`}
           className="text-primary text-sm lg:text-base hover:opacity-80"
         >
           View Raffle Here{" "}

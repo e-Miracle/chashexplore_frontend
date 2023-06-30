@@ -57,7 +57,7 @@ const index = () => {
         if (data) toast.success(data?.pages[data?.pages.length - 1]?.message);
       },
       onError: (err) => {
-        console.log(err)
+        console.log(err);
         if (err) toast.error("An error occured");
       },
     }
@@ -193,8 +193,7 @@ const index = () => {
                                     i > 0 ? (isMobile ? "-1rem" : "-1rem") : "",
                                   background: "#FBFBFD",
                                 }}
-                                >
-                                  
+                              >
                                 {item.participants_count}
                               </div>
                             </div>
@@ -228,7 +227,7 @@ const index = () => {
                           <button
                             onClick={() =>
                               navigate(
-                                `/my/dashboard/${_INFLUENCER_}/draws/singledraw/${item.id}`
+                                `/my/dashboard/${_INFLUENCER_}/draws/preview/${item.id}`
                               )
                             }
                             className="flex items-center bg-[#F4F6F8] rounded-[100px] text-primary p-5 hover:opacity-80"

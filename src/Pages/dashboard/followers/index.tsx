@@ -63,7 +63,7 @@ const Top = ({ title }: { title: string }) => {
     error,
     isFetching,
   } = useInfiniteQuery(
-    "draws",
+    "followerTopDraws",
     async ({ pageParam = 1 }) => {
       const res = await fetchDraws({
         page: pageParam,
@@ -155,7 +155,7 @@ const Other = ({ title }: { title: string }) => {
     error,
     isFetching,
   } = useInfiniteQuery(
-    "draws",
+    "followerOtherDraws",
     async ({ pageParam = 1 }) => {
       const res = await fetchDraws({
         page: pageParam,
@@ -247,7 +247,7 @@ const Beauty = ({ title }: { title: string }) => {
     error,
     isFetching,
   } = useInfiniteQuery(
-    "draws",
+    "followerBeautyProducts",
     async ({ pageParam = 1 }) => {
       const res = await fetchDraws({
         page: pageParam,

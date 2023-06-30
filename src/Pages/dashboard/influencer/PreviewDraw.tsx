@@ -10,6 +10,7 @@ import { useQuery } from "react-query";
 import { fetchSingleCampaign } from "../../../hooks/customGets";
 import toast from "react-hot-toast";
 import { getUserData, convertDateTime, countDown } from "../../../Utils";
+import { _INFLUENCER_ } from "../../../constants";
 const Timer = lazy(() => import("../../../components/Timer/Timer"));
 
 const PreviewDraw = () => {
@@ -66,13 +67,13 @@ const PreviewDraw = () => {
         </p>
         <div className="flex flex-col flex-wrap md:flex-row items-center justify-between">
           <Link
-            to={"/"}
+            to={`/my/dashboard/${_INFLUENCER_}/draws/singledraw/${id}`}
             className="w-full md:w-[48%] inline-block text-center bg-primary text-white rounded-[100px] p-5 text-sm lg:text-base hover:opacity-80"
           >
             Join Raffle Draw{" "}
           </Link>
           <Link
-            to={"/"}
+            to={`/my/dashboard/${_INFLUENCER_}/home`}
             className="w-full md:w-[48%] md:w-auto mt-5 md:mt-0 inline-block text-center bg-transparent border-[2px] border-primary text-primary rounded-[100px] py-5 px-10 text-sm lg:text-base hover:opacity-80"
           >
             View Public Raffles
@@ -163,8 +164,9 @@ const PreviewDraw = () => {
           {convertDateTime(data?.data?.end_date)}
         </span>
       </p>
+      {/* this does soemthing differently entirely */}
       <Link
-        to="/"
+        to={`/my/dashboard/${_INFLUENCER_}/draws/singledraw/${id}`}
         className="inline-block text-center bg-primary text-white rounded-[100px] p-5 text-sm lg:text-base hover:opacity-80"
       >
         Join Raffle Draw{" "}
@@ -176,7 +178,7 @@ const PreviewDraw = () => {
     <div className="flex flex-col md:flex-row items-center justify-end mt-10">
       <Link
         className="w-full md:w-auto inline-block text-center bg-transparent border-[2px] border-primary text-primary rounded-[100px] py-5 px-10 text-sm lg:text-base hover:opacity-80"
-        to={`/influencer/my/draws/create`}
+        to={`/my/dashboard/${_INFLUENCER_}/update/:id`}
       >
         Continue Editing{" "}
       </Link>

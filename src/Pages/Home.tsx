@@ -19,6 +19,7 @@ import useErrorHandler from "../hooks/useErrorHandler";
 import { socialRequest } from "../Utils";
 import { _FOLLOWER_, _INFLUENCER_ } from "../constants";
 import toast from "react-hot-toast";
+import Influencer from './dashboard/admin/Influencer';
 export type HeaderProps = {
   title: string;
   text: string;
@@ -100,14 +101,21 @@ export const SocialComponent = ({
   ) => {
     const link = await socialRequest(name, type, () => {
       updateSpinner(false);
-      updateType('');
+      updateType("");
     });
     if (link) window.location.replace(link);
   };
 
   return (
     <>
-      {popup && <Select typeSelect={typeSelect} />}
+      {popup && (
+        <>
+          <h2 className="text-primary font-ubuntu text-sm lg:text-base capitalize my-3 font-bold">
+             Influencer or Follower please select an option.
+          </h2>
+          <Select typeSelect={typeSelect} />{" "}
+        </>
+      )}
       <div className="my-[1.5rem]">
         {text && (
           <h4 className="text-[#797F8A] font-ubuntu text-[1.2rem] lg:text-[1.5rem] my-3 text-center lg:text-left">

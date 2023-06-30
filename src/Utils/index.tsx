@@ -226,4 +226,10 @@ export const socialRequest = async (
   }
 };
 
+export const loadUser = () => {
+  if (getUserData()?.token)
+    return <Navigate to={`/my/dashboard/${getUserData()?.role}/home`} />;
+  return;
+};
+
 export * from "./types";

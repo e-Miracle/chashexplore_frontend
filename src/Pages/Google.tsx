@@ -3,7 +3,7 @@ import { Spinner } from ".";
 import { useLocation, Navigate } from "react-router-dom";
 import { useQuery } from "react-query";
 import toast from "react-hot-toast";
-import { ENDPOINTS } from "../constants";
+import { ENDPOINTS, _INFLUENCER_ } from "../constants";
 import { fetchAuth } from "../hooks/customGets";
 import { storeSocialData, getUserData } from "../Utils";
 import axios from "axios";
@@ -14,6 +14,7 @@ const Google = () => {
   const url =
     ENDPOINTS.API_BASE_URL +
     String(ENDPOINTS.API_INFLUENCER_AUTH_GOOGLE) +
+    `/${_INFLUENCER_}` +
     `?${queryParams.toString()}`;
   //i need a way to differentiate between influencer and follower
   const { isLoading, isError, data, error } = useQuery(

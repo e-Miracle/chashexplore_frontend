@@ -45,6 +45,7 @@ const data = [
     price: 150,
   },
 ];
+data.length = 0;
 
 const Body = ({ title, data }: { title: string; data: any[] }) => {
   return (

@@ -1,7 +1,7 @@
 import React, { Suspense } from "react";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { EmptyDraw } from "../../assets";
-import { useQuery, useInfiniteQuery } from "react-query";
+import {  useInfiniteQuery } from "react-query";
 import toast from "react-hot-toast";
 import { fetchDraws } from "../../hooks/customGets";
 import { ENDPOINTS, _INFLUENCER_ } from "../../constants";

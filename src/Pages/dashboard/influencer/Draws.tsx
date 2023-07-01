@@ -12,10 +12,10 @@ import { LazyLoadImage } from "react-lazy-load-image-component";
 import { PrizeDraw } from "../../../assets";
 import { _INFLUENCER_, ENDPOINTS } from "../../../constants";
 import { BackgroundDrop } from "./Profile";
-import { useQuery, useInfiniteQuery, QueryClient } from "react-query";
+import { useInfiniteQuery, QueryClient } from "react-query";
 import toast from "react-hot-toast";
-import { fetchCampaigns, fetchDraws } from "../../../hooks/customGets";
-import { Campaign, convertEndpointToTitle } from "../../../Utils";
+import { fetchDraws } from "../../../hooks/customGets";
+import { Campaign, convertEndpointToTitle, getUserData } from "../../../Utils";
 import { useNavigate } from "react-router-dom";
 import { useMediaQuery } from "react-responsive";
 import { useIntersection } from "@mantine/hooks";
@@ -24,9 +24,6 @@ const ModalContent = React.lazy(() =>
   import("./SingleDraw").then((res) => {
     return { default: res.ModalContent };
   })
-);
-const Pagination = React.lazy(
-  () => import("../../../components/Paginate/Paginate")
 );
 
 const Header = () => {
@@ -186,7 +183,9 @@ const Table = ({
                     <button
                       onClick={() =>
                         navigate(
-                          `/my/dashboard/${_INFLUENCER_}/draws/singledraw/${item.id}`
+                          `/my/dashboard/${
+                            getUserData()?.role
+                          }/draws/singledraw/${item.id}`
                         )
                       }
                       className="flex items-center bg-[#F4F6F8] rounded-[100px] text-primary p-5 hover:opacity-80"
@@ -214,7 +213,7 @@ const Table = ({
   );
 };
 
-const Body = ({ openModal }: { openModal: (id: number) => void }) => {
+export const Body = ({ openModal }: { openModal: (id: number) => void }) => {
   const [currentUrl, setCurrentUrl] = React.useState<string>(
     String(ENDPOINTS.API_INFLUENCER_TOP_DRAWS)
   );
@@ -272,8 +271,6 @@ const Body = ({ openModal }: { openModal: (id: number) => void }) => {
   }, [entry]);
 
   React.useEffect(() => {
-    // Refetch the data when the search string changes
-    // This will trigger a fresh query with the updated search string
     queryClient.invalidateQueries(queryKey);
   }, [currentUrl, queryKey, queryClient]);
 

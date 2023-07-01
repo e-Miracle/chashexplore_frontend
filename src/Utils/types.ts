@@ -20,13 +20,13 @@ export interface Influencer {
   last_name: string;
   email: string;
   password_is_temporary: boolean;
-  account_verfied: string;
+  account_verfied?: string;
   created_at: Date;
   updated_at: Date;
   role: string;
-  number_of_tickets_sold: number;
-  number_of_raffles_created: number;
-  participants_reached: number;
+  number_of_tickets_sold?: number;
+  number_of_raffles_created?: number;
+  participants_reached?: number;
   verification_detail?: Verification;
   account_verification_pending?: boolean;
 }

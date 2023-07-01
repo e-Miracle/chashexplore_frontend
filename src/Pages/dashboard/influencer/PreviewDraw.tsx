@@ -1,6 +1,6 @@
 import { Suspense, lazy, useState } from "react";
 import { DashBoardLayout } from "../../";
-import { useNavigate, Link, useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import Spinner from "../../../components/Spinner";
 import { faCheckCircle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -44,11 +44,12 @@ const PreviewDraw = () => {
       >
         <>
           {isMobile
-            ? `${getUserData()?.first_name} ${
-                getUserData()?.last_name
-              }`.substring(0, 3) + "..."
-            : `${getUserData()?.first_name} ${getUserData()?.last_name}`}{" "}
-          {getUserData()?.account_verfied != "0" && (
+            ? `${data?.data?.influencer?.first_name} ${data?.data?.influencer?.last_name}`.substring(
+                0,
+                3
+              ) + "..."
+            : `${data?.data?.influencer?.first_name} ${data?.data?.influencer?.last_name}`}{" "}
+          {data?.data?.influencer?.account_verfied != "0" && (
             <FontAwesomeIcon icon={faCheckCircle} className="text-primary" />
           )}
         </>

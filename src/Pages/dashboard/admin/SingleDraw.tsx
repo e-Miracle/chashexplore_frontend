@@ -4,6 +4,11 @@ import Spinner from "../../../components/Spinner";
 import { Title } from "../followers/Draws";
 import { Header } from "../followers/PurchaseTicket";
 import moment from "moment";
+import { useQuery } from "react-query";
+import toast from "react-hot-toast";
+import { fetchSingleCampaign } from "../../../hooks/customGets";
+import { useParams } from "react-router-dom";
+
 const Modal = lazy(() => import("../../../components/Modal/Modal"));
 const BackgroundDrop = React.lazy(() =>
   import("../influencer/Profile").then((res) => {
@@ -100,6 +105,7 @@ const ModalContentAlt: React.FC<ModalContentAlt> = ({
   );
 };
 const SingleDraw = () => {
+  const { id } = useParams();
   const [modalIsOpen, setIsOpen] = useState<boolean>(false);
   const [modalIsOpenAlt, setIsOpenAlt] = useState<boolean>(false);
   const [ticketTable, setTicketTable] = useState<boolean>(true);
@@ -119,6 +125,25 @@ const SingleDraw = () => {
     acctNumber: "",
     bank: "",
   });
+
+  const { isLoading, isError, data, error } = useQuery(
+    "singleCampaign",
+    () => fetchSingleCampaign(Number(id)),
+    {
+      onSuccess: (data) => {
+        console.log(data);
+        if (data) toast.success("Successfully fetched campaign");
+      },
+      onError: (err) => {
+        if (err) toast.error("An error occured");
+      },
+    }
+  );
+  const soldTickets: number = data?.data?.participants.reduce(
+    (accumulator: number, currentItem: any) =>
+      accumulator + Number(currentItem.number_of_tickets),
+    0
+  );
 
   const updateTicketDetails = (data: any) => {
     setTicketDetails({
@@ -143,22 +168,34 @@ const SingleDraw = () => {
     setPartcipantsTable(false);
   };
 
-  const BoxesProps = {
-    ticketsPurchased: 3,
-    ticketsAvaliable: 400,
-    ticketCap: 400,
-    ticketParticpants: 40,
-    ticket: ticketTable,
-    participant: partcipantsTable,
-  };
+   const BoxesProps = {
+     ticketsPurchased: soldTickets,
+     ticketsAvaliable: data?.data?.ticket?.ticket_sale_cap - soldTickets,
+     ticketCap: data?.data?.ticket?.ticket_sale_cap,
+     ticketParticpants: data?.data?.participants.length,
+     ticket: ticketTable,
+     participant: partcipantsTable,
+   };
+
+   if (isLoading) return <Spinner />;
+
+   if (isError) {
+     const errorMessage = (error as any).message || "An unknown error occurred";
+     return (
+       <div>
+         <p>There was an error fetching the data.</p>
+         <p>{errorMessage}</p>
+       </div>
+     );
+   }
   return (
     <Suspense fallback={<Spinner />}>
       <DashBoardLayout type="admin" backbtn={true}>
         <Title text="My Draws" />
         <BackgroundDrop>
           <Header
-            text="N100,000 New Year Giveaway!"
-            time={moment().add(3, "d").toDate()}
+            text={data?.data?.title}
+            time={data?.data?.end_date}
             color="#394355"
             headerColor="#4E5767"
           />
@@ -169,16 +206,22 @@ const SingleDraw = () => {
           />
           {ticketTable && (
             <TicketTable
-              data={[]}
-              title="N100,000 New Year Giveaway!"
+              data={data?.data?.participants}
+              title={data?.data?.title}
               onclick={updateTicketDetails}
             />
           )}
-          {partcipantsTable && <ParticipantsTable data={[]} />}
+          {partcipantsTable && (
+            <ParticipantsTable data={data?.data?.participants} />
+          )}
           <Modal visible={modalIsOpen}>
             <ModalContent
               onclick={() => setIsOpen(false)}
-              link="https://www.cashXplore/GenevieveDoe?100,000nairanewyeargiveaway"
+              link={
+                import.meta.env.MODE === "development"
+                  ? `http://localhost:5173/raffle-page-preview/${id}`
+                  : `https://cashexplore.emiracle.me/raffle-page-preview/${id}`
+              }
             />
           </Modal>
           <Modal visible={modalIsOpenAlt}>

@@ -13,7 +13,8 @@ import { useInfiniteQuery } from "react-query";
 import toast from "react-hot-toast";
 import { useIntersection } from "@mantine/hooks";
 
-const Tables = ({
+
+export const Tables = ({
   data,
   observerRef,
   normalRef,

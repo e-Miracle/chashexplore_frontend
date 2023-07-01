@@ -1,12 +1,16 @@
 import { Suspense, lazy, useState } from "react";
 import { DashBoardLayout } from "../../";
-import { useNavigate, Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import Spinner from "../../../components/Spinner";
 import { faCheckCircle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { PreviewLogo } from "../../../assets";
 import { useMediaQuery } from "react-responsive";
 import { PreviewImage } from "../../../assets";
+import { useQuery } from "react-query";
+import { fetchSingleCampaign } from "../../../hooks/customGets";
+import { getUserData, convertDateTime, countDown } from "../../../Utils";
+import toast from "react-hot-toast";
 const BackgroundDrop = lazy(() =>
   import("../influencer/Profile").then((res) => {
     return {
@@ -19,7 +23,21 @@ const Timer = lazy(() => import("../../../components/Timer/Timer"));
 const imgArray: string[] = [PreviewImage, PreviewImage, PreviewImage];
 
 const PreviewDraw = () => {
+  const { id } = useParams();
   const isMobile: boolean = useMediaQuery({ query: `(max-width: 768px)` });
+   const { isLoading, isError, data, error } = useQuery(
+     "singleCampaign",
+     () => fetchSingleCampaign(Number(id)),
+     {
+       onSuccess: (data) => {
+         console.log(data?.data);
+         if (data) toast.success("Successfully fetched campaigns");
+       },
+       onError: (err) => {
+         if (err) toast.error("An error occured");
+       },
+     }
+   );
   const header = (
     <div className="flex items-center">
       <img
@@ -33,8 +51,15 @@ const PreviewDraw = () => {
         }
       >
         <>
-          {isMobile ? "Genevieve Doe".substring(0, 3) + "..." : "Genevieve Doe"}{" "}
-          <FontAwesomeIcon icon={faCheckCircle} className="text-primary" />
+          {isMobile
+            ? `${data?.data?.influencer?.first_name} ${data?.data?.influencer?.last_name}`.substring(
+                0,
+                3
+              ) + "..."
+            : `${data?.data?.influencer?.first_name} ${data?.data?.influencer?.last_name}`}{" "}
+          {data?.data?.influencer?.account_verfied != "0" && (
+            <FontAwesomeIcon icon={faCheckCircle} className="text-primary" />
+          )}
         </>
       </h1>
     </div>
@@ -45,22 +70,20 @@ const PreviewDraw = () => {
     <div className="text-labels mt-10 p-5 font-ubuntu flex flex-wrap">
       <div className="w-full md:w-1/2">
         <h1 className="text-[2.5rem] lg:text-[3rem]  font-bold text-center md:text-left">
-          N100,000 New Year Giveaway!
+          {data?.data?.title}
         </h1>
         <p className="my-10 text-[1rem] lg:text-[1.25rem] text-[#4E5767] text-center md:text-left">
-          Lörem ipsum nydyhet seskap. Parasade trening. Prenosade dinade. Ogisk.
-          Obångar krore suprall. Ode oska jag besesk. Lörem ipsum nydyhet
-          seskap. Parasade trening.{" "}
+          {data?.data?.description}
         </p>
         <div className="flex flex-col flex-wrap md:flex-row items-center justify-between">
           <Link
-            to={"/"}
+            to={`/my/dashboard/${getUserData()?.role}/draws/singledraw/${id}`}
             className="w-full md:w-[48%] inline-block text-center bg-primary text-white rounded-[100px] p-5 text-sm lg:text-base hover:opacity-80"
           >
             Join Raffle Draw{" "}
           </Link>
           <Link
-            to={"/"}
+            to={`/my/dashboard/${getUserData()?.role}/home`}
             className="w-full md:w-[48%] md:w-auto mt-5 md:mt-0 inline-block text-center bg-transparent border-[2px] border-primary text-primary rounded-[100px] py-5 px-10 text-sm lg:text-base hover:opacity-80"
           >
             View Public Raffles
@@ -69,15 +92,15 @@ const PreviewDraw = () => {
       </div>
       <div className="w-full md:w-1/2 flex flex-col justify-center items-center mt-5 md:mt-0 ">
         <img
-          src={imgArray[currentImage]}
-          alt={imgArray[currentImage]}
+          src={data?.data?.media[currentImage].original_url}
+          alt={data?.data?.media[currentImage].uuid}
           className="w-full md:w-[392px] h-[292px] md:h[200px] object-cover shadow-new"
         />
 
         <div className="flex items-center flex-wrap mt-5">
-          {imgArray &&
-            imgArray.length > 0 &&
-            imgArray.map((item: string, i: number) => (
+          {data?.data?.media &&
+            data?.data?.media.length > 0 &&
+            data?.data?.media.map((item: any, i: number) => (
               <div
                 key={i}
                 className={
@@ -88,8 +111,9 @@ const PreviewDraw = () => {
                 onClick={() => setCurrentImage(i)}
               >
                 <img
-                  src={item}
-                  alt={item}
+                  src={item.original_url}
+                  alt={item.uuid}
+                  loading="lazy"
                   className="w-full h-full  object-cover rounded-[10px] "
                 />
               </div>
@@ -106,11 +130,11 @@ const PreviewDraw = () => {
       </h1>
 
       <p className="my-10 text-center text-[1.2rem] lg:text-[1.5rem]">
-        There will be 5 winners for this draw.{" "}
+        There will be {data?.data?.number_of_winners} winners for this draw.{" "}
       </p>
       <p className="text-center text-[1.2rem] lg:text-[1.5rem]">
-        5 tickets will be randomly selected using our automatic random name
-        generator for fairness and transparency.
+        {data?.data?.number_of_winners} tickets will be randomly selected using
+        our automatic random name generator for fairness and transparency.
       </p>
     </div>
   );
@@ -133,14 +157,27 @@ const PreviewDraw = () => {
 
   const Block3 = (
     <div className="bg-white rounded-[10px] text-labels mt-10 p-5 font-ubuntu flex flex-col justify-center items-center">
-      <Timer />
+      <Timer
+        countDownDate={
+          new Date(
+            countDown(data?.data?.end_date).year,
+            countDown(data?.data?.end_date).month,
+            countDown(data?.data?.end_date).day
+          )
+        }
+      />
 
       <p className="my-10 text-center text-[1.2rem] lg:text-[1.5rem]">
         Raffle Ends on:{" "}
-        <span className="font-bold">5th February 2023, 04:50pm</span>
+        <span className="font-bold">
+          {" "}
+          <span className="font-bold">
+            {convertDateTime(data?.data?.end_date)}
+          </span>
+        </span>
       </p>
       <Link
-        to="/"
+        to={`/my/dashboard/${getUserData()?.role}/draws/singledraw/${id}`}
         className="inline-block text-center bg-primary text-white rounded-[100px] p-5 text-sm lg:text-base hover:opacity-80"
       >
         Join Raffle Draw{" "}
@@ -152,7 +189,7 @@ const PreviewDraw = () => {
     <div className="flex flex-col md:flex-row items-center justify-end mt-10">
       <Link
         className="w-full md:w-auto inline-block text-center bg-transparent border-[2px] border-primary text-primary rounded-[100px] py-5 px-10 text-sm lg:text-base hover:opacity-80"
-        to={`/influencer/my/draws/create`}
+        to={`/my/dashboard/${getUserData()?.role}/update/:id`}
       >
         Continue Editing{" "}
       </Link>
@@ -161,6 +198,18 @@ const PreviewDraw = () => {
       </button>
     </div>
   );
+
+  if (isLoading) return <Spinner />;
+
+  if (isError) {
+    const errorMessage = (error as any).message || "An unknown error occurred";
+    return (
+      <div>
+        <p>There was an error fetching the data.</p>
+        <p>{errorMessage}</p>
+      </div>
+    );
+  }
 
   return (
     <Suspense fallback={<Spinner />}>

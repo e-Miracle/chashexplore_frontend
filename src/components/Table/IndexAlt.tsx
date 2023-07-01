@@ -9,8 +9,15 @@ type Props = {
     Header: string;
     accessor: string;
   }[];
+  observerRef?: React.RefObject<HTMLDivElement>;
+  itemRef?: any;
 };
-const Index: React.FC<Props> = ({ dataArr, columnsArr }) => {
+const Index: React.FC<Props> = ({
+  dataArr,
+  columnsArr,
+  observerRef,
+  itemRef,
+}) => {
   const isMobile: boolean = useMediaQuery({ query: `(max-width: 768px)` });
   const data = React.useMemo(() => dataArr, []);
   const columns: any = React.useMemo(() => columnsArr, []);
@@ -19,7 +26,10 @@ const Index: React.FC<Props> = ({ dataArr, columnsArr }) => {
     useTable({ columns, data });
   return (
     <Suspense>
-      <div className="relative overflow-x-auto  sm:rounded-lg mt-10">
+      <div
+        ref={observerRef}
+        className="relative overflow-x-auto  sm:rounded-lg mt-10 h-[500px] overflow-y-auto"
+      >
         <table
           className="w-full text-sm text-left text-gray-500 dark:text-gray-400 z-[1]"
           {...getTableProps()}
@@ -39,7 +49,7 @@ const Index: React.FC<Props> = ({ dataArr, columnsArr }) => {
             ))}
           </thead>
           <tbody {...getTableBodyProps()}>
-            {rows.map((row) => {
+            {rows.map((row, i) => {
               prepareRow(row);
               return (
                 <tr
@@ -48,6 +58,7 @@ const Index: React.FC<Props> = ({ dataArr, columnsArr }) => {
                 >
                   {row.cells.map((cell) => (
                     <td
+                      ref={i === data.length - 1 ? itemRef : null}
                       className="text-[#232E43]  font-ubuntu text-sm lg:text-base  px-6 py-4"
                       {...cell.getCellProps()}
                     >

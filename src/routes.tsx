@@ -157,7 +157,7 @@ const router = createBrowserRouter([
         element: <FollowersProfile />,
       },
       {
-        path: `/my/dashboard/${_FOLLOWER_}/draws/results`,
+        path: `/my/dashboard/${_FOLLOWER_}/draws/results/:id`,
         element: <FollowersResults />,
       },
       {
@@ -237,15 +237,19 @@ const router = createBrowserRouter([
         element: <AdminCreateDraws />,
       },
       {
-        path: `/my/dashboard/${_ADMIN_}/preview`,
+        path: `/my/dashboard/${_ADMIN_}/update/:id`,
+        element: <InflunecersUpdateDraw />,
+      },
+      {
+        path: `/my/dashboard/${_ADMIN_}/preview/:id`,
         element: <AdminPreviewDraws />,
       },
       {
-        path: `/my/dashboard/${_ADMIN_}/singledraw`,
+        path: `/my/dashboard/${_ADMIN_}/singledraw/:id`,
         element: <AdminSingleDraws />,
       },
       {
-        path: `/my/dashboard/${_ADMIN_}/results`,
+        path: `/my/dashboard/${_ADMIN_}/results/:id`,
         element: <AdminResults />,
       },
       {

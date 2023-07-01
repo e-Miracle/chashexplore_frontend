@@ -10,13 +10,16 @@ import { ErrorMessage } from "@hookform/error-message";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheckCircle } from "@fortawesome/free-solid-svg-icons";
 import { BlueLogo } from "../../../assets";
-import moment from "moment";
-import { useQuery } from "react-query";
-import { fetchSingleCampaign } from "../../../hooks/customGets";
+import { useQuery, useInfiniteQuery } from "react-query";
+import {
+  fetchSingleCampaign,
+  fetchWinners,
+  fetchReviews,
+} from "../../../hooks/customGets";
 import toast from "react-hot-toast";
-import { getUserData, convertDateTime, countDown } from "../../../Utils";
-import { useMediaQuery } from "react-responsive";
+import { getUserData } from "../../../Utils";
 import { useParams } from "react-router-dom";
+import { useIntersection } from "@mantine/hooks";
 const BackgroundDrop = React.lazy(() =>
   import("../influencer/Profile").then((res) => {
     return {
@@ -149,14 +152,94 @@ export const Hero = () => {
   );
 };
 
-export const Winners = ({ data, columns }: { data: any[]; columns: any[] }) => {
+export const Winners = ({ id, columns }: { id: number; columns: any[] }) => {
+  const {
+    data,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isError,
+    error,
+    isFetching,
+  } = useInfiniteQuery(
+    "winners",
+    async ({ pageParam = 1 }) => {
+      const res = await fetchWinners(id, pageParam);
+      return res;
+    },
+
+    {
+      getNextPageParam: (_, allPages) => {
+        return allPages[allPages.length - 1]?.data.next_page_url
+          ? allPages[allPages.length - 1]?.data.current_page + 1
+          : null;
+      },
+      initialData: {
+        pages: [],
+        pageParams: [1],
+      },
+      onSuccess: (data) => {
+        console.log(data);
+        if (data) toast.success(data?.pages[data?.pages.length - 1]?.message);
+      },
+      onError: (err) => {
+        if (err) toast.error("An error occured");
+      },
+    }
+  );
+  const flattenedData = data?.pages.flatMap((page) => page.data.data) || [];
+  const observerRef = React.useRef<HTMLDivElement>(null);
+  const { ref, entry } = useIntersection({
+    root: observerRef.current,
+    threshold: 1,
+  });
+  React.useEffect(() => {
+    if (entry?.isIntersecting && hasNextPage && !isFetchingNextPage)
+      fetchNextPage();
+  }, [entry]);
+
+  if (isFetching) return <Spinner toggle={false} />;
+
+  if (isError) {
+    const errorMessage = (error as any).message || "An unknown error occurred";
+    return (
+      <div>
+        <p>There was an error fetching the data.</p>
+        <p>{errorMessage}</p>
+      </div>
+    );
+  }
   return (
     <Suspense fallback={<Spinner toggle={false} />}>
       <div className="mt-10">
         <h1 className="text-center md:text-left text-primary text-[1.8rem] font-bold lg:text-[2rem] font-ubuntu">
           Winners
         </h1>
-        <Table dataArr={data} columnsArr={columns} />
+        <>
+          {flattenedData && flattenedData.length > 0 ? (
+            <>
+              <Table
+                dataArr={flattenedData}
+                observerRef={observerRef}
+                normalRef={ref}
+                columnsArr={columns}
+              />
+              {isFetchingNextPage && <Spinner toggle={false} />}
+            </>
+          ) : (
+            <>
+              {isFetching ? (
+                <Spinner toggle={false} />
+              ) : (
+                <div className="flex flex-col justify-center items-center h-full">
+                  <p className="font-ubuntu text-base lg:text-lg text-center my-[3rem] text-[#0D1A31] mt-5">
+                    Your winners will appear here.
+                  </p>
+                </div>
+              )}
+            </>
+          )}
+        </>
       </div>
     </Suspense>
   );
@@ -330,18 +413,89 @@ export const Receipts = ({
   );
 };
 
-export const Reviews = ({ data }: { data: any[] }) => {
+export const Reviews = ({ id }: { id: number }) => {
+  const {
+    data,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isError,
+    error,
+    isFetching,
+  } = useInfiniteQuery(
+    "reviews",
+    async ({ pageParam = 1 }) => {
+      const res = await fetchReviews(id, pageParam);
+      return res;
+    },
+    {
+      getNextPageParam: (_, allPages) => {
+        return allPages[allPages.length - 1]?.data.next_page_url
+          ? allPages[allPages.length - 1]?.data.current_page + 1
+          : null;
+      },
+      initialData: {
+        pages: [],
+        pageParams: [1],
+      },
+      onSuccess: (data) => {
+        console.log(data);
+        if (data) toast.success(data?.pages[data?.pages.length - 1]?.message);
+      },
+      onError: (err) => {
+        if (err) toast.error("An error occured");
+      },
+    }
+  );
+  const flattenedData = data?.pages.flatMap((page) => page.data.data) || [];
+  const observerRef = React.useRef<HTMLDivElement>(null);
+  const { ref, entry } = useIntersection({
+    root: observerRef.current,
+    threshold: 1,
+  });
+  React.useEffect(() => {
+    if (entry?.isIntersecting && hasNextPage && !isFetchingNextPage)
+      fetchNextPage();
+  }, [entry]);
+
+  if (isFetching) return <Spinner toggle={false} />;
+
+  if (isError) {
+    const errorMessage = (error as any).message || "An unknown error occurred";
+    return (
+      <div>
+        <p>There was an error fetching the data.</p>
+        <p>{errorMessage}</p>
+      </div>
+    );
+  }
   return (
     <Suspense fallback={<Spinner toggle={false} />}>
       <div>
         <h1 className="text-center md:text-left text-primary text-[1.8rem] font-bold lg:text-[2rem] font-ubuntu  my-[3rem]">
           Reviews
         </h1>
-        <div className="grid gap-[1rem] grid-cols-1 md:grid-cols-2 lg:grid-cols-3 mt-[1rem] lg:mt-0">
-          {data &&
-            data.length > 0 &&
-            data.map((item, i: number) => <ReviewCard key={i} {...item} />)}
-        </div>
+        <>
+          {flattenedData && flattenedData.length > 0 ? (
+            <div
+              className="grid gap-[1rem] grid-cols-1 md:grid-cols-2 lg:grid-cols-3 mt-[1rem] lg:mt-0 h-[500px] overflow-y-auto"
+              ref={observerRef}
+            >
+              {flattenedData.map((item, i: number) => (
+                <ReviewCard
+                  key={i}
+                  noref={i === flattenedData.length - 1 ? ref : null}
+                  {...item}
+                />
+              ))}
+              {isFetchingNextPage && <Spinner toggle={false} />}
+            </div>
+          ) : (
+            <h3 className="text-primary text-sm lg:text-base font-semibold">
+              No Reviews
+            </h3>
+          )}
+        </>
       </div>
     </Suspense>
   );
@@ -357,7 +511,7 @@ const Results = () => {
         <BackgroundDrop>
           <Header id={Number(id)} />
           <Hero />
-          <Winners data={dataArr} columns={columnsArr} />
+          <Winners id={Number(id)} columns={columnsArr} />
           <div className="flex justify-center items-center my-10">
             <button
               onClick={() => setIsOpen(true)}
@@ -370,7 +524,7 @@ const Results = () => {
             <ModalContent onclick={() => setIsOpen(false)} />
           </Modal>
           <Receipts data={dataArr} columns={columnsArr} />
-          <Reviews data={reviewArr} />
+          <Reviews id={Number(id)} />
         </BackgroundDrop>
       </DashBoardLayout>
     </Suspense>

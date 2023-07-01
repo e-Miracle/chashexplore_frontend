@@ -12,9 +12,9 @@ const PendingCampaigns = lazy(
 );
 const index = () => {
   const cardProps = {
-    raffles: getUserData()?.number_of_raffles_created,
-    participants: getUserData()?.participants_reached,
-    tickets: getUserData()?.number_of_tickets_sold,
+    raffles: getUserData()?.number_of_raffles_created ? Number(getUserData()?.number_of_raffles_created): 0,
+    participants: getUserData()?.participants_reached ? Number(getUserData()?.participants_reached): 0,
+    tickets: getUserData()?.number_of_tickets_sold ?  Number(getUserData()?.number_of_tickets_sold) : 0,
   };
   return (
     <Suspense fallback={<Spinner />}>

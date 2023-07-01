@@ -8,6 +8,7 @@ type Props = {
   imgSrc: string;
   username: string;
   amount: number;
+  noref?: any;
 };
 
 const counter = (value: number) => {
@@ -21,7 +22,7 @@ const counter = (value: number) => {
 const ReviewCard: React.FC<Props> = (props) => {
   return (
     <Suspense>
-      <div className="font-ubuntu bg-white rounded-[10px] p-[1rem]">
+      <div className="font-ubuntu bg-white rounded-[10px] p-[1rem]" ref={props.noref}>
         <h3 className="text-base lg:text-[1.25rem] text-labels leading-[2]">
           {props.text}
         </h3>

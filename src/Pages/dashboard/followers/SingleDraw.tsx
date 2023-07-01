@@ -461,7 +461,6 @@ const SingleDraw = () => {
             toggleTicketTables={toggleTicketTables}
             {...BoxesProps}
           />
-          {data?.data?.participants.length > 0 && <></>}
           {ticketTable && (
             <TicketTable
               data={data?.data?.participants}
@@ -477,6 +476,7 @@ const SingleDraw = () => {
               onclick={() => setIsOpen(false)}
               title={data?.data?.title}
               price={data?.data?.ticket?.ticket_prize}
+            
             />
           </Modal>
           <Modal visible={modalIsOpenAlt}>

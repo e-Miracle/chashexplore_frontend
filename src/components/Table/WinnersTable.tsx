@@ -6,8 +6,15 @@ type Props = {
     Header: string;
     accessor: string;
   }[];
+  observerRef?: any;
+  normalRef?: any;
 };
-const Index: React.FC<Props> = ({ dataArr, columnsArr }) => {
+const Index: React.FC<Props> = ({
+  dataArr,
+  columnsArr,
+  observerRef,
+  normalRef,
+}) => {
   const data = React.useMemo(() => dataArr, []);
   const columns: any = React.useMemo(() => columnsArr, []);
 
@@ -15,7 +22,10 @@ const Index: React.FC<Props> = ({ dataArr, columnsArr }) => {
     useTable({ columns, data });
   return (
     <Suspense>
-      <div className="relative overflow-x-auto bg-white rounded-[10px] mt-10">
+      <div
+        ref={observerRef}
+        className="relative overflow-x-auto bg-white rounded-[10px] mt-10 h-[500px]"
+      >
         <table
           className="w-full text-sm text-white text-gray-500 dark:text-gray-400 z-[1]"
           {...getTableProps()}
@@ -35,7 +45,7 @@ const Index: React.FC<Props> = ({ dataArr, columnsArr }) => {
             ))}
           </thead>
           <tbody {...getTableBodyProps()}>
-            {rows.map((row) => {
+            {rows.map((row, i) => {
               prepareRow(row);
               return (
                 <tr
@@ -44,6 +54,7 @@ const Index: React.FC<Props> = ({ dataArr, columnsArr }) => {
                 >
                   {row.cells.map((cell) => (
                     <td
+                      ref={i === data.length - 1 ? normalRef : null}
                       className="text-[#232E43] text-center  font-ubuntu text-sm lg:text-base  px-6 py-4"
                       {...cell.getCellProps()}
                     >

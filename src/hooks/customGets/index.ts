@@ -3,3 +3,5 @@ export * from "./getDraws";
 export * from "./getSocials"
 export * from "./getParticipants"
 export * from "./getGoogleAuth"
+export * from "./getReviews";
+export * from "./getWinners";

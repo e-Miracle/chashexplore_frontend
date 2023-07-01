@@ -5,44 +5,23 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ErrorMessage } from "@hookform/error-message";
 import { z } from "zod";
-// import ReactQuill from "react-quill";
-// import "react-quill/dist/quill.snow.css";
-import { Image } from "../../../components/DragandDrop";
-import { currency_list } from "../../../constants";
 import toast from "react-hot-toast";
-const DropBox = React.lazy(() => import("../../../components/DragandDrop"));
-const BackgroundDrop = React.lazy(() =>
-  import("../influencer/Profile").then((res) => {
-    return {
-      default: res.BackgroundDrop,
-    };
-  })
-);
-const colors: string[] = ["#211DEC", "#716EEA", "#DDDCEF"];
+import { BackgroundDrop } from "../influencer/Profile";
+import { useDropzone } from "react-dropzone";
+import { MAX_FILE_SIZE, ACCEPTED_IMAGE_TYPES } from "../../../constants";
+import { getDateIsoString } from "../../../Utils";
+import { faTimesCircle } from "@fortawesome/free-regular-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import useCreateInfluencerCampaign from "../../../hooks/influencer/useCustomInfluencerCampaign";
+import useErrorHandler from "../../../hooks/useErrorHandler";
+
 const Draws = () => {
-  const [raffleimages, setRaffleImages] = useState<Image[]>([]);
-  const [PageIcons, setPageIcons] = useState<Image[]>([]);
-  const [brandColor, setBrandColors] = useState<string>("");
-  const dateSchema = z.object({
-    date: z
-      .string({
-        required_error: "date is required",
-        invalid_type_error: "date must be a string",
-      })
-      .min(3, { message: "date must have at least three characters " })
-      .max(30, {
-        message: "date must not be greater than 30 characters",
-      }),
-    time: z
-      .string({
-        required_error: "time is required",
-        invalid_type_error: "time must be a string",
-      })
-      .min(3, { message: "time must have at least three characters " })
-      .max(30, {
-        message: "time must not be greater than 30 characters",
-      }),
-  });
+  const createCampaign = useCreateInfluencerCampaign();
+  useErrorHandler(
+    createCampaign,
+    "Create Campaign Successful",
+    "Create Campaign Error"
+  );
   const formSchema = z.object({
     title: z
       .string({
@@ -50,53 +29,107 @@ const Draws = () => {
         invalid_type_error: "title must be a string",
       })
       .min(3, { message: "title must have at least three characters " })
-      .max(30, {
+      .max(50, {
         message: "title must not be greater than 30 characters",
       }),
-    start: dateSchema,
-    stop: dateSchema,
+    start_date: z.coerce
+      .date({
+        required_error: "date is required",
+        invalid_type_error: "date must be a string",
+      })
+      .min(
+        new Date(
+          new Date().getFullYear(),
+          new Date().getMonth(),
+          new Date().getDate()
+        ),
+        { message: "Date must start_date from today" }
+      )
+      .max(
+        new Date(
+          new Date().getFullYear(),
+          new Date().getMonth() + 2,
+          new Date().getDate() + 9
+        ),
+        {
+          message: "Date must be within the next 2 months",
+        }
+      ),
+    end_date: z.coerce
+      .date({
+        required_error: "date is required",
+        invalid_type_error: "date must be a string",
+      })
+      .min(
+        new Date(
+          new Date().getFullYear(),
+          new Date().getMonth(),
+          new Date().getDate()
+        ),
+        { message: "Date must start_date from today" }
+      )
+      .max(
+        new Date(
+          new Date().getFullYear(),
+          new Date().getMonth() + 2,
+          new Date().getDate() + 9
+        ),
+        {
+          message: "Date must be within the next 2 months",
+        }
+      ),
     recurring: z
       .string()
-      .min(3, { message: "recurring must have at least three characters " })
-      .nullable()
-      .optional(),
-    winners: z
+      .min(3, { message: "recurring must have at least three characters " }),
+    number_of_winners: z
       .number({
         required_error: "number of winners  is required",
         invalid_type_error: "number of winners must be a number",
       })
-      .positive(),
-    drawType: z
+      .positive()
+      .refine((value) => Number(value) <= 1000000, "winners must be a number"),
+    draw_type: z
       .string({
-        required_error: "drawType is required",
-        invalid_type_error: "drawType must be a string",
+        required_error: "draw_type is required",
+        invalid_type_error: "draw_type must be a string",
       })
-      .min(3, { message: "drawType must have at least three characters " }),
+      .min(3, { message: "draw_type must have at least three characters " }),
     description: z
       .string({
         required_error: "description is required",
         invalid_type_error: "description must be a string",
       })
-      .min(3, {
-        message: "description must have at least three characters ",
-      }),
-    currency: z.string({
-      required_error: "currency is required",
-      invalid_type_error: "currency must be a string",
-    }),
-    // .min(1, { message: "currency must have at least one character" }),
-    amount: z
+      .min(3, { message: "description must have at least three characters " }),
+    ticket_prize: z
       .number({
-        required_error: "number of winners  is required",
-        invalid_type_error: "number of winners must be a number",
+        required_error: "Ticket Price  is required",
+        invalid_type_error: "Ticket Price must be a number",
       })
-      .positive(),
-    noOfTickets: z
+      .positive()
+      .refine((value) => Number(value) <= 1000000, "price must be a number"),
+    // .min(1, { message: "currency must have at least one character" }),
+    // amount: z
+    //   .number({
+    //     required_error: "number of number_of_winners  is required",
+    //     invalid_type_error: "number of number_of_winners must be a number",
+    //   })
+    //   .positive(),
+    ticket_sale_cap: z
       .number({
         required_error: "number of tickets  is required",
         invalid_type_error: "number of tickets must be a number",
       })
-      .positive(),
+      .positive()
+      .refine(
+        (value) => Number(value) <= 1000000,
+        "number of tickets must be a number"
+      ),
+    brand_colors: z
+      .array(z.string())
+      .refine(
+        (value) => value.length === 3,
+        "Brand Colors contain exactly three colors"
+      ),
   });
 
   type FormSchmaType = z.infer<typeof formSchema>;
@@ -109,20 +142,53 @@ const Draws = () => {
     resolver: zodResolver(formSchema),
   });
 
+  const defaultColor = "#1F52AE";
+
+  //image section
+  const [images, setImages] = useState<File[]>([]);
+  const onDrop = (acceptedFiles: File[]) => {
+    setImages([...images, ...acceptedFiles]);
+  };
+
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
+
+  const removeImage = (index: number) => {
+    setImages((prevImages) => {
+      const updatedImages = [...prevImages];
+      updatedImages.splice(index, 1);
+      return updatedImages;
+    });
+  };
+
   const onSubmit: SubmitHandler<FormSchmaType> = async (data) => {
-    // if (raffleimages && raffleimages.length < 0)
-    //   return toast.error("Please add Images for the raffle");
-    // if (PageIcons && PageIcons.length < 0)
-    //   return toast.error("Please add Images for the icon");
-    // if (!brandColor) return toast.error("Please add brand colors");
-    console.log({ data, raffleimages, PageIcons, brandColor });
+    if (images.length === 0) {
+      return toast.error("Please add Images for the campaign");
+    }
+    images.map((img) => {
+      if (img.size > MAX_FILE_SIZE)
+        return toast.error(
+          "Some of the images exceed 5MB Max image audience_size is 5MB"
+        );
+      if (!ACCEPTED_IMAGE_TYPES.includes(img.type))
+        return toast.error(
+          "Some of the images exceed 5MB Max image audience_size is 5MB"
+        );
+    });
+    const req = {
+      ...data,
+      start_date: getDateIsoString(data.start_date),
+      end_date: getDateIsoString(data.end_date),
+      raffle_images: images,
+    };
+    console.log(req);
+    createCampaign.mutateAsync(req);
   };
   return (
     <Suspense fallback={<Spinner />}>
-      <DashBoardLayout type="admin">
+      <DashBoardLayout type="influencer" backbtn={true}>
         <form onSubmit={handleSubmit(onSubmit)}>
           <BackgroundDrop>
-            <h3 className="text-primary font-ubuntu text-[1.2rem] lg:text-[1.5rem] border-b-[1px] border-formborder font-bold">
+            <h3 className="text-primary font-ubuntu text-[1.2rem] lg:text-[1.5rem]  font-bold">
               Raffle Draw Details
             </h3>
 
@@ -163,94 +229,78 @@ const Draws = () => {
                   Campaign Duration
                 </label>
                 <p className="font-ubuntu text-sm lg:text-base  text-forms lg:w-[80%] mb-3 lg:mb-0">
-                  Please enter the start and end dates and time.
+                  Please enter the start_date and end dates and time.
                 </p>
               </div>
 
               <div className="w-full lg:w-[70%] ">
                 <div className="flex  justify-between flex-wrap">
                   <input
-                    className={`w-full lg:w-[48%] border text-sm bg-bg lg:text-base text-forms border-formborder p-3 rounded-[10px] outline-none placeholder:text-forms placeholder:text-sm placeholder:opacity-[.6]`}
-                    aria-label="start"
+                    className={`w-full  border text-sm bg-bg lg:text-base text-forms border-formborder p-3 rounded-[10px] outline-none placeholder:text-forms placeholder:text-sm placeholder:opacity-[.6]`}
+                    aria-label="start_date"
                     placeholder="Start"
                     type="date"
-                    id="start"
-                    {...register("start.date", {
+                    id="start_date"
+                    {...register("start_date", {
                       required: "This is required.",
                     })}
                     disabled={isSubmitting}
+                    defaultValue={new Date().toISOString().split("T")[0]}
                   />
 
-                  <input
+                  {/* <input
                     className={`w-full lg:w-[48%] mt-3 lg:mt-0 border text-sm bg-bg lg:text-base text-forms border-formborder p-3 rounded-[10px] outline-none placeholder:text-forms placeholder:text-sm placeholder:opacity-[.6]`}
-                    aria-label="start"
+                    aria-label="start_date"
                     placeholder="Start"
                     type="text"
-                    id="start"
-                    {...register("start.time", {
+                    id="start_date"
+                    {...register("start_date", {
                       required: "This is required.",
                     })}
                     disabled={isSubmitting}
-                  />
+                  /> */}
                 </div>
                 <div className="flex justify-between flex-wrap mt-[1rem]">
                   <input
-                    className={`w-full lg:w-[48%] border text-sm bg-bg lg:text-base text-forms border-formborder p-3 rounded-[10px] outline-none placeholder:text-forms placeholder:text-sm placeholder:opacity-[.6]`}
-                    aria-label="start"
+                    className={`w-full  border text-sm bg-bg lg:text-base text-forms border-formborder p-3 rounded-[10px] outline-none placeholder:text-forms placeholder:text-sm placeholder:opacity-[.6]`}
+                    aria-label="start_date"
                     placeholder="Start"
                     type="date"
-                    id="start"
-                    {...register("stop.date", {
+                    id="start_date"
+                    {...register("end_date", {
                       required: "This is required.",
                     })}
                     disabled={isSubmitting}
+                    defaultValue={new Date().toISOString().split("T")[0]}
                   />
 
-                  <input
+                  {/* <input
                     className={`w-full lg:w-[48%] mt-3 lg:mt-0  border text-sm bg-bg lg:text-base text-forms border-formborder p-3 rounded-[10px] outline-none placeholder:text-forms placeholder:text-sm placeholder:opacity-[.6]`}
-                    aria-label="start"
+                    aria-label="start_date"
                     placeholder="End"
                     type="text"
-                    id="start"
-                    {...register("stop.time", {
+                    id="start_date"
+                    {...register("end_date", {
                       required: "This is required.",
                     })}
                     disabled={isSubmitting}
-                  />
+                  /> */}
                 </div>
               </div>
             </div>
+            <ErrorMessage
+              errors={errors}
+              name="start_date"
+              render={({ message }) => (
+                <p className="my-1 font-ubuntu text-[#E4033B] text-xs lg:text-sm">
+                  {message}
+                </p>
+              )}
+            />
 
             <ErrorMessage
               errors={errors}
-              name="start.date"
-              render={({ message }) => (
-                <p className="my-1 font-ubuntu text-[#E4033B] text-xs lg:text-sm">
-                  {message}
-                </p>
-              )}
-            />
-            <ErrorMessage
-              errors={errors}
-              name="start.time"
-              render={({ message }) => (
-                <p className="my-1 font-ubuntu text-[#E4033B] text-xs lg:text-sm">
-                  {message}
-                </p>
-              )}
-            />
-            <ErrorMessage
-              errors={errors}
-              name="stop.date"
-              render={({ message }) => (
-                <p className="my-1 font-ubuntu text-[#E4033B] text-xs lg:text-sm">
-                  {message}
-                </p>
-              )}
-            />
-            <ErrorMessage
-              errors={errors}
-              name="stop.time"
+              name="end_date"
               render={({ message }) => (
                 <p className="my-1 font-ubuntu text-[#E4033B] text-xs lg:text-sm">
                   {message}
@@ -287,10 +337,10 @@ const Draws = () => {
                   >
                     Every two weeks
                   </option>
-                  <option className="text-sm opacity-[.6]" value="Every Month">
+                  <option className="text-sm opacity-[.6]" value="monthly">
                     Every Month
                   </option>
-                  <option className="text-sm opacity-[.6]" value="Custom">
+                  <option className="text-sm opacity-[.6]" value="custom">
                     Custom
                   </option>
                 </select>
@@ -309,19 +359,19 @@ const Draws = () => {
 
             <div className="flex flex-col lg:flex-row justify-between mt-[1rem] lg:mt-[2rem]">
               <label
-                htmlFor="winners"
+                htmlFor="number_of_winners"
                 className="font-ubuntu text-rand text-sm lg:text-base mb-3 lg:mb-0"
               >
-                Number of winners
+                Number of number_of_winners
               </label>
 
               <input
                 className={`w-full lg:w-[70%] border text-sm bg-bg lg:text-base text-forms border-formborder p-3 rounded-[10px] outline-none placeholder:text-forms placeholder:text-sm placeholder:opacity-[.6]`}
-                aria-label="winners"
-                placeholder="No of winners"
+                aria-label="number_of_winners"
+                placeholder="No of number_of_winners"
                 type="text"
-                id="winners"
-                {...register("winners", {
+                id="number_of_winners"
+                {...register("number_of_winners", {
                   required: "This is required.",
                   valueAsNumber: true,
                   validate: (value) => value > 0,
@@ -332,7 +382,7 @@ const Draws = () => {
 
             <ErrorMessage
               errors={errors}
-              name="winners"
+              name="number_of_winners"
               render={({ message }) => (
                 <p className="my-1 font-ubuntu text-[#E4033B] text-xs lg:text-sm">
                   {message}
@@ -354,19 +404,16 @@ const Draws = () => {
                 <select
                   id="drawtype"
                   className={`w-full border text-sm bg-bg lg:text-base text-forms border-formborder p-3 rounded-[10px] outline-none placeholder:text-forms placeholder:text-sm placeholder:opacity-[.6]`}
-                  // {...(register("drawType"), { required: "This is required." })}
-                  {...register("drawType", { required: "This is required." })}
+                  // {...(register("draw_type"), { required: "This is required." })}
+                  {...register("draw_type", { required: "This is required." })}
                 >
                   <option className="text-sm opacity-[.6]" value="">
-                    ---
+                    Select an option
                   </option>
-                  <option className="text-sm opacity-[.6]" value="Live Draw">
+                  <option className="text-sm opacity-[.6]" value="live">
                     Live Draw
                   </option>
-                  <option
-                    className="text-sm opacity-[.6]"
-                    value="Schedule Draw"
-                  >
+                  <option className="text-sm opacity-[.6]" value="scheduled">
                     Schedule Draw
                   </option>
                 </select>
@@ -374,7 +421,7 @@ const Draws = () => {
             </div>
             <ErrorMessage
               errors={errors}
-              name="drawType"
+              name="draw_type"
               render={({ message }) => (
                 <p className="my-1 font-ubuntu text-[#E4033B] text-xs lg:text-sm">
                   {message}
@@ -406,7 +453,7 @@ const Draws = () => {
 
             <ErrorMessage
               errors={errors}
-              name="snow"
+              name="description"
               render={({ message }) => (
                 <p className="my-1 font-ubuntu text-[#E4033B] text-xs lg:text-sm">
                   {message}
@@ -429,7 +476,12 @@ const Draws = () => {
               </label>
 
               <div className="flex items-center w-full lg:w-[70%]">
-                <select
+                <div
+                  className={`:w-[20%] lg:w-[10%] mr-0 border text-sm bg-[#F4F6F8] lg:text-base text-forms border-formborder p-3 rounded-l-[10px] outline-none placeholder:text-forms placeholder:text-sm placeholder:opacity-[.6]`}
+                >
+                  $
+                </div>
+                {/* <select
                   id="input"
                   className={`:w-[20%] lg:w-[10%] mr-0 border text-sm bg-[#F4F6F8] lg:text-base text-forms border-formborder p-3 rounded-l-[10px] outline-none placeholder:text-forms placeholder:text-sm placeholder:opacity-[.6]`}
                   {...register("currency", { required: "This is required." })}
@@ -440,13 +492,13 @@ const Draws = () => {
                       {currency_list[key].symbol}
                     </option>
                   ))}
-                </select>
+                </select> */}
                 <input
                   className={`w-[80%] lg:w-[90%] border text-sm bg-bg lg:text-base text-forms border-formborder p-3 rounded-r-[10px] outline-none placeholder:text-forms placeholder:text-sm placeholder:opacity-[.6]`}
                   aria-label="amount"
                   placeholder="Amount"
                   type="text"
-                  {...register("amount", {
+                  {...register("ticket_prize", {
                     required: "This is required.",
                     valueAsNumber: true,
                     validate: (value) => value > 0,
@@ -456,7 +508,7 @@ const Draws = () => {
               </div>
             </div>
 
-            <ErrorMessage
+            {/* <ErrorMessage
               errors={errors}
               name="currency"
               render={({ message }) => (
@@ -464,10 +516,10 @@ const Draws = () => {
                   {message}
                 </p>
               )}
-            />
+            /> */}
             <ErrorMessage
               errors={errors}
-              name="amount"
+              name="ticket_prize"
               render={({ message }) => (
                 <p className="my-1 font-ubuntu text-[#E4033B] text-xs lg:text-sm">
                   {message}
@@ -478,7 +530,7 @@ const Draws = () => {
             <div className="flex flex-col lg:flex-row justify-between mt-[1rem] lg:mt-[2rem]">
               <div className="lg:w-[30%]">
                 <label
-                  htmlFor="noOfTickets"
+                  htmlFor="ticket_sale_cap"
                   className="font-ubuntu text-rand text-sm lg:text-base mb-3 lg:mb-0"
                 >
                   Ticket Sale Cap
@@ -492,11 +544,11 @@ const Draws = () => {
               <div className="w-full lg:w-[70%] ">
                 <input
                   className={`w-full  border text-sm bg-bg lg:text-base text-forms border-formborder p-3 rounded-[10px] outline-none placeholder:text-forms placeholder:text-sm placeholder:opacity-[.6]`}
-                  aria-label="winners"
+                  aria-label="ticket_sale_cap"
                   placeholder="No of Tickets"
                   type="number"
-                  id="noOfTickets"
-                  {...register("noOfTickets", {
+                  id="ticket_sale_cap"
+                  {...register("ticket_sale_cap", {
                     required: "This is required.",
                     valueAsNumber: true,
                     validate: (value) => value > 0,
@@ -509,7 +561,7 @@ const Draws = () => {
 
           <ErrorMessage
             errors={errors}
-            name="noOfTickets"
+            name="ticket_sale_cap"
             render={({ message }) => (
               <p className="my-1 font-ubuntu text-[#E4033B] text-xs lg:text-sm">
                 {message}
@@ -538,12 +590,39 @@ const Draws = () => {
               </div>
 
               <div className="w-full lg:w-[70%] ">
-                {" "}
-                <DropBox images={raffleimages} setImages={setRaffleImages} />
+                <div
+                  {...getRootProps()}
+                  className={`h-[200px] flex justify-center items-center rounded-lg border border-dashed   ${
+                    isDragActive ? "border-[green]" : "border-[gray]"
+                  }`}
+                >
+                  <input {...getInputProps()} />
+                  <p className="text-[#000]">Drag 'n' drop some files here</p>
+                </div>
+                <div className="mt-5 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-[1rem]">
+                  {images.map((image, index) => (
+                    <div
+                      key={index}
+                      className="w-full h-[200px] border border-dashed border-[gray] relative"
+                    >
+                      <img
+                        src={URL.createObjectURL(image)}
+                        alt={`Preview ${index}`}
+                        className="w-full h-full object-contain  aspect-[3/2] "
+                      />
+                      <button
+                        onClick={() => removeImage(index)}
+                        className="text-[#000] text-base absolute top-[-0.6rem] right-[-0.5rem] hover:text-primary"
+                      >
+                        <FontAwesomeIcon icon={faTimesCircle} />
+                      </button>
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
 
-            <div className="flex flex-col lg:flex-row justify-between mt-[1rem] lg:mt-[2rem]">
+            {/* <div className="flex flex-col lg:flex-row justify-between mt-[1rem] lg:mt-[2rem]">
               <div className="lg:w-[30%]">
                 <label
                   // htmlFor="recurring"
@@ -559,7 +638,7 @@ const Draws = () => {
               <div className="w-full lg:w-[70%] ">
                 <DropBox images={PageIcons} setImages={setPageIcons} />
               </div>
-            </div>
+            </div> */}
 
             <div className="flex flex-col lg:flex-row justify-between mt-[1rem] lg:mt-[2rem]">
               <div className="lg:w-[30%]">
@@ -577,17 +656,51 @@ const Draws = () => {
               <div
                 className={`w-full flex lg:w-[70%] border  bg-bg l border-formborder p-3 rounded-[10px] outline-none `}
               >
-                {colors.map((item: string, i: number) => (
+                <input
+                  type="color"
+                  className="block hover:opacity-80 cursor-pointer rounded-full w-[30px] h-[30px]  mr-2 border-0 bg-white"
+                  defaultValue={defaultColor}
+                  {...register("brand_colors.0", {
+                    required: "Color 1 is required",
+                  })}
+                />
+                <input
+                  type="color"
+                  {...register("brand_colors.1", {
+                    required: "Color 2 is required",
+                  })}
+                  defaultValue={defaultColor}
+                  className="block hover:opacity-80 cursor-pointer rounded-full w-[30px] h-[30px]  mr-2 border-0 bg-white"
+                />
+                <input
+                  type="color"
+                  {...register("brand_colors.2", {
+                    required: "Color 3 is required",
+                  })}
+                  defaultValue={defaultColor}
+                  className="block hover:opacity-80 cursor-pointer rounded-full w-[30px] h-[30px]  mr-2 border-0 outline-none bg-white"
+                />
+                {/* {colors.map((item: string, i: number) => (
                   <span
                     key={i}
                     style={{ background: item }}
                     onClick={() => setBrandColors(item)}
                     className="block hover:opacity-80 cursor-pointer rounded-full w-[20px] h-[20px]  mr-2"
                   ></span>
-                ))}
+                ))} */}
               </div>
             </div>
           </div>
+
+          <ErrorMessage
+            errors={errors}
+            name="brand_colors"
+            render={({ message }) => (
+              <p className="my-1 font-ubuntu text-[#E4033B] text-xs lg:text-sm">
+                {message}
+              </p>
+            )}
+          />
 
           <div className=" w-full p-[1rem] lg:p-0">
             {isSubmitting ? (

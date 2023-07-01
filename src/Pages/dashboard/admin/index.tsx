@@ -2,6 +2,7 @@ import React, { Suspense, lazy } from "react";
 import { DashBoardLayout } from "../../";
 import Spinner from "../../../components/Spinner";
 import { Raffle } from "../../../assets";
+import { getUserData } from "../../../Utils";
 
 
 const InflencerCards = lazy(
@@ -174,7 +175,7 @@ export const data = [
   },
 ];
 
-export const UserData = ({
+export const UserDataCard = ({
   item,
   onClick,
 }: {
@@ -212,6 +213,19 @@ export const UserData = ({
   );
 };
 
+const UserData = ({ userData }: { userData: any[] }) => {
+  return (
+    <>
+      <h2 className="text-primary  text-base capitalize font-semibold lg:text-lg">
+        Pending Registrations
+      </h2>
+      {userData &&
+        userData.length > 0 &&
+        userData.map((item, i) => <UserDataCard key={i} item={item} />)}{" "}
+    </>
+  );
+};
+
 const Body = ({ userData }: { userData: any[] }) => {
   return (
     <Suspense fallback={<Spinner toggle={false} />}>
@@ -221,23 +235,24 @@ const Body = ({ userData }: { userData: any[] }) => {
           <InfluencerDraws />
         </div>
         <div className="col-span-6 lg:col-span-2 flex flex-col justify-between h-full overflow-y-auto bg-bg p-[1rem] rounded-[10px]">
-          <h2 className="text-primary  text-base capitalize font-semibold lg:text-lg">
-            Pending Registrations
-          </h2>
-          {userData &&
-            userData.length > 0 &&
-            userData.map((item, i) => <UserData key={i} item={item} />)}{" "}
+          <UserData userData={userData} />
         </div>
       </div>
     </Suspense>
   );
 };
 const Transactions = () => {
-  const cardProps = {
-    raffles: 147,
-    participants: 15,
-    tickets: 20,
-  };
+ const cardProps = {
+   raffles: getUserData()?.number_of_raffles_created
+     ? Number(getUserData()?.number_of_raffles_created)
+     : 0,
+   participants: getUserData()?.participants_reached
+     ? Number(getUserData()?.participants_reached)
+     : 0,
+   tickets: getUserData()?.number_of_tickets_sold
+     ? Number(getUserData()?.number_of_tickets_sold)
+     : 0,
+ };
   return (
     <Suspense fallback={<Spinner />}>
       <DashBoardLayout type="admin">

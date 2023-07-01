@@ -28,7 +28,7 @@ const Index: React.FC<Props> = ({
     <Suspense>
       <div
         ref={observerRef}
-        className="relative overflow-x-auto  sm:rounded-lg mt-10"
+        className="relative overflow-x-auto  sm:rounded-lg mt-10 h-[500px] overflow-y-auto"
       >
         <table
           className="w-full text-sm text-left text-gray-500 dark:text-gray-400 z-[1]"
@@ -54,7 +54,7 @@ const Index: React.FC<Props> = ({
             ))}
           </thead>
           <tbody {...getTableBodyProps()}>
-            {rows.map((row, i:number) => {
+            {rows.map((row, i: number) => {
               prepareRow(row);
               return (
                 <tr

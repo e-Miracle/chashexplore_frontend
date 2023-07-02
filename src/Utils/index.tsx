@@ -3,6 +3,14 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import { Influencer } from "./types";
 import { Navigate } from "react-router-dom";
+import Cookies, { CookieAttributes } from "js-cookie";
+
+const cookieConfig: CookieAttributes = {
+  expires: 7, //expires in 7day
+  secure: true, //when all is done change to true
+  sameSite: "Lax", //set to 'strict' when all is done
+  path: "/", // i could set the path to /dashboard/home or /dashboard/raws
+};
 
 export const getUserData = (): Influencer => {
   const user = sessionStorage.getItem(USER._USER_TOKEN);
@@ -18,21 +26,21 @@ export const toNum = (num: number) => (num ? Number(num).toLocaleString() : 0);
 
 export const storeUserData = (data: any) => {
   localStorage.setItem(USER.__TOKEN__, data?.message?.token);
-   sessionStorage.setItem(
-     USER._USER_TOKEN,
-     JSON.stringify({ ...data?.message?.user, token: data?.message?.token })
-     // JSON.stringify({ token: data?.access_token, isVerified: data?.isVerified })
-   );
-}
- 
+  Cookies.set(USER.__TOKEN__, data?.message?.token, cookieConfig);
+  sessionStorage.setItem(
+    USER._USER_TOKEN,
+    JSON.stringify({ ...data?.message?.user, token: data?.message?.token })
+  );
+};
+
 export const storeSocialData = async (data: any) => {
   localStorage.setItem(USER.__TOKEN__, data?.token);
-   await sessionStorage.setItem(
-     USER._USER_TOKEN,
-     JSON.stringify({ ...data?.user, token: data?.token })
-   );
-}
- 
+  Cookies.set(USER.__TOKEN__, data?.token, cookieConfig);
+  await sessionStorage.setItem(
+    USER._USER_TOKEN,
+    JSON.stringify({ ...data?.user, token: data?.token })
+  );
+};
 
 export const storeIdentificationTypes = (data: any) =>
   sessionStorage.setItem(
@@ -180,14 +188,15 @@ export const setAuthToken = () => {
     axios.defaults.headers.common["Authorization"] = `Bearer ${
       getUserData()?.token
     }`;
-  } else if (localStorage.token) {
-    axios.defaults.headers.common["Authorization"] = `Bearer ${
-      localStorage.token
-      }`;
+    return;
   }
-  else {
-    delete axios.defaults.headers.common["Authorization"];
+
+  const token = Cookies.get(USER.__TOKEN__);
+  if (token) {
+    axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+    return;
   }
+  delete axios.defaults.headers.common["Authorization"];
 };
 
 export const getDateIsoString = (date: Date) => {
@@ -209,9 +218,17 @@ export const changeContentTypeHeader = (isImage: boolean = false) => {
   }
 };
 
+const clearAllCookies = () => {
+  const cookies = Cookies.get();
+  for (const cookie in cookies) {
+    Cookies.remove(cookie);
+  }
+};
+
 export const logout = () => {
-  localStorage.clear();
   sessionStorage.clear();
+  Cookies.remove(USER.__TOKEN__);
+  clearAllCookies();
   delete axios.defaults.headers.common["Authorization"];
   return <Navigate to={PAGES.LOGIN_PAGE} />;
 };
@@ -239,11 +256,13 @@ export const socialRequest = async (
 };
 
 export const loadUser = () => {
-  if (localStorage.token) {
-    //i want to fetch user data here, so i need a fucntion
-    return <Navigate to={`/my/dashboard/${getUserData()?.role}/home`} />;
+  const token = Cookies.get(USER.__TOKEN__);
+  if (token) {
+    console.log("we know what we are doing to the ", token);
+    <Navigate to={`/my/dashboard/${getUserData()?.role}/home`} />;
+    return;
   }
-   
+
   return;
 };
 

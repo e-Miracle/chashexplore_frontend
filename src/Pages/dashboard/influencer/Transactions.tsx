@@ -12,7 +12,7 @@ import { fetchCampaigns } from "../../../hooks/customGets";
 import { useInfiniteQuery } from "react-query";
 import toast from "react-hot-toast";
 import { useIntersection } from "@mantine/hooks";
-
+const Error = lazy(() => import("../../../components/ErrorComponent"));
 
 export const Tables = ({
   data,
@@ -116,7 +116,7 @@ const Transactions = () => {
     isFetchingNextPage,
     isError,
     error,
-    isFetching,
+    isLoading,
   } = useInfiniteQuery(
     "campaigns",
     async ({ pageParam = 1 }) => {
@@ -129,10 +129,6 @@ const Transactions = () => {
         return allPages[allPages.length - 1]?.data.next_page_url
           ? allPages[allPages.length - 1]?.data.current_page + 1
           : null;
-      },
-      initialData: {
-        pages: [],
-        pageParams: [1],
       },
       onSuccess: (data) => {
         if (data) toast.success(data?.pages[data?.pages.length - 1]?.message);
@@ -156,16 +152,11 @@ const Transactions = () => {
       fetchNextPage();
   }, [entry]);
 
-  if (isFetching) return <Spinner />;
+  if (isLoading) return <Spinner />;
 
   if (isError) {
     const errorMessage = (error as any).message || "An unknown error occurred";
-    return (
-      <div>
-        <p>There was an error fetching the data.</p>
-        <p>{errorMessage}</p>
-      </div>
-    );
+     return <Error err={errorMessage}  />;
   }
   return (
     <Suspense fallback={<Spinner />}>
@@ -182,17 +173,16 @@ const Transactions = () => {
                 normalRef={ref}
               />
               {isFetchingNextPage && <Spinner toggle={false} />}
-            </>
-          ) : (
-            <>
-              {isFetchingNextPage ? (
-                <Spinner toggle={false} />
-              ) : (
-                <div className="text-[black]">
-                  Your transactions would appear here
-                </div>
+              {!data?.pages[data?.pages.length - 1]?.data?.next_page_url && (
+                <p className="text-sm lg:text-base text-center my-3 text-primary">
+                  Nothing more to load
+                </p>
               )}
             </>
+          ) : (
+            <div className="text-[black]">
+              Your transactions would appear here
+            </div>
           )}
         </BackgroundDrop>
       </DashBoardLayout>

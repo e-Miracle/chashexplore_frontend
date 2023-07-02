@@ -3,26 +3,9 @@ import { DashBoardLayout } from "../../";
 import Spinner from "../../../components/Spinner";
 import { BackgroundDrop } from "../influencer/Profile";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faCheckCircle,
-  faPen,
-  faEye,
-  faEyeSlash,
-} from "@fortawesome/free-solid-svg-icons";
+import { faPen, faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import { nFormatter, getUserData } from "../../../Utils";
 import { Raffle } from "../../../assets";
-import { fetchData } from "../../../hooks/customGets";
-import { useQuery } from "react-query";
-import { ENDPOINTS } from "../../../constants";
-import toast from "react-hot-toast";
-import {
-  Google,
-  Twitter,
-  Facebook,
-  LinkedIn,
-  Instagram,
-} from "../../../assets";
-import { LazyLoadImage } from "react-lazy-load-image-component";
 const ActiveDraws = React.lazy(() =>
   import("../influencer/Profile").then((res) => {
     return { default: res.ActiveDraws };

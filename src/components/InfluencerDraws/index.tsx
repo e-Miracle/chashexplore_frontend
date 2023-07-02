@@ -18,6 +18,7 @@ const ModalContent = React.lazy(() =>
     return { default: res.ModalContent };
   })
 );
+const Error = React.lazy(() => import("../ErrorComponent"));
 
 const index = () => {
   const isMobile: boolean = useMediaQuery({ query: `(max-width: 768px)` });
@@ -58,6 +59,7 @@ const index = () => {
       },
     }
   );
+  console.log("takt", data?.pages[data?.pages.length - 1]?.data?.next_page_url);
   const flattenedData = data?.pages.flatMap((page) => page.data.data) || [];
   const observerRef = React.useRef<HTMLDivElement>(null);
   const { ref, entry } = useIntersection({
@@ -84,12 +86,7 @@ const index = () => {
 
   if (isError) {
     const errorMessage = (error as any).message || "An unknown error occurred";
-    return (
-      <div>
-        <p>There was an error fetching the data.</p>
-        <p>{errorMessage}</p>
-      </div>
-    );
+     return <Error err={errorMessage} small={true} />;
   }
   return (
     <Suspense>
@@ -250,6 +247,11 @@ const index = () => {
               </table>
             </div>
             {isFetchingNextPage && <Spinner toggle={false} />}
+            {!data?.pages[data?.pages.length - 1]?.data?.next_page_url && (
+              <p className="text-sm lg:text-base text-center my-3 text-primary">
+                Nothing more to load
+              </p>
+            )}
             {/* {hasNextPage && (
               <button
                 onClick={() => fetchNextPage()}

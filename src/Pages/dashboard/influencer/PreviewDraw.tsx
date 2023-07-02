@@ -12,6 +12,7 @@ import toast from "react-hot-toast";
 import { getUserData, convertDateTime, countDown } from "../../../Utils";
 import { _INFLUENCER_ } from "../../../constants";
 const Timer = lazy(() => import("../../../components/Timer/Timer"));
+const Error = lazy(() => import("../../../components/ErrorComponent"));
 
 const PreviewDraw = () => {
   const { id } = useParams();
@@ -193,12 +194,7 @@ const PreviewDraw = () => {
 
   if (isError) {
     const errorMessage = (error as any).message || "An unknown error occurred";
-    return (
-      <div>
-        <p>There was an error fetching the data.</p>
-        <p>{errorMessage}</p>
-      </div>
-    );
+    return <Error err={errorMessage} />;
   }
 
   return (

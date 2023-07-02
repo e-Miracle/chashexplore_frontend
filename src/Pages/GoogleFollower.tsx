@@ -7,14 +7,11 @@ import { ENDPOINTS, _INFLUENCER_, _FOLLOWER_ } from "../constants";
 import { fetchAuth } from "../hooks/customGets";
 import { storeSocialData, getUserData } from "../Utils";
 import axios from "axios";
+const Error = React.lazy(() => import("../components/ErrorComponent"));
 
 const Google = () => {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
-  //   const url =
-  //     ENDPOINTS.API_BASE_URL +
-  //     String(ENDPOINTS.API_FOLLOWER_AUTH_GOOGLE) +
-  //         `?${queryParams.toString()}`;
 
   const url =
     ENDPOINTS.API_BASE_URL +
@@ -42,12 +39,7 @@ const Google = () => {
 
   if (isError) {
     const errorMessage = (error as any).message || "An unknown error occurred";
-    return (
-      <div>
-        <p>There was an error fetching the data.</p>
-        <p>{errorMessage}</p>
-      </div>
-    );
+     return <Error err={errorMessage} />;
   }
   return (
     <Suspense fallback={<Spinner />}>

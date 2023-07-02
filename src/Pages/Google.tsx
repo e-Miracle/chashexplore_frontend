@@ -7,6 +7,7 @@ import { ENDPOINTS, _INFLUENCER_ } from "../constants";
 import { fetchAuth } from "../hooks/customGets";
 import { storeSocialData, getUserData } from "../Utils";
 import axios from "axios";
+const Error = React.lazy(() => import('../components/ErrorComponent'));
 
 const Google = () => {
   const location = useLocation();
@@ -38,12 +39,7 @@ const Google = () => {
 
   if (isError) {
     const errorMessage = (error as any).message || "An unknown error occurred";
-    return (
-      <div>
-        <p>There was an error fetching the data.</p>
-        <p>{errorMessage}</p>
-      </div>
-    );
+    return <Error err={errorMessage} />;
   }
   return (
     <Suspense fallback={<Spinner />}>

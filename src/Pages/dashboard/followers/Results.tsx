@@ -15,55 +15,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useIntersection } from "@mantine/hooks";
 import ReviewCard from "../../../components/ReviewCard/ReviewCard";
 const Table = lazy(() => import("../../../components/Table/WinnersTable"));
-const reviewArr = [
-  {
-    text: "Absolutely unbelievable service from Ricky Crown! Easy to deal with a completely genuine! Still in shock that i won!",
-    rating: 4,
-    imgSrc: BlueLogo,
-    username: "@johndoe2345",
-    amount: 1000000,
-  },
-  {
-    text: "Absolutely unbelievable service from Ricky Crown! Easy to deal with a completely genuine! Still in shock that i won!",
-    rating: 4,
-    imgSrc: BlueLogo,
-    username: "@johndoe2345",
-    amount: 1000000,
-  },
-  {
-    text: "Absolutely unbelievable service from Ricky Crown! Easy to deal with a completely genuine! Still in shock that i won!",
-    rating: 4,
-    imgSrc: BlueLogo,
-    username: "@johndoe2345",
-    amount: 1000000,
-  },
-];
-const dataArr = [
-  {
-    ticketId: "GN24809HN",
-    price: 100000,
-    username: "@johndoe235",
-    number: "0803 *** 4567",
-  },
-  {
-    ticketId: "GN24809HN",
-    price: 100000,
-    username: "@johndoe235",
-    number: "0803 *** 4567",
-  },
-  {
-    ticketId: "GN24809HN",
-    price: 100000,
-    username: "@johndoe235",
-    number: "0803 *** 4567",
-  },
-  {
-    ticketId: "GN24809HN",
-    price: 100000,
-    username: "@johndoe235",
-    number: "0803 *** 4567",
-  },
-];
+const Error = React.lazy(() => import("../../../components/ErrorComponent"));
 const columnsArr = [
   { Header: "Ticket ID", accessor: "ticketId" },
   { Header: "Prize", accessor: "price" },
@@ -143,7 +95,7 @@ const Winners = ({ id }: { id: number }) => {
     isFetchingNextPage,
     isError,
     error,
-    isFetching,
+    isLoading,
   } = useInfiniteQuery(
     "winners",
     async ({ pageParam = 1 }) => {
@@ -156,10 +108,6 @@ const Winners = ({ id }: { id: number }) => {
         return allPages[allPages.length - 1]?.data.next_page_url
           ? allPages[allPages.length - 1]?.data.current_page + 1
           : null;
-      },
-      initialData: {
-        pages: [],
-        pageParams: [1],
       },
       onSuccess: (data) => {
         console.log(data);
@@ -181,16 +129,11 @@ const Winners = ({ id }: { id: number }) => {
       fetchNextPage();
   }, [entry]);
 
-  if (isFetching) return <Spinner toggle={false} />;
+  if (isLoading) return <Spinner toggle={false} />;
 
   if (isError) {
     const errorMessage = (error as any).message || "An unknown error occurred";
-    return (
-      <div>
-        <p>There was an error fetching the data.</p>
-        <p>{errorMessage}</p>
-      </div>
-    );
+      return <Error err={errorMessage} small={true} />;
   }
   return (
     <div className="mt-10">
@@ -207,19 +150,18 @@ const Winners = ({ id }: { id: number }) => {
               columnsArr={columnsArr}
             />
             {isFetchingNextPage && <Spinner toggle={false} />}
-          </>
-        ) : (
-          <>
-            {isFetching ? (
-              <Spinner toggle={false} />
-            ) : (
-              <div className="flex flex-col justify-center items-center h-full">
-                <p className="font-ubuntu text-base lg:text-lg text-center my-[3rem] text-[#0D1A31] mt-5">
-                  Your winners will appear here.
-                </p>
-              </div>
+            {!data?.pages[data?.pages.length - 1]?.data?.next_page_url && (
+              <p className="text-sm lg:text-base text-center my-3 text-primary">
+                Nothing more to load
+              </p>
             )}
           </>
+        ) : (
+          <div className="flex flex-col justify-center items-center h-full">
+            <p className="font-ubuntu text-base lg:text-lg text-center my-[3rem] text-[#0D1A31] mt-5">
+              Your winners will appear here.
+            </p>
+          </div>
         )}
       </>
       <div className="my-[1rem] flex justify-center items-center">
@@ -246,7 +188,7 @@ const Reviews = ({ id }: { id: number }) => {
     isFetchingNextPage,
     isError,
     error,
-    isFetching,
+    isLoading
   } = useInfiniteQuery(
     "reviews",
     async ({ pageParam = 1 }) => {
@@ -258,10 +200,6 @@ const Reviews = ({ id }: { id: number }) => {
         return allPages[allPages.length - 1]?.data.next_page_url
           ? allPages[allPages.length - 1]?.data.current_page + 1
           : null;
-      },
-      initialData: {
-        pages: [],
-        pageParams: [1],
       },
       onSuccess: (data) => {
         console.log(data);
@@ -283,16 +221,11 @@ const Reviews = ({ id }: { id: number }) => {
       fetchNextPage();
   }, [entry]);
 
-  if (isFetching) return <Spinner toggle={false} />;
+  if (isLoading) return <Spinner toggle={false} />;
 
   if (isError) {
     const errorMessage = (error as any).message || "An unknown error occurred";
-    return (
-      <div>
-        <p>There was an error fetching the data.</p>
-        <p>{errorMessage}</p>
-      </div>
-    );
+     return <Error err={errorMessage} small={true} />;
   }
   return (
     <div>
@@ -313,6 +246,11 @@ const Reviews = ({ id }: { id: number }) => {
               />
             ))}
             {isFetchingNextPage && <Spinner toggle={false} />}
+            {!data?.pages[data?.pages.length - 1]?.data?.next_page_url && (
+              <p className="text-sm lg:text-base text-center my-3 text-primary">
+                Nothing more to load
+              </p>
+            )}
           </div>
         ) : (
           <h3 className="text-primary text-sm lg:text-base font-semibold">

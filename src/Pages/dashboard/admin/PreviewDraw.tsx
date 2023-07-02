@@ -19,25 +19,26 @@ const BackgroundDrop = lazy(() =>
   })
 );
 const Timer = lazy(() => import("../../../components/Timer/Timer"));
+const Error = lazy(() => import("../../../components/ErrorComponent"));
 
 const imgArray: string[] = [PreviewImage, PreviewImage, PreviewImage];
 
 const PreviewDraw = () => {
   const { id } = useParams();
   const isMobile: boolean = useMediaQuery({ query: `(max-width: 768px)` });
-   const { isLoading, isError, data, error } = useQuery(
-     "singleCampaign",
-     () => fetchSingleCampaign(Number(id)),
-     {
-       onSuccess: (data) => {
-         console.log(data?.data);
-         if (data) toast.success("Successfully fetched campaigns");
-       },
-       onError: (err) => {
-         if (err) toast.error("An error occured");
-       },
-     }
-   );
+  const { isLoading, isError, data, error } = useQuery(
+    "singleCampaign",
+    () => fetchSingleCampaign(Number(id)),
+    {
+      onSuccess: (data) => {
+        console.log(data?.data);
+        if (data) toast.success("Successfully fetched campaigns");
+      },
+      onError: (err) => {
+        if (err) toast.error("An error occured");
+      },
+    }
+  );
   const header = (
     <div className="flex items-center">
       <img
@@ -203,12 +204,7 @@ const PreviewDraw = () => {
 
   if (isError) {
     const errorMessage = (error as any).message || "An unknown error occurred";
-    return (
-      <div>
-        <p>There was an error fetching the data.</p>
-        <p>{errorMessage}</p>
-      </div>
-    );
+    return <Error err={errorMessage}  />;
   }
 
   return (

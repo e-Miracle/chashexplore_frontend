@@ -27,6 +27,8 @@ import { useInfiniteQuery, useQuery } from "react-query";
 import { Draws } from "../../../Utils";
 import { ENDPOINTS } from "../../../constants";
 import { useIntersection } from "@mantine/hooks";
+import { useNavigate } from "react-router-dom";
+const Error = React.lazy(() => import("../../../components/ErrorComponent"));
 
 export const data = [
   {
@@ -81,6 +83,7 @@ export const BackgroundDrop = ({ children }: { children: React.ReactNode }) => {
 };
 
 export const Header = () => {
+  const navigate = useNavigate();
   const { isLoading, isError, data, error } = useQuery(
     "socials",
     ({ pageParam = 1 }) =>
@@ -102,12 +105,7 @@ export const Header = () => {
 
   if (isError) {
     const errorMessage = (error as any).message || "An unknown error occurred";
-    return (
-      <div>
-        <p>There was an error fetching the data.</p>
-        <p>{errorMessage}</p>
-      </div>
-    );
+    return <Error err={errorMessage} small={true} />;
   }
   type socialCta = { imgUrl: string; cta: string; color?: string };
   const socailCta: socialCta[] = [
@@ -154,28 +152,45 @@ export const Header = () => {
         <p className="text-[#000] text-sm lg:text-base text-center md:text-left">
           Connect with me:
         </p>
-        <div className="flex flex-wrap justify-center md:justify-start  items-center  mt-[3rem]">
-          {socailCta.map((item: socialCta, i: number) => (
-            <div key={i}>
-              {item.cta && (
-                <a
-                  className="hover:opacity-80 rounded-full shadow-primary p-2 flex justify-center items-center ml-0 mr-2"
-                  style={{ background: item?.color }}
-                  href={item.cta}
-                  target="_blank"
-                >
-                  {" "}
-                  <LazyLoadImage
-                    className="w-[20px] md:w-[30px] h-[20px] md:h-[30px] object-contain"
-                    src={item.imgUrl}
-                    placeholderSrc={"https://via.placeholder.com/72x72"}
-                    alt={item.imgUrl}
-                  />
-                </a>
-              )}
-            </div>
-          ))}
-        </div>
+        {getUserData()?.account_verfied === "1" ? (
+          <div className="flex flex-wrap justify-center md:justify-start  items-center  mt-[3rem]">
+            {socailCta.map((item: socialCta, i: number) => (
+              <div key={i}>
+                {item.cta && (
+                  <a
+                    className="hover:opacity-80 rounded-full shadow-primary p-2 flex justify-center items-center ml-0 mr-2"
+                    style={{ background: item?.color }}
+                    href={item.cta}
+                    target="_blank"
+                  >
+                    {" "}
+                    <LazyLoadImage
+                      className="w-[20px] md:w-[30px] h-[20px] md:h-[30px] object-contain"
+                      src={item.imgUrl}
+                      placeholderSrc={"https://via.placeholder.com/72x72"}
+                      alt={item.imgUrl}
+                    />
+                  </a>
+                )}
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="w-full flex flex-wrap items-center justify-center">
+            <h3 className="text-[#394355] text-center text-base lg:text-lg mt-5">
+              Account Verification not done or incomplete for your socials
+              sharing. Click on the button to verify
+            </h3>
+            <button
+              onClick={() =>
+                navigate(`/my/dashboard/${getUserData()?.role}/create`)
+              }
+              className="w-full md:w-auto  my-5  inline-block text-center border-[2px] border-primary bg-primary text-white rounded-[100px] py-3 px-5 text-sm lg:text-base hover:opacity-80"
+            >
+              Verify Account
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );
@@ -191,14 +206,13 @@ export const ActiveDraws = () => {
     isFetchingNextPage,
     isError,
     error,
-    isFetching,
     isLoading,
   } = useInfiniteQuery(
     queryKey,
     async ({ pageParam = 1 }) => {
       const res = await fetchDraws({
         page: pageParam,
-        endpoint: String(ENDPOINTS.API_INFLUENCER_TOP_DRAWS),
+        endpoint: String(ENDPOINTS.API_INFLUENCER_ACTIVE_DRAWS),
       });
       return res;
     },
@@ -208,10 +222,6 @@ export const ActiveDraws = () => {
         return allPages[allPages.length - 1]?.data.next_page_url
           ? allPages[allPages.length - 1]?.data.current_page + 1
           : null;
-      },
-      initialData: {
-        pages: [],
-        pageParams: [1],
       },
       onSuccess: (data) => {
         if (data) toast.success(data?.pages[data?.pages.length - 1]?.message);
@@ -232,16 +242,11 @@ export const ActiveDraws = () => {
     if (entry?.isIntersecting && hasNextPage && !isFetchingNextPage)
       fetchNextPage();
   }, [entry]);
-  if (isFetching) return <Spinner toggle={false} />;
+  if (isLoading) return <Spinner toggle={false} />;
 
   if (isError) {
     const errorMessage = (error as any).message || "An unknown error occurred";
-    return (
-      <div>
-        <p>There was an error fetching the data.</p>
-        <p>{errorMessage}</p>
-      </div>
-    );
+    return <Error err={errorMessage} small={true} />;
   }
   return (
     <div className="w-full bg-bg rounded-[10px] p-[1rem] font-ubuntu">
@@ -275,6 +280,11 @@ export const ActiveDraws = () => {
                 />
               ))}
               {isFetchingNextPage && <Spinner toggle={false} />}
+              {!data?.pages[data?.pages.length - 1]?.data?.next_page_url && (
+                <p className="text-sm lg:text-base text-center my-3 text-primary">
+                  Nothing more to load
+                </p>
+              )}
             </>
           ) : (
             <h3 className="text-primary text-sm lg:text-base font-semibold">
@@ -297,7 +307,7 @@ export const InActiveDraws = () => {
     isFetchingNextPage,
     isError,
     error,
-    isFetching,
+    isLoading,
   } = useInfiniteQuery(
     queryKey,
     async ({ pageParam = 1 }) => {
@@ -313,10 +323,6 @@ export const InActiveDraws = () => {
         return allPages[allPages.length - 1]?.data.next_page_url
           ? allPages[allPages.length - 1]?.data.current_page + 1
           : null;
-      },
-      initialData: {
-        pages: [],
-        pageParams: [1],
       },
       onSuccess: (data) => {
         if (data) toast.success(data?.pages[data?.pages.length - 1]?.message);
@@ -337,16 +343,11 @@ export const InActiveDraws = () => {
     if (entry?.isIntersecting && hasNextPage && !isFetchingNextPage)
       fetchNextPage();
   }, [entry]);
-  if (isFetching) return <Spinner toggle={false} />;
+  if (isLoading) return <Spinner toggle={false} />;
 
   if (isError) {
     const errorMessage = (error as any).message || "An unknown error occurred";
-    return (
-      <div>
-        <p>There was an error fetching the data.</p>
-        <p>{errorMessage}</p>
-      </div>
-    );
+   return <Error err={errorMessage} small={true} />;
   }
   return (
     <div className="w-full bg-bg rounded-[10px] p-[1rem] font-ubuntu mt-[1rem]">
@@ -379,6 +380,11 @@ export const InActiveDraws = () => {
                 />
               ))}
               {isFetchingNextPage && <Spinner toggle={false} />}
+              {!data?.pages[data?.pages.length - 1]?.data?.next_page_url && (
+                <p className="text-sm lg:text-base text-center my-3 text-primary">
+                  Nothing more to load
+                </p>
+              )}
             </>
           ) : (
             <h3 className="text-primary text-sm lg:text-base font-semibold">

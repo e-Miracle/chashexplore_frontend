@@ -9,6 +9,7 @@ import { useIntersection } from "@mantine/hooks";
 import { ENDPOINTS } from "../../../constants";
 import toast from "react-hot-toast";
 import { Draws } from "../../../Utils";
+const Error = React.lazy(() => import("../../../components/ErrorComponent"));
 const data = [
   {
     imgSrc: Raffle,
@@ -61,7 +62,7 @@ const Top = ({ title }: { title: string }) => {
     isFetchingNextPage,
     isError,
     error,
-    isFetching,
+    isLoading
   } = useInfiniteQuery(
     "followerTopDraws",
     async ({ pageParam = 1 }) => {
@@ -104,16 +105,11 @@ const Top = ({ title }: { title: string }) => {
       fetchNextPage();
   }, [entry]);
 
-  if (isFetching) return <Spinner toggle={false} />;
+  if (isLoading) return <Spinner toggle={false} />;
 
   if (isError) {
     const errorMessage = (error as any).message || "An unknown error occurred";
-    return (
-      <div>
-        <p>There was an error fetching the data.</p>
-        <p>{errorMessage}</p>
-      </div>
-    );
+     return <Error err={errorMessage} small={true} />;
   }
   return (
     <div className="font-ubuntu  bg-bg rounded-[10px] p-[1rem] my-[1rem]">
@@ -153,7 +149,7 @@ const Other = ({ title }: { title: string }) => {
     isFetchingNextPage,
     isError,
     error,
-    isFetching,
+    isLoading,
   } = useInfiniteQuery(
     "followerOtherDraws",
     async ({ pageParam = 1 }) => {
@@ -169,10 +165,6 @@ const Other = ({ title }: { title: string }) => {
         return allPages[allPages.length - 1]?.data.next_page_url
           ? allPages[allPages.length - 1]?.data.current_page + 1
           : null;
-      },
-      initialData: {
-        pages: [],
-        pageParams: [1],
       },
       onSuccess: (data) => {
         console.log(data);
@@ -196,16 +188,11 @@ const Other = ({ title }: { title: string }) => {
       fetchNextPage();
   }, [entry]);
 
-  if (isFetching) return <Spinner toggle={false} />;
+  if (isLoading) return <Spinner toggle={false} />;
 
   if (isError) {
     const errorMessage = (error as any).message || "An unknown error occurred";
-    return (
-      <div>
-        <p>There was an error fetching the data.</p>
-        <p>{errorMessage}</p>
-      </div>
-    );
+      return <Error err={errorMessage} small={true} />;
   }
   return (
     <div className="font-ubuntu  bg-bg rounded-[10px] p-[1rem] my-[1rem]">
@@ -245,7 +232,7 @@ const Beauty = ({ title }: { title: string }) => {
     isFetchingNextPage,
     isError,
     error,
-    isFetching,
+    isLoading
   } = useInfiniteQuery(
     "followerBeautyProducts",
     async ({ pageParam = 1 }) => {
@@ -261,10 +248,6 @@ const Beauty = ({ title }: { title: string }) => {
         return allPages[allPages.length - 1]?.data.next_page_url
           ? allPages[allPages.length - 1]?.data.current_page + 1
           : null;
-      },
-      initialData: {
-        pages: [],
-        pageParams: [1],
       },
       onSuccess: (data) => {
         console.log(data);
@@ -288,16 +271,11 @@ const Beauty = ({ title }: { title: string }) => {
       fetchNextPage();
   }, [entry]);
 
-  if (isFetching) return <Spinner toggle={false} />;
+  if (isLoading) return <Spinner toggle={false} />;
 
   if (isError) {
     const errorMessage = (error as any).message || "An unknown error occurred";
-    return (
-      <div>
-        <p>There was an error fetching the data.</p>
-        <p>{errorMessage}</p>
-      </div>
-    );
+      return <Error err={errorMessage} small={true} />;
   }
   return (
     <div className="font-ubuntu  bg-bg rounded-[10px] p-[1rem] my-[1rem]">

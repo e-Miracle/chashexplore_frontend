@@ -7,9 +7,13 @@ import { fetchCampaigns } from "../../../hooks/customGets";
 import { useInfiniteQuery } from "react-query";
 import toast from "react-hot-toast";
 import { useIntersection } from "@mantine/hooks";
-const Tables = React.lazy(() => import(`../influencer/Transactions`).then(res => {
-  return { default: res.Tables }
-}));
+
+const Error = React.lazy(() => import("../../../components/ErrorComponent"));
+const Tables = React.lazy(() =>
+  import(`../influencer/Transactions`).then((res) => {
+    return { default: res.Tables };
+  })
+);
 const BackgroundDrop = React.lazy(() =>
   import("../influencer/Profile").then((res) => {
     return {
@@ -154,64 +158,59 @@ const Transactions = () => {
       payout: 1800000,
     },
   ];
-   const {
-     data,
-     fetchNextPage,
-     hasNextPage,
-     isFetchingNextPage,
-     isError,
-     error,
-     isFetching,
-   } = useInfiniteQuery(
-     "campaigns",
-     async ({ pageParam = 1 }) => {
-       const res = await fetchCampaigns(pageParam);
-       return res;
-     },
+  const {
+    data,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isError,
+    error,
+    isLoading,
+  } = useInfiniteQuery(
+    "campaigns",
+    async ({ pageParam = 1 }) => {
+      const res = await fetchCampaigns(pageParam);
+      return res;
+    },
 
-     {
-       getNextPageParam: (_, allPages) => {
-         return allPages[allPages.length - 1]?.data.next_page_url
-           ? allPages[allPages.length - 1]?.data.current_page + 1
-           : null;
-       },
-       initialData: {
-         pages: [],
-         pageParams: [1],
-       },
-       onSuccess: (data) => {
-         if (data) toast.success(data?.pages[data?.pages.length - 1]?.message);
-       },
-       onError: (err) => {
-         console.log(err);
-         if (err) toast.error("An error occured");
-       },
-     }
-   );
+    {
+      getNextPageParam: (_, allPages) => {
+        return allPages[allPages.length - 1]?.data.next_page_url
+          ? allPages[allPages.length - 1]?.data.current_page + 1
+          : null;
+      },
+      initialData: {
+        pages: [],
+        pageParams: [1],
+      },
+      onSuccess: (data) => {
+        if (data) toast.success(data?.pages[data?.pages.length - 1]?.message);
+      },
+      onError: (err) => {
+        console.log(err);
+        if (err) toast.error("An error occured");
+      },
+    }
+  );
 
-   const flattenedData = data?.pages.flatMap((page) => page.data.data) || [];
-   const observerRef = React.useRef<HTMLDivElement>(null);
-   const { ref, entry } = useIntersection({
-     root: observerRef.current,
-     threshold: 1,
-   });
+  const flattenedData = data?.pages.flatMap((page) => page.data.data) || [];
+  const observerRef = React.useRef<HTMLDivElement>(null);
+  const { ref, entry } = useIntersection({
+    root: observerRef.current,
+    threshold: 1,
+  });
 
-   React.useEffect(() => {
-     if (entry?.isIntersecting && hasNextPage && !isFetchingNextPage)
-       fetchNextPage();
-   }, [entry]);
+  React.useEffect(() => {
+    if (entry?.isIntersecting && hasNextPage && !isFetchingNextPage)
+      fetchNextPage();
+  }, [entry]);
 
-   if (isFetching) return <Spinner />;
+  if (isLoading) return <Spinner />;
 
-   if (isError) {
-     const errorMessage = (error as any).message || "An unknown error occurred";
-     return (
-       <div>
-         <p>There was an error fetching the data.</p>
-         <p>{errorMessage}</p>
-       </div>
-     );
-   }
+  if (isError) {
+    const errorMessage = (error as any).message || "An unknown error occurred";
+   return <Error err={errorMessage}  />;
+  }
   return (
     <Suspense fallback={<Spinner />}>
       <DashBoardLayout type="admin">
@@ -230,17 +229,16 @@ const Transactions = () => {
                 normalRef={ref}
               />
               {isFetchingNextPage && <Spinner toggle={false} />}
-            </>
-          ) : (
-            <>
-              {isFetchingNextPage ? (
-                <Spinner toggle={false} />
-              ) : (
-                <div className="text-[black]">
-                  Your transactions would appear here
-                </div>
+              {!data?.pages[data?.pages.length - 1]?.data?.next_page_url && (
+                <p className="text-sm lg:text-base text-center my-3 text-primary">
+                  Nothing more to load
+                </p>
               )}
             </>
+          ) : (
+            <div className="text-[black]">
+              Your transactions would appear here
+            </div>
           )}
         </BackgroundDrop>
       </DashBoardLayout>

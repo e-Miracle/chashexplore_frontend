@@ -12,6 +12,7 @@ import { useIntersection } from "@mantine/hooks";
 import { ENDPOINTS } from "../../../constants";
 import toast from "react-hot-toast";
 import { Draws } from "../../../Utils";
+const Error = React.lazy(() => import("../../../components/ErrorComponent"));
 
 export const Title = ({ text }: { text: string }) => {
   return (
@@ -30,7 +31,7 @@ const ActiveDraws = ({ text }: { text: string }) => {
     isFetchingNextPage,
     isError,
     error,
-    isFetching,
+    isLoading,
   } = useInfiniteQuery(
     "followerActiveDraws",
     async ({ pageParam = 1 }) => {
@@ -46,10 +47,6 @@ const ActiveDraws = ({ text }: { text: string }) => {
         return allPages[allPages.length - 1]?.data.next_page_url
           ? allPages[allPages.length - 1]?.data.current_page + 1
           : null;
-      },
-      initialData: {
-        pages: [],
-        pageParams: [1],
       },
       onSuccess: (data) => {
         console.log(data);
@@ -73,16 +70,11 @@ const ActiveDraws = ({ text }: { text: string }) => {
       fetchNextPage();
   }, [entry]);
 
-  if (isFetching) return <Spinner toggle={false} />;
+  if (isLoading) return <Spinner toggle={false} />;
 
   if (isError) {
     const errorMessage = (error as any).message || "An unknown error occurred";
-    return (
-      <div>
-        <p>There was an error fetching the data.</p>
-        <p>{errorMessage}</p>
-      </div>
-    );
+    return <Error err={errorMessage} small={true} />;
   }
   return (
     <Suspense fallback={<Spinner toggle={false} />}>
@@ -99,17 +91,24 @@ const ActiveDraws = ({ text }: { text: string }) => {
         {visible && (
           <>
             {flattenedData && flattenedData.length > 0 ? (
-              <div className="grid gap-[1rem] grid-cols-1 md:grid-cols-2 lg:grid-cols-3 mt-[1rem] lg:mt-0 h-[80vh]">
-                {flattenedData.map((item: Draws, i: number) => (
-                  <DrawsCard
-                    key={i}
-                    noref={i === flattenedData.length - 1 ? ref : null}
-                    item={item}
-                    name={"john Doe"}
-                  />
-                ))}
+              <>
+                <div className="grid gap-[1rem] grid-cols-1 md:grid-cols-2 lg:grid-cols-3 mt-[1rem] lg:mt-0 h-[80vh]">
+                  {flattenedData.map((item: Draws, i: number) => (
+                    <DrawsCard
+                      key={i}
+                      noref={i === flattenedData.length - 1 ? ref : null}
+                      item={item}
+                      name={"john Doe"}
+                    />
+                  ))}
+                </div>
                 {isFetchingNextPage && <Spinner toggle={false} />}
-              </div>
+                {!data?.pages[data?.pages.length - 1]?.data?.next_page_url && (
+                  <p className="text-sm lg:text-base text-center my-3 text-primary">
+                    Nothing more to load
+                  </p>
+                )}
+              </>
             ) : (
               <h3 className="text-primary text-sm lg:text-base font-semibold">
                 No Active Draws
@@ -130,7 +129,7 @@ const InactiveDraws = ({ text }: { text: string }) => {
     isFetchingNextPage,
     isError,
     error,
-    isFetching,
+    isLoading,
   } = useInfiniteQuery(
     "followerInactiveDraws",
     async ({ pageParam = 1 }) => {
@@ -146,10 +145,6 @@ const InactiveDraws = ({ text }: { text: string }) => {
         return allPages[allPages.length - 1]?.data.next_page_url
           ? allPages[allPages.length - 1]?.data.current_page + 1
           : null;
-      },
-      initialData: {
-        pages: [],
-        pageParams: [1],
       },
       onSuccess: (data) => {
         console.log(data);
@@ -173,16 +168,11 @@ const InactiveDraws = ({ text }: { text: string }) => {
       fetchNextPage();
   }, [entry]);
 
-  if (isFetching) return <Spinner toggle={false} />;
+  if (isLoading) return <Spinner toggle={false} />;
 
   if (isError) {
     const errorMessage = (error as any).message || "An unknown error occurred";
-    return (
-      <div>
-        <p>There was an error fetching the data.</p>
-        <p>{errorMessage}</p>
-      </div>
-    );
+    return <Error err={errorMessage} small={true} />;
   }
   return (
     <Suspense fallback={<Spinner toggle={false} />}>
@@ -199,17 +189,24 @@ const InactiveDraws = ({ text }: { text: string }) => {
         {visible && (
           <>
             {flattenedData && flattenedData.length > 0 ? (
-              <div className="grid gap-[1rem] grid-cols-1 md:grid-cols-2 lg:grid-cols-3 mt-[1rem] lg:mt-0 h-[80vh]">
-                {flattenedData.map((item: Draws, i: number) => (
-                  <DrawsCard
-                    key={i}
-                    noref={i === flattenedData.length - 1 ? ref : null}
-                    item={item}
-                    name={"john Doe"}
-                  />
-                ))}
+              <>
+                <div className="grid gap-[1rem] grid-cols-1 md:grid-cols-2 lg:grid-cols-3 mt-[1rem] lg:mt-0 h-[80vh]">
+                  {flattenedData.map((item: Draws, i: number) => (
+                    <DrawsCard
+                      key={i}
+                      noref={i === flattenedData.length - 1 ? ref : null}
+                      item={item}
+                      name={"john Doe"}
+                    />
+                  ))}
+                </div>
                 {isFetchingNextPage && <Spinner toggle={false} />}
-              </div>
+                {!data?.pages[data?.pages.length - 1]?.data?.next_page_url && (
+                  <p className="text-sm lg:text-base text-center my-3 text-primary">
+                    Nothing more to load
+                  </p>
+                )}
+              </>
             ) : (
               <h3 className="text-primary text-sm lg:text-base font-semibold">
                 No Active Draws

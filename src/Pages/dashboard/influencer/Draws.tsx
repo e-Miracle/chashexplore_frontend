@@ -20,6 +20,7 @@ import { useNavigate } from "react-router-dom";
 import { useMediaQuery } from "react-responsive";
 import { useIntersection } from "@mantine/hooks";
 const Modal = React.lazy(() => import("../../../components/Modal/Modal"));
+const Error = React.lazy(() => import("../../../components/ErrorComponent"));
 const ModalContent = React.lazy(() =>
   import("./SingleDraw").then((res) => {
     return { default: res.ModalContent };
@@ -237,7 +238,6 @@ export const Body = ({ openModal }: { openModal: (id: number) => void }) => {
       });
       return res;
     },
-
     {
       getNextPageParam: (_, allPages) => {
         return allPages[allPages.length - 1]?.data.next_page_url
@@ -287,12 +287,7 @@ export const Body = ({ openModal }: { openModal: (id: number) => void }) => {
 
   if (isError) {
     const errorMessage = (error as any).message || "An unknown error occurred";
-    return (
-      <div>
-        <p>There was an error fetching the data.</p>
-        <p>{errorMessage}</p>
-      </div>
-    );
+    return <Error err={errorMessage} small={true} />;
   }
   return (
     <div className=" mt-[1rem] lg:mt-10 bg-bg md:h-[calc(100vh-20vh)]  p-[1rem] lg:p-[2rem] rounded-[10px] ">
@@ -321,14 +316,11 @@ export const Body = ({ openModal }: { openModal: (id: number) => void }) => {
               openModal={openModal}
             />
             {isFetchingNextPage && <Spinner toggle={false} />}
-            {/* <Pagination
-              postsPerPage={postsPerPage}
-              totalPosts={campaigns ? campaigns?.length : 0}
-              paginate={paginate}
-              previousPage={previousPage}
-              nextPage={nextPage}
-              currentPage={currentPage}
-            /> */}
+            {!data?.pages[data?.pages.length - 1]?.data?.next_page_url && (
+              <p className="text-sm lg:text-base text-center my-3 text-primary">
+                Nothing more to load
+              </p>
+            )}
           </>
         ) : (
           <div className="flex flex-col justify-center items-center h-full">

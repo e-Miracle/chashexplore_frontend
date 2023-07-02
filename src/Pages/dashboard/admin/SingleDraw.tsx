@@ -3,11 +3,11 @@ import { DashBoardLayout } from "../../";
 import Spinner from "../../../components/Spinner";
 import { Title } from "../followers/Draws";
 import { Header } from "../followers/PurchaseTicket";
-import moment from "moment";
 import { useQuery } from "react-query";
 import toast from "react-hot-toast";
 import { fetchSingleCampaign } from "../../../hooks/customGets";
 import { useParams } from "react-router-dom";
+const Error = React.lazy(() => import("../../../components/ErrorComponent"));
 
 const Modal = lazy(() => import("../../../components/Modal/Modal"));
 const BackgroundDrop = React.lazy(() =>
@@ -181,12 +181,7 @@ const SingleDraw = () => {
 
    if (isError) {
      const errorMessage = (error as any).message || "An unknown error occurred";
-     return (
-       <div>
-         <p>There was an error fetching the data.</p>
-         <p>{errorMessage}</p>
-       </div>
-     );
+      return <Error err={errorMessage}  />;
    }
   return (
     <Suspense fallback={<Spinner />}>

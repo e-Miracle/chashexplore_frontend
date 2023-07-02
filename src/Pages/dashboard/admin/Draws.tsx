@@ -1,20 +1,13 @@
 import React, { Suspense, lazy } from "react";
 import { DashBoardLayout } from "../../";
 import Spinner from "../../../components/Spinner";
-import { Link, useNavigate } from "react-router-dom";
-import { faPlus, faArrowDown } from "@fortawesome/free-solid-svg-icons";
+import { Link } from "react-router-dom";
+import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { _ADMIN_ } from "../../../constants";
 import { Raffle, PreviewImage } from "../../../assets";
-import { faEye, faShareSquare } from "@fortawesome/free-regular-svg-icons";
-import { nFormatter } from "../../../Utils";
-import { useMediaQuery } from "react-responsive";
-import { useInfiniteQuery, QueryClient } from "react-query";
-import toast from "react-hot-toast";
-import { fetchDraws } from "../../../hooks/customGets";
-import { Campaign, convertEndpointToTitle } from "../../../Utils";
-import { useIntersection } from "@mantine/hooks";
 const Modal = React.lazy(() => import("../../../components/Modal/Modal"));
+const Error = React.lazy(() => import("../../../components/ErrorComponent"));
 const ModalContent = React.lazy(() =>
   import("../influencer/SingleDraw").then((res) => {
     return { default: res.ModalContent };

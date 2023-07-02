@@ -10,7 +10,6 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { nFormatter, countDown, getUserData } from "../../../Utils";
 import { PreviewImage } from "../../../assets";
-import { SocialComponent } from "../../Home";
 import { fetchSingleCampaign } from "../../../hooks/customGets";
 import { useQuery } from "react-query";
 import toast from "react-hot-toast";
@@ -30,6 +29,7 @@ const Modal = lazy(() => import("../../../components/Modal/Modal"));
 const Timer = lazy(() => import("../../../components/Timer/Timer"));
 const Table = lazy(() => import("../../../components/Table/DrawsTable"));
 const CopyText = lazy(() => import("../../../components/CopyText/CopyText"));
+const Error = lazy(() => import("../../../components/ErrorComponent"));
 
 const Header = ({ title, endDate }: { title: string; endDate: string }) => {
   const header = (
@@ -188,12 +188,7 @@ export const ModalContent: React.FC<ModalContent> = ({ onclick, link }) => {
 
   if (isError) {
     const errorMessage = (error as any).message || "An unknown error occurred";
-    return (
-      <div>
-        <p>There was an error fetching the data.</p>
-        <p>{errorMessage}</p>
-      </div>
-    );
+    return <Error err={errorMessage} small={true} />;
   }
   type socialCta = { imgUrl: string; cta: string; color?: string };
   const socailCta: socialCta[] = [
@@ -236,8 +231,8 @@ export const ModalContent: React.FC<ModalContent> = ({ onclick, link }) => {
         ) : (
           <div className="w-full flex flex-wrap items-center justify-center">
             <h3 className="text-[#394355] text-center text-base lg:text-lg mt-5">
-              Account Verification not done or incomplete for your socials sharing.
-              Click on the button to verify
+              Account Verification not done or incomplete for your socials
+              sharing. Click on the button to verify
             </h3>
             <button
               onClick={() => navigate(`/my/dashboard/${_INFLUENCER_}/create`)}
@@ -320,12 +315,7 @@ const SingleDraw = () => {
 
   if (isError) {
     const errorMessage = (error as any).message || "An unknown error occurred";
-    return (
-      <div>
-        <p>There was an error fetching the data.</p>
-        <p>{errorMessage}</p>
-      </div>
-    );
+    return <Error err={errorMessage} />;
   }
   return (
     <Suspense fallback={<Spinner />}>

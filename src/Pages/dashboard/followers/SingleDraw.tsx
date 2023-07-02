@@ -18,6 +18,7 @@ import { fetchSingleCampaign } from "../../../hooks/customGets";
 import { useParams, useNavigate } from "react-router-dom";
 import { useQuery } from "react-query";
 import toast from "react-hot-toast";
+const Error = React.lazy(() => import("../../../components/ErrorComponent"));
 
 const Modal = lazy(() => import("../../../components/Modal/Modal"));
 
@@ -388,7 +389,7 @@ const SingleDraw = () => {
     () => fetchSingleCampaign(Number(id)),
     {
       onSuccess: (data) => {
-        console.log(data)
+        console.log(data);
         if (data) toast.success("Successfully fetched campaign");
       },
       onError: (err) => {
@@ -438,12 +439,7 @@ const SingleDraw = () => {
 
   if (isError) {
     const errorMessage = (error as any).message || "An unknown error occurred";
-    return (
-      <div>
-        <p>There was an error fetching the data.</p>
-        <p>{errorMessage}</p>
-      </div>
-    );
+    return <Error err={errorMessage} />;
   }
   return (
     <Suspense fallback={<Spinner />}>
@@ -476,7 +472,6 @@ const SingleDraw = () => {
               onclick={() => setIsOpen(false)}
               title={data?.data?.title}
               price={data?.data?.ticket?.ticket_prize}
-            
             />
           </Modal>
           <Modal visible={modalIsOpenAlt}>

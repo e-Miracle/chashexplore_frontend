@@ -1,9 +1,8 @@
 import React, { Suspense, lazy } from "react";
 import { DashBoardLayout } from "../../";
 import Spinner from "../../../components/Spinner";
-import { dataArr, columnsArr, reviewArr } from "../influencer/Results";
-import { useParams } from "react-router-dom"
-const Table = lazy(() => import("../../../components/Table/WinnersTable"));
+import { dataArr, columnsArr } from "../influencer/Results";
+import { useParams } from "react-router-dom";
 const Modal = lazy(() => import("../../../components/Modal/Modal"));
 const ReviewCard = lazy(
   () => import("../../../components/ReviewCard/ReviewCard")

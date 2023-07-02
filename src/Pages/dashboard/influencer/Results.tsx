@@ -32,6 +32,7 @@ const Modal = lazy(() => import("../../../components/Modal/Modal"));
 const ReviewCard = lazy(
   () => import("../../../components/ReviewCard/ReviewCard")
 );
+const Error = React.lazy(() => import("../../../components/ErrorComponent"));
 export const dataArr = [
   {
     ticketId: "GN24809HN",
@@ -161,6 +162,7 @@ export const Winners = ({ id, columns }: { id: number; columns: any[] }) => {
     isError,
     error,
     isFetching,
+    isLoading,
   } = useInfiniteQuery(
     "winners",
     async ({ pageParam = 1 }) => {
@@ -173,10 +175,6 @@ export const Winners = ({ id, columns }: { id: number; columns: any[] }) => {
         return allPages[allPages.length - 1]?.data.next_page_url
           ? allPages[allPages.length - 1]?.data.current_page + 1
           : null;
-      },
-      initialData: {
-        pages: [],
-        pageParams: [1],
       },
       onSuccess: (data) => {
         console.log(data);
@@ -198,16 +196,11 @@ export const Winners = ({ id, columns }: { id: number; columns: any[] }) => {
       fetchNextPage();
   }, [entry]);
 
-  if (isFetching) return <Spinner toggle={false} />;
+  if (isLoading) return <Spinner toggle={false} />;
 
   if (isError) {
     const errorMessage = (error as any).message || "An unknown error occurred";
-    return (
-      <div>
-        <p>There was an error fetching the data.</p>
-        <p>{errorMessage}</p>
-      </div>
-    );
+    return <Error err={errorMessage} small={true} />;
   }
   return (
     <Suspense fallback={<Spinner toggle={false} />}>
@@ -225,6 +218,11 @@ export const Winners = ({ id, columns }: { id: number; columns: any[] }) => {
                 columnsArr={columns}
               />
               {isFetchingNextPage && <Spinner toggle={false} />}
+              {!data?.pages[data?.pages.length - 1]?.data?.next_page_url && (
+                <p className="text-sm lg:text-base text-center my-3 text-primary">
+                  Nothing more to load
+                </p>
+              )}
             </>
           ) : (
             <>
@@ -421,7 +419,7 @@ export const Reviews = ({ id }: { id: number }) => {
     isFetchingNextPage,
     isError,
     error,
-    isFetching,
+    isLoading,
   } = useInfiniteQuery(
     "reviews",
     async ({ pageParam = 1 }) => {
@@ -433,10 +431,6 @@ export const Reviews = ({ id }: { id: number }) => {
         return allPages[allPages.length - 1]?.data.next_page_url
           ? allPages[allPages.length - 1]?.data.current_page + 1
           : null;
-      },
-      initialData: {
-        pages: [],
-        pageParams: [1],
       },
       onSuccess: (data) => {
         console.log(data);
@@ -458,16 +452,11 @@ export const Reviews = ({ id }: { id: number }) => {
       fetchNextPage();
   }, [entry]);
 
-  if (isFetching) return <Spinner toggle={false} />;
+  if (isLoading) return <Spinner toggle={false} />;
 
   if (isError) {
     const errorMessage = (error as any).message || "An unknown error occurred";
-    return (
-      <div>
-        <p>There was an error fetching the data.</p>
-        <p>{errorMessage}</p>
-      </div>
-    );
+    return <Error err={errorMessage} small={true} />;
   }
   return (
     <Suspense fallback={<Spinner toggle={false} />}>
@@ -489,6 +478,11 @@ export const Reviews = ({ id }: { id: number }) => {
                 />
               ))}
               {isFetchingNextPage && <Spinner toggle={false} />}
+              {!data?.pages[data?.pages.length - 1]?.data?.next_page_url && (
+                <p className="text-sm lg:text-base text-center my-3 text-primary">
+                  Nothing more to load
+                </p>
+              )}
             </div>
           ) : (
             <h3 className="text-primary text-sm lg:text-base font-semibold">

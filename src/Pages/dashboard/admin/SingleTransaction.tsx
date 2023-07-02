@@ -5,6 +5,7 @@ import { useParams } from "react-router-dom";
 import { dataArr, columnsArr, reviewArr } from "../influencer/Results";
 const Table = lazy(() => import("../../../components/Table/WinnersTable"));
 const Modal = lazy(() => import("../../../components/Modal/Modal"));
+const Error = React.lazy(() => import("../../../components/ErrorComponent"));
 const ReviewCard = lazy(
   () => import("../../../components/ReviewCard/ReviewCard")
 );

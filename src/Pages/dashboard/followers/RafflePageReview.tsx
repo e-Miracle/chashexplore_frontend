@@ -15,7 +15,7 @@ import { useMediaQuery } from "react-responsive";
 import { PreviewImage, BlueLogo } from "../../../assets";
 import { Link } from "react-router-dom";
 const Timer = lazy(() => import("../../../components/Timer/Timer"));
-
+const Error = lazy(() => import("../../../components/ErrorComponent"));
 const imgArray: string[] = [PreviewImage, PreviewImage, PreviewImage];
 
 const Header = () => {

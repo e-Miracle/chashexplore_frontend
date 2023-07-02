@@ -13,6 +13,7 @@ import { fetchSingleCampaign } from "../../../hooks/customGets";
 import { getUserData, convertDateTime, countDown } from "../../../Utils";
 import toast from "react-hot-toast";
 const Timer = lazy(() => import("../../../components/Timer/Timer"));
+const Error = React.lazy(() => import("../../../components/ErrorComponent"));
 
 const imgArray: string[] = [PreviewImage, PreviewImage, PreviewImage];
 const ViewRaffle = () => {
@@ -182,12 +183,7 @@ const ViewRaffle = () => {
 
   if (isError) {
     const errorMessage = (error as any).message || "An unknown error occurred";
-    return (
-      <div>
-        <p>There was an error fetching the data.</p>
-        <p>{errorMessage}</p>
-      </div>
-    );
+   return <Error err={errorMessage} />;
   }
 
   return (

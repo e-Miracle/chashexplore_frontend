@@ -13,6 +13,7 @@ import { ENDPOINTS } from "../../../constants";
 import { Draws } from "../../../Utils";
 import { useInfiniteQuery } from "react-query";
 import toast from "react-hot-toast";
+const Error = React.lazy(() => import("../../../components/ErrorComponent"));
 const data = [
   {
     imgSrc: Raffle,
@@ -65,7 +66,7 @@ const ActiveDraws = ({ text }: { text: string }) => {
     isFetchingNextPage,
     isError,
     error,
-    isFetching,
+    isLoading
   } = useInfiniteQuery(
     "followerActiveDraws",
     async ({ pageParam = 1 }) => {
@@ -81,10 +82,6 @@ const ActiveDraws = ({ text }: { text: string }) => {
         return allPages[allPages.length - 1]?.data.next_page_url
           ? allPages[allPages.length - 1]?.data.current_page + 1
           : null;
-      },
-      initialData: {
-        pages: [],
-        pageParams: [1],
       },
       onSuccess: (data) => {
         console.log(data);
@@ -108,16 +105,11 @@ const ActiveDraws = ({ text }: { text: string }) => {
       fetchNextPage();
   }, [entry]);
 
-  if (isFetching) return <Spinner toggle={false} />;
+  if (isLoading) return <Spinner toggle={false} />;
 
   if (isError) {
     const errorMessage = (error as any).message || "An unknown error occurred";
-    return (
-      <div>
-        <p>There was an error fetching the data.</p>
-        <p>{errorMessage}</p>
-      </div>
-    );
+   return <Error err={errorMessage} small={true} /> ;
   }
   return (
     <div className="w-full bg-bg rounded-[10px] p-[1rem] font-ubuntu">
@@ -163,7 +155,7 @@ const InactiveDraws = ({ text }: { text: string }) => {
     isFetchingNextPage,
     isError,
     error,
-    isFetching,
+    isLoading,
   } = useInfiniteQuery(
     "followerInactiveDraws",
     async ({ pageParam = 1 }) => {
@@ -179,10 +171,6 @@ const InactiveDraws = ({ text }: { text: string }) => {
         return allPages[allPages.length - 1]?.data.next_page_url
           ? allPages[allPages.length - 1]?.data.current_page + 1
           : null;
-      },
-      initialData: {
-        pages: [],
-        pageParams: [1],
       },
       onSuccess: (data) => {
         console.log(data);
@@ -206,16 +194,11 @@ const InactiveDraws = ({ text }: { text: string }) => {
       fetchNextPage();
   }, [entry]);
 
-  if (isFetching) return <Spinner toggle={false} />;
+  if (isLoading) return <Spinner toggle={false} />;
 
   if (isError) {
     const errorMessage = (error as any).message || "An unknown error occurred";
-    return (
-      <div>
-        <p>There was an error fetching the data.</p>
-        <p>{errorMessage}</p>
-      </div>
-    );
+    return <Error err={errorMessage} small={true} />;
   }
   return (
     <div className="w-full bg-bg rounded-[10px] p-[1rem] font-ubuntu">

@@ -8,6 +8,7 @@ import { useParams } from "react-router-dom";
 import toast from "react-hot-toast";
 import { useIntersection } from "@mantine/hooks";
 const Table = React.lazy(() => import("../../../components/Table/DrawsTable"));
+const Error = React.lazy(() => import("../../../components/ErrorComponent"));
 const columnsArr = [
   { Header: "Participants’ Username", accessor: "name" },
   { Header: "Tickets Bought", accessor: "number_of_tickets" },
@@ -22,7 +23,6 @@ const Participants = () => {
     isError,
     error,
     isLoading,
-    isFetching,
   } = useInfiniteQuery(
     "draws",
     async ({ pageParam = 1 }) => {
@@ -38,10 +38,6 @@ const Participants = () => {
         return allPages[allPages.length - 1]?.data.next_page_url
           ? allPages[allPages.length - 1]?.data.current_page + 1
           : null;
-      },
-      initialData: {
-        pages: [],
-        pageParams: [1],
       },
       onSuccess: (data) => {
         console.log(data);
@@ -68,12 +64,7 @@ const Participants = () => {
 
   if (isError) {
     const errorMessage = (error as any).message || "An unknown error occurred";
-    return (
-      <div>
-        <p>There was an error fetching the data.</p>
-        <p>{errorMessage}</p>
-      </div>
-    );
+    return <Error err={errorMessage} />;
   }
   return (
     <Suspense fallback={<Spinner />}>
@@ -87,9 +78,14 @@ const Participants = () => {
               itemRef={ref}
             />
             {isFetchingNextPage && <Spinner toggle={false} />}
+            {!data?.pages[data?.pages.length - 1]?.data?.next_page_url && (
+              <p className="text-sm lg:text-base text-center my-3 text-primary">
+                Nothing more to load
+              </p>
+            )}
           </>
         ) : (
-          <Spinner toggle={false} />
+          <div>sorry there are no participants</div>
         )}
       </DashBoardLayout>
     </Suspense>

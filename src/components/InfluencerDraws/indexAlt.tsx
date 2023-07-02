@@ -8,7 +8,7 @@ import { ENDPOINTS, _INFLUENCER_ } from "../../constants";
 import { useIntersection } from "@mantine/hooks";
 import Spinner from "../Spinner";
 const DrawsTable = React.lazy(() => import("../Table/IndexAlt"));
-
+const Error = React.lazy(() => import("../ErrorComponent"));
 const index = () => {
   const dataArr = [
     {
@@ -50,7 +50,7 @@ const index = () => {
     isFetchingNextPage,
     isError,
     error,
-    isFetching,
+    isLoading,
   } = useInfiniteQuery(
     "draws",
     async ({ pageParam = 1 }) => {
@@ -66,10 +66,6 @@ const index = () => {
         return allPages[allPages.length - 1]?.data.next_page_url
           ? allPages[allPages.length - 1]?.data.current_page + 1
           : null;
-      },
-      initialData: {
-        pages: [],
-        pageParams: [1],
       },
       onSuccess: (data) => {
         console.log(data);
@@ -93,16 +89,11 @@ const index = () => {
       fetchNextPage();
   }, [entry]);
 
-  if (isFetching) return <Spinner toggle={false} />;
+  if (isLoading) return <Spinner toggle={false} />;
 
   if (isError) {
     const errorMessage = (error as any).message || "An unknown error occurred";
-    return (
-      <div>
-        <p>There was an error fetching the data.</p>
-        <p>{errorMessage}</p>
-      </div>
-    );
+    return <Error err={errorMessage} small={true} />;
   }
   return (
     <Suspense>
@@ -111,12 +102,21 @@ const index = () => {
           Top Performing Draws
         </h2>
         {flattenedData && flattenedData.length > 0 ? (
-          <DrawsTable
-            dataArr={flattenedData}
-            columnsArr={columnsArr}
-            observerRef={observerRef}
-            itemRef={ref}
-          />
+          <>
+            {" "}
+            <DrawsTable
+              dataArr={flattenedData}
+              columnsArr={columnsArr}
+              observerRef={observerRef}
+              itemRef={ref}
+            />
+            {isFetchingNextPage && <Spinner toggle={false} />}
+            {!data?.pages[data?.pages.length - 1]?.data?.next_page_url && (
+              <p className="text-sm lg:text-base text-center my-3 text-primary">
+                Nothing more to load
+              </p>
+            )}
+          </>
         ) : (
           <div className="flex flex-col justify-center items-center h-full">
             <LazyLoadImage

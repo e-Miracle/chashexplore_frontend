@@ -83,7 +83,7 @@ const SingleTransaction = () => {
         <BackgroundDrop>
           <Header id={Number(id)} />
           <Hero />
-          <Winners data={dataArr} columns={columnsArr} />
+          <Winners id={Number(id)} columns={columnsArr} />
           <div className="flex justify-center items-center my-10">
             <button
               onClick={() => setIsOpen(true)}
@@ -96,7 +96,7 @@ const SingleTransaction = () => {
             <ModalContent onclick={() => setIsOpen(false)} />
           </Modal>
           <Receipts data={dataArr} columns={columnsArr} />
-          <Reviews data={reviewArr} />
+          <Reviews id={Number(id)} />
         </BackgroundDrop>
       </DashBoardLayout>
     </Suspense>

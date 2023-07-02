@@ -15,7 +15,7 @@ import { useMediaQuery } from "react-responsive";
 const Influencer = lazy(() =>
   import("./index").then((res) => {
     return {
-      default: res.UserData,
+      default: res.UserDataCard,
     };
   })
 );

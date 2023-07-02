@@ -1,7 +1,7 @@
 import React, { Suspense } from "react";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { EmptyDraw } from "../../assets";
-import {  useInfiniteQuery } from "react-query";
+import { useInfiniteQuery } from "react-query";
 import toast from "react-hot-toast";
 import { fetchDraws } from "../../hooks/customGets";
 import { ENDPOINTS, _INFLUENCER_ } from "../../constants";
@@ -31,7 +31,7 @@ const index = () => {
     isFetchingNextPage,
     isError,
     error,
-    isFetching,
+    isLoading,
   } = useInfiniteQuery(
     "draws",
     async ({ pageParam = 1 }) => {
@@ -48,10 +48,6 @@ const index = () => {
           ? allPages[allPages.length - 1]?.data.current_page + 1
           : null;
       },
-      initialData: {
-        pages: [],
-        pageParams: [1],
-      },
       onSuccess: (data) => {
         console.log(data);
         if (data) toast.success(data?.pages[data?.pages.length - 1]?.message);
@@ -62,7 +58,6 @@ const index = () => {
       },
     }
   );
-
   const flattenedData = data?.pages.flatMap((page) => page.data.data) || [];
   const observerRef = React.useRef<HTMLDivElement>(null);
   const { ref, entry } = useIntersection({
@@ -85,7 +80,7 @@ const index = () => {
       fetchNextPage();
   }, [entry]);
 
-  if (isFetching) return <Spinner toggle={false} />;
+  if (isLoading) return <Spinner toggle={false} />;
 
   if (isError) {
     const errorMessage = (error as any).message || "An unknown error occurred";

@@ -227,7 +227,7 @@ export const Body = ({ openModal }: { openModal: (id: number) => void }) => {
     isFetchingNextPage,
     isError,
     error,
-    isFetching,
+    isLoading,
   } = useInfiniteQuery(
     queryKey,
     async ({ pageParam = 1 }) => {
@@ -243,10 +243,6 @@ export const Body = ({ openModal }: { openModal: (id: number) => void }) => {
         return allPages[allPages.length - 1]?.data.next_page_url
           ? allPages[allPages.length - 1]?.data.current_page + 1
           : null;
-      },
-      initialData: {
-        pages: [],
-        pageParams: [1],
       },
       onSuccess: (data) => {
         console.log(data);
@@ -287,7 +283,7 @@ export const Body = ({ openModal }: { openModal: (id: number) => void }) => {
     },
   ];
 
-  if (isFetching) return <Spinner toggle={false} />;
+  if (isLoading) return <Spinner toggle={false} />;
 
   if (isError) {
     const errorMessage = (error as any).message || "An unknown error occurred";
@@ -335,26 +331,20 @@ export const Body = ({ openModal }: { openModal: (id: number) => void }) => {
             /> */}
           </>
         ) : (
-          <>
-            {isFetching ? (
-              <Spinner toggle={false} />
-            ) : (
-              <div className="flex flex-col justify-center items-center h-full">
-                <LazyLoadImage
-                  className="  w-[200px] h-[200px] lg:w-[400px] lg:h-[400px]  my-[1rem]  object-contain"
-                  src={PrizeDraw}
-                  placeholderSrc={"https://via.placeholder.com/100x100"}
-                  alt={PrizeDraw}
-                />
+          <div className="flex flex-col justify-center items-center h-full">
+            <LazyLoadImage
+              className="  w-[200px] h-[200px] lg:w-[400px] lg:h-[400px]  my-[1rem]  object-contain"
+              src={PrizeDraw}
+              placeholderSrc={"https://via.placeholder.com/100x100"}
+              alt={PrizeDraw}
+            />
 
-                <p className="font-ubuntu text-base lg:text-lg text-center my-[3rem] text-[#0D1A31] mt-5">
-                  Your {convertEndpointToTitle(currentUrl)} performing raffle
-                  draws appear here. Start creating awesome and exciting raffle
-                  draws for your audience.
-                </p>
-              </div>
-            )}
-          </>
+            <p className="font-ubuntu text-base lg:text-lg text-center my-[3rem] text-[#0D1A31] mt-5">
+              Your {convertEndpointToTitle(currentUrl)} performing raffle draws
+              appear here. Start creating awesome and exciting raffle draws for
+              your audience.
+            </p>
+          </div>
         )}
       </>
     </div>

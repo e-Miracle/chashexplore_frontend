@@ -213,7 +213,7 @@ export const UserDataCard = ({
   );
 };
 
-const UserData = ({ userData }: { userData: any[] }) => {
+export const UserData = ({ userData }: { userData: any[] }) => {
   return (
     <>
       <h2 className="text-primary  text-base capitalize font-semibold lg:text-lg">

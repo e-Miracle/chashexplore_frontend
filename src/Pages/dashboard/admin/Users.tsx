@@ -88,7 +88,7 @@ const BackgroundDrop = React.lazy(() =>
 const UserData = React.lazy(() =>
   import("./index").then((res) => {
     return {
-      default: res.UserData,
+      default: res.UserDataCard,
     };
   })
 );

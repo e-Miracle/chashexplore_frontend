@@ -133,7 +133,7 @@ const router = createBrowserRouter([
         element: <FollowersViewRaffle />,
       },
       {
-        path: `/my/dashboard/${_FOLLOWER_}/home/purchase-ticket/:id/:name/:time/:amount`,
+        path: `/my/dashboard/${_FOLLOWER_}/home/purchase-ticket/:id`,
         element: <FollowersPurchaseTicket />,
       },
       {
@@ -215,6 +215,10 @@ const router = createBrowserRouter([
       {
         path: `/my/dashboard/${_INFLUENCER_}/draws/participants/:id`,
         element: <InflunecersParticipants />,
+      },
+      {
+        path: `/my/dashboard/${_INFLUENCER_}/home/purchase-ticket/:id/:name/:time/:amount`,
+        element: <FollowersPurchaseTicket />,
       },
       {
         path: `/my/dashboard/${_ADMIN_}/home`,

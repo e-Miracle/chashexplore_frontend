@@ -69,7 +69,11 @@ const PreviewDraw = () => {
         </p>
         <div className="flex flex-col flex-wrap md:flex-row items-center justify-between">
           <Link
-            to={`/my/dashboard/${_INFLUENCER_}/draws/singledraw/${id}`}
+           to={`/my/dashboard/${
+              getUserData()?.role
+            }/home/purchase-ticket/${id}/${data?.data?.title}/${
+              data?.data?.end_date
+            }/${data?.data?.ticket?.ticket_prize}`}
             className="w-full md:w-[48%] inline-block text-center bg-primary text-white rounded-[100px] p-5 text-sm lg:text-base hover:opacity-80"
           >
             Join Raffle Draw{" "}
@@ -168,7 +172,9 @@ const PreviewDraw = () => {
       </p>
       {/* this does soemthing differently entirely */}
       <Link
-        to={`/my/dashboard/${_INFLUENCER_}/draws/singledraw/${id}`}
+       to={`/my/dashboard/${
+              getUserData()?.role
+            }/home/purchase-ticket/${id}`}
         className="inline-block text-center bg-primary text-white rounded-[100px] p-5 text-sm lg:text-base hover:opacity-80"
       >
         Join Raffle Draw{" "}

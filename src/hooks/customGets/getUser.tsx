@@ -2,7 +2,6 @@ import axios from "axios";
 import { ENDPOINTS } from "../../constants";
 import toast from "react-hot-toast";
 import { logout, storeSessionUser } from "../../Utils";
-import { Navigate } from "react-router-dom";
 export const fetchUser = async (token: string) => {
   const route = String(ENDPOINTS.API_USER);
   try {

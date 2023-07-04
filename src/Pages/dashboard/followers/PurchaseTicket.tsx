@@ -8,11 +8,7 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ErrorMessage } from "@hookform/error-message";
 import validator from "validator";
-import {
-  faBars,
-  faTimes,
-  faTimesCircle,
-} from "@fortawesome/free-solid-svg-icons";
+import { faTimesCircle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { BackDrop } from "../influencer/SingleDraw";
 import { countDown, getUserData } from "../../../Utils";
@@ -24,10 +20,7 @@ import useBuyTicket from "../../../hooks/utils/useCustomBankPayment";
 import useErrorHandler from "../../../hooks/useErrorHandler";
 const Timer = lazy(() => import("../../../components/Timer/Timer"));
 const Modal = lazy(() => import("../../../components/Modal/Modal"));
-
-const payWithFlutterWave = (): void => {};
-
-const payWithWallet = (): void => {};
+const Error = lazy(() => import("../../../components/ErrorComponent"));
 
 export const Header = ({
   text,
@@ -49,16 +42,29 @@ export const Header = ({
         >
           {text}
         </h2>
-        <Timer
-          countDownDate={
-            new Date(
-              countDown(time).year,
-              countDown(time).month,
-              countDown(time).day
-            )
-          }
-          color={color}
-        />
+        {new Date(
+          countDown(time).year,
+          countDown(time).month,
+          countDown(time).day
+        ) < new Date() ? (
+          <h2
+            className=" text-[1.2rem] lg:text-[1.5rem] text-primary"
+            style={{ color: headerColor }}
+          >
+            This draw has Ended
+          </h2>
+        ) : (
+          <Timer
+            countDownDate={
+              new Date(
+                countDown(time).year,
+                countDown(time).month,
+                countDown(time).day
+              )
+            }
+            color={color}
+          />
+        )}
       </div>
     </Suspense>
   );
@@ -75,8 +81,6 @@ const Form = ({
   id: number;
   amount: number;
 }) => {
-  const buyticket = useBuyTicket();
-  useErrorHandler(buyticket, "Purchase Successful", "Purchase Error");
   const formSchema = z.object({
     phone: z.string().refine(validator.isMobilePhone),
     name: z
@@ -105,15 +109,13 @@ const Form = ({
   const noOfTickets = watch("number_of_tickets");
 
   const onSubmit: SubmitHandler<FormSchemaType> = async (data) => {
-    console.log(data);
-    submit(data);
-    toggleModal();
-    await buyticket.mutateAsync({
+    const newData = {
       ...data,
-      campaign_id: id,
-      ticket_id: id,
-      amount: amount * Number(data.number_of_tickets),
-    });
+      amount: Number(amount) * Number(data.number_of_tickets),
+      campaign_id: Number(id),
+    };
+    submit(newData);
+    toggleModal();
     reset({
       phone: "",
       name: getUserData()?.first_name + " " + getUserData()?.last_name,
@@ -265,11 +267,17 @@ type Data = {
 
 type ModalContent = {
   onclick: React.MouseEventHandler<HTMLButtonElement> | undefined;
-  data: Data;
+  data: any;
+  payWithFlutterWave: any;
+  payWithWallet: any;
+  loading: boolean;
 };
 const ModalContent: React.FC<ModalContent> = ({
   onclick,
-  data: { price, numberOfTickets },
+  data,
+  payWithWallet,
+  payWithFlutterWave,
+  loading,
 }) => {
   return (
     <BackDrop onclick={onclick}>
@@ -278,50 +286,76 @@ const ModalContent: React.FC<ModalContent> = ({
           Ticket Purchase
         </h1>
         <p className="my-5 text-modalParagraph text-center text-[1.2rem] lg:text-[1.5rem]">
-          Number of tickets: {numberOfTickets}
+          Number of tickets: {data.number_of_tickets}
         </p>
         <p className="my-5 text-modalParagraph text-center text-[1.2rem] lg:text-[1.5rem]">
-          Total price: {price}
+          Total price: {Number(data.amount).toLocaleString()}
         </p>
 
         <h4 className="font-bold text-heading text-center text-[1.2rem] lg:text-[1.5rem]">
           How would you like to purchase your tickets?
         </h4>
-        <div className="flex items-center justify-center flex-wrap my-5">
-          <button
-            onClick={payWithWallet}
-            className=" w-full md:w-auto bg-secondary border-2 border-btnBorder font-semibold text-heading text-sm lg:text-base  py-3 px-10  rounded-[10px] cursor-pointer hover:opacity-80"
-          >
-            Pay from Wallet
-          </button>
-          <button
-            onClick={payWithFlutterWave}
-            className="mt-[1rem] md:mt-0 md:ml-3 w-full md:w-auto bg-secondary border-2 border-btnBorder font-semibold text-heading text-sm lg:text-base  py-3 px-10  rounded-[10px] cursor-pointer hover:opacity-80"
-          >
-            Pay using Flutterwave
-          </button>
-        </div>
+        {loading ? (
+          <Spinner toggle={false} />
+        ) : (
+          <div className="flex items-center justify-center flex-wrap my-5">
+            <button
+              onClick={() => payWithWallet(data)}
+              className=" w-full md:w-auto bg-secondary border-2 border-btnBorder font-semibold text-heading text-sm lg:text-base  py-3 px-10  rounded-[10px] cursor-pointer hover:opacity-80"
+            >
+              Pay from Wallet
+            </button>
+            <button
+              onClick={() => payWithFlutterWave()}
+              className="mt-[1rem]  xl:mt-0 md:ml-3 w-full md:w-auto bg-secondary border-2 border-btnBorder font-semibold text-heading text-sm lg:text-base  py-3 px-10  rounded-[10px] cursor-pointer hover:opacity-80"
+            >
+              Pay using Flutterwave
+            </button>
+          </div>
+        )}
       </div>
     </BackDrop>
   );
 };
 const PurchaseTicket = () => {
-  const { id, name, time, amount } = useParams();
+  const { id } = useParams();
+  const { isLoading, isError, data, error } = useQuery(
+    "singleCampaign",
+    () => fetchSingleCampaign(Number(id)),
+    {
+      onSuccess: (data) => {
+        console.log(data);
+        if (data) toast.success("Successfully fetched campaign");
+      },
+      onError: (err) => {
+        if (err) toast.error("An error occured");
+      },
+    }
+  );
+  const buyticket = useBuyTicket(() =>  setLoading(false));
+  useErrorHandler(buyticket, "Purchase Successful", "Purchase Error");
   const [modalIsOpen, setIsOpen] = React.useState<boolean>(false);
-  const [mainData, setData] = React.useState<Data>({
-    price: 4000,
-    numberOfTickets: 4,
-  });
+  const [mainData, setData] = React.useState<any>();
+  const [loading, setLoading] = React.useState<boolean>(false);
 
   const updateData = (data: any) => {
     console.log(data);
-    setData({
-      ...mainData,
-      phone: data.phone,
-      numberOfTickets: data.number_of_tickets,
-      price: data.number_of_tickets * 1000,
-    });
+    setData(data);
   };
+  const payWithFlutterWave = (): void => {};
+
+  const payWithWallet = async (data: any): Promise<void> => {
+    console.log(data);
+    setLoading(true);
+    await buyticket.mutateAsync(data);
+  };
+
+  if (isLoading) return <Spinner />;
+
+  if (isError) {
+    const errorMessage = (error as any).message || "An unknown error occurred";
+    return <Error err={errorMessage} />;
+  }
   return (
     <Suspense fallback={<Spinner />}>
       <DashBoardLayout type="follower" backbtn={true}>
@@ -329,16 +363,25 @@ const PurchaseTicket = () => {
           Ticket Purchase
         </h1>
         <BackgroundDrop>
-          <Header text={String(name)} time={time} />
+          <Header
+            text={String(data?.data?.title)}
+            time={data?.data?.end_date}
+          />
 
           <Form
-            id={Number(id)}
-            amount={Number(amount)}
+            id={Number(data?.data?.id)}
+            amount={Number(data?.data?.ticket?.ticket_prize)}
             toggleModal={() => setIsOpen(true)}
             submit={updateData}
           />
           <Modal visible={modalIsOpen}>
-            <ModalContent onclick={() => setIsOpen(false)} data={mainData} />
+            <ModalContent
+              onclick={() => setIsOpen(false)}
+              data={mainData}
+              payWithFlutterWave={payWithFlutterWave}
+              payWithWallet={payWithWallet}
+              loading={loading}
+            />
           </Modal>
         </BackgroundDrop>
       </DashBoardLayout>

@@ -4,6 +4,7 @@ import toast from "react-hot-toast";
 import { Influencer } from "./types";
 import { Navigate } from "react-router-dom";
 import Cookies, { CookieAttributes } from "js-cookie";
+import { fetchUser } from "../hooks/customGets";
 
 const cookieConfig: CookieAttributes = {
   expires: 7, //expires in 7day
@@ -41,6 +42,9 @@ export const storeSocialData = async (data: any) => {
     JSON.stringify({ ...data?.user, token: data?.token })
   );
 };
+
+export const storeSessionUser = async (data: any) =>
+  await sessionStorage.setItem(USER._USER_TOKEN, JSON.stringify(data));
 
 export const storeIdentificationTypes = (data: any) =>
   sessionStorage.setItem(
@@ -255,15 +259,10 @@ export const socialRequest = async (
   }
 };
 
-export const loadUser = () => {
+export const loadUser = async () => {
   const token = Cookies.get(USER.__TOKEN__);
-  if (token) {
-    console.log("we know what we are doing to the ", token);
-    <Navigate to={`/my/dashboard/${getUserData()?.role}/home`} />;
-    return;
-  }
-
-  return;
+  const role = await fetchUser(String(token));
+  return role ? role : null;
 };
 
 export * from "./types";

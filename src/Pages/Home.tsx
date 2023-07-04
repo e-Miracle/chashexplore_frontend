@@ -16,10 +16,12 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import useAuthLogin from "../hooks/auth/useAuthLogin";
 import useErrorHandler from "../hooks/useErrorHandler";
-import { socialRequest } from "../Utils";
-import { _FOLLOWER_, _INFLUENCER_ } from "../constants";
+import { socialRequest, loadUser } from "../Utils";
+import { _FOLLOWER_, _INFLUENCER_, USER } from "../constants";
+import Cookies from "js-cookie";
+import { fetchUser } from "../hooks/customGets";
 import toast from "react-hot-toast";
-import Influencer from './dashboard/admin/Influencer';
+import Influencer from "./dashboard/admin/Influencer";
 export type HeaderProps = {
   title: string;
   text: string;
@@ -111,7 +113,7 @@ export const SocialComponent = ({
       {popup && (
         <>
           <h2 className="text-primary font-ubuntu text-sm lg:text-base capitalize my-3 font-bold">
-             Influencer or Follower please select an option.
+            Influencer or Follower please select an option.
           </h2>
           <Select typeSelect={typeSelect} />{" "}
         </>
@@ -290,11 +292,20 @@ const LoginForm = () => {
 };
 
 const Login = () => {
+  const navigate = useNavigate();
+  React.useEffect(() => {
+    // this logs the user in with only the token
+    const init = async () => {
+      const role = await loadUser();
+      if (role) navigate(`/my/dashboard/${role}/home`);
+    };
+    init();
+  }, []);
   const headerProps: HeaderProps = {
     title: "Login",
     text: "Don’t have an account? ",
     linkName: "Sign up here",
-    route: "",
+    route: "/register",
   };
   return (
     <Suspense fallback={<Spinner />}>

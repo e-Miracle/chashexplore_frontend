@@ -430,6 +430,9 @@ const Body = ({ balance, data }: { balance: number; data: any[] }) => {
         </div>
         <div className="flex justify-center items-center mt-3">
           <button className=" bg-primary text-[#fff] text-sm lg:text-base outline-none  py-5 px-8 mt-5 rounded-[100px] cursor-pointer hover:opacity-80">
+            Fund Account
+          </button>
+          <button className=" bg-primary text-[#fff] text-sm lg:text-base outline-none  py-5 px-8 mt-5 rounded-[100px] cursor-pointer hover:opacity-80">
             Withdraw Balance
           </button>
         </div>

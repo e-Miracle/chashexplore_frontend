@@ -19,6 +19,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useQuery } from "react-query";
 import toast from "react-hot-toast";
 const Error = React.lazy(() => import("../../../components/ErrorComponent"));
+const Ended = lazy(() => import("../../../components/Ended"));
 
 const Modal = lazy(() => import("../../../components/Modal/Modal"));
 
@@ -446,6 +447,7 @@ const SingleDraw = () => {
       <DashBoardLayout type="follower" backbtn={true}>
         <Title text="My Draws" />
         <BackgroundDrop>
+          {}
           <Header
             text={data?.data?.title}
             time={data?.data?.end_date}

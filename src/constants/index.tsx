@@ -357,6 +357,7 @@ export const ENDPOINTS: { [key: string]: string | Function } = {
   API_INFLUENCER_PENDING_DRAWS: "/pending-draws",
   API_REVIEWS: "/reviews",
   API_SINGLE_REVIEW: "/api/reviews",
+  API_ADD_REVIEW: "/draw/review/create",
   API_WINNERS: "/api/winners/all",
 
   // follower Auth URl

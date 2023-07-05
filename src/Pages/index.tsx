@@ -41,6 +41,7 @@ const FollowersNotification = lazy(
   () => import("./dashboard/followers/Notifications")
 );
 const FollowersTicket = lazy(() => import("./dashboard/followers/Tickets"));
+const FollowersReviewTicket = lazy(() =>import("./dashboard/followers/ReviewTicket"))
 
 //influncers pages
 const InflunecersDashboard = lazy(() => import("./dashboard/influencer"));
@@ -136,6 +137,7 @@ export {
   FollowersViewRaffle,
   FollowersPurchaseTicket,
   FollowersSingleDraw,
+  FollowersReviewTicket,
   InflunecersDashboard,
   InflunecersDraws,
   InflunecersNewDraw,

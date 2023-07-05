@@ -8,7 +8,12 @@ import {
   faShare,
   faTimesCircle,
 } from "@fortawesome/free-solid-svg-icons";
-import { nFormatter, countDown, getUserData } from "../../../Utils";
+import {
+  nFormatter,
+  countDown,
+  getUserData,
+  getSocialUrl,
+} from "../../../Utils";
 import { PreviewImage } from "../../../assets";
 import { fetchSingleCampaign } from "../../../hooks/customGets";
 import { useQuery } from "react-query";
@@ -190,10 +195,20 @@ export const ModalContent: React.FC<ModalContent> = ({ onclick, link }) => {
     const errorMessage = (error as any).message || "An unknown error occurred";
     return <Error err={errorMessage} small={true} />;
   }
-  type socialCta = { imgUrl: string; cta: string; color?: string };
+  type socialCta = {
+    imgUrl: string;
+    cta: string;
+    color?: string;
+    shareLink?: string;
+  };
   const socailCta: socialCta[] = [
     { imgUrl: Google, cta: "" },
-    { imgUrl: Twitter, cta: data?.data?.twitter_url, color: "#1D9BF0" },
+    {
+      imgUrl: Twitter,
+      cta: data?.data?.twitter_url,
+      color: "#1D9BF0",
+      shareLink: "https://twitter.com/intent/tweet",
+    },
     { imgUrl: Facebook, cta: data?.data?.facebook_url, color: "#1877F2" },
     { imgUrl: LinkedIn, cta: data?.data?.linked_url, color: "" },
     { imgUrl: Instagram, cta: data?.data?.instagram_url },
@@ -207,26 +222,36 @@ export const ModalContent: React.FC<ModalContent> = ({ onclick, link }) => {
         {/* <SocialComponent option={false} /> */}
         {getUserData()?.account_verfied === "1" ? (
           <div className="w-full flex flex-wrap justify-center   items-center   my-[1rem]">
-            {socailCta.map((item: socialCta, i: number) => (
-              <div key={i}>
-                {item.cta && (
-                  <a
-                    className="hover:opacity-80 rounded-full shadow-primary p-2 flex justify-center items-center ml-0 mr-2"
-                    style={{ background: item?.color }}
-                    href={item.cta}
-                    target="_blank"
-                  >
-                    {" "}
-                    <LazyLoadImage
-                      className="w-[20px] md:w-[30px] h-[20px] md:h-[30px] object-contain"
-                      src={item.imgUrl}
-                      placeholderSrc={"https://via.placeholder.com/72x72"}
-                      alt={item.imgUrl}
-                    />
-                  </a>
-                )}
-              </div>
-            ))}
+            {socailCta.map((item: socialCta, i: number) => {
+              const text: string = "Check out this draw";
+              const url: string = encodeURIComponent(
+                import.meta.env.MODE === "development"
+                  ? `http://localhost:5173`
+                  : `https://cashexplore.emiracle.me`
+              );
+              const share = getSocialUrl(item.cta, text, url);
+              return (
+                <div key={i}>
+                  {item.cta && (
+                    <a
+                      className="hover:opacity-80 rounded-full shadow-primary p-2 flex justify-center items-center ml-0 mr-2"
+                      style={{ background: item?.color }}
+                      href={share ? share : item.cta}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      {" "}
+                      <LazyLoadImage
+                        className="w-[20px] md:w-[30px] h-[20px] md:h-[30px] object-contain"
+                        src={item.imgUrl}
+                        placeholderSrc={"https://via.placeholder.com/72x72"}
+                        alt={item.imgUrl}
+                      />
+                    </a>
+                  )}
+                </div>
+              );
+            })}
           </div>
         ) : (
           <div className="w-full flex flex-wrap items-center justify-center">

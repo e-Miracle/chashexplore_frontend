@@ -21,6 +21,7 @@ import useErrorHandler from "../../../hooks/useErrorHandler";
 const Timer = lazy(() => import("../../../components/Timer/Timer"));
 const Modal = lazy(() => import("../../../components/Modal/Modal"));
 const Error = lazy(() => import("../../../components/ErrorComponent"));
+const Ended = lazy(() => import("../../../components/Ended"));
 
 export const Header = ({
   text,
@@ -332,7 +333,7 @@ const PurchaseTicket = () => {
       },
     }
   );
-  const buyticket = useBuyTicket(() =>  setLoading(false));
+  const buyticket = useBuyTicket(() => setLoading(false));
   useErrorHandler(buyticket, "Purchase Successful", "Purchase Error");
   const [modalIsOpen, setIsOpen] = React.useState<boolean>(false);
   const [mainData, setData] = React.useState<any>();
@@ -356,6 +357,7 @@ const PurchaseTicket = () => {
     const errorMessage = (error as any).message || "An unknown error occurred";
     return <Error err={errorMessage} />;
   }
+
   return (
     <Suspense fallback={<Spinner />}>
       <DashBoardLayout type="follower" backbtn={true}>
@@ -363,26 +365,36 @@ const PurchaseTicket = () => {
           Ticket Purchase
         </h1>
         <BackgroundDrop>
-          <Header
-            text={String(data?.data?.title)}
-            time={data?.data?.end_date}
-          />
+          {new Date(
+            countDown(data?.data?.end_date).year,
+            countDown(data?.data?.end_date).month,
+            countDown(data?.data?.end_date).day
+          ) < new Date() ? (
+            <Ended />
+          ) : (
+            <>
+              <Header
+                text={String(data?.data?.title)}
+                time={data?.data?.end_date}
+              />
 
-          <Form
-            id={Number(data?.data?.id)}
-            amount={Number(data?.data?.ticket?.ticket_prize)}
-            toggleModal={() => setIsOpen(true)}
-            submit={updateData}
-          />
-          <Modal visible={modalIsOpen}>
-            <ModalContent
-              onclick={() => setIsOpen(false)}
-              data={mainData}
-              payWithFlutterWave={payWithFlutterWave}
-              payWithWallet={payWithWallet}
-              loading={loading}
-            />
-          </Modal>
+              <Form
+                id={Number(data?.data?.id)}
+                amount={Number(data?.data?.ticket?.ticket_prize)}
+                toggleModal={() => setIsOpen(true)}
+                submit={updateData}
+              />
+              <Modal visible={modalIsOpen}>
+                <ModalContent
+                  onclick={() => setIsOpen(false)}
+                  data={mainData}
+                  payWithFlutterWave={payWithFlutterWave}
+                  payWithWallet={payWithWallet}
+                  loading={loading}
+                />
+              </Modal>
+            </>
+          )}
         </BackgroundDrop>
       </DashBoardLayout>
     </Suspense>

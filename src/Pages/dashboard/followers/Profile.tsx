@@ -6,6 +6,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPen, faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import { nFormatter, getUserData } from "../../../Utils";
 import { Raffle } from "../../../assets";
+import { BackDrop } from "../influencer/SingleDraw";
+const Modal = React.lazy(() => import("../../../components/Modal/Modal"));
 const ActiveDraws = React.lazy(() =>
   import("../influencer/Profile").then((res) => {
     return { default: res.ActiveDraws };
@@ -156,7 +158,15 @@ export const Header = () => {
   );
 };
 
-const Body = ({ balance, data }: { balance: number; data: any[] }) => {
+const Body = ({
+  balance,
+  data,
+  trigger,
+}: {
+  balance: number;
+  data: any[];
+  trigger: any;
+}) => {
   const [visible, setVisbility] = useState<boolean>(false);
   return (
     <div className=" bg-white mt-[1rem] lg:mt-10 grid grid-cols-1 lg:grid-cols-6 gap-[1rem]  md:h-[calc(100vh-30vh)] font-ubuntu">
@@ -187,8 +197,14 @@ const Body = ({ balance, data }: { balance: number; data: any[] }) => {
             />
           </button>
         </div>
-        <div className="flex justify-center items-center mt-3">
-          <button className=" bg-primary text-[#fff] text-sm lg:text-base outline-none  py-5 px-8 mt-5 rounded-[100px] cursor-pointer hover:opacity-80">
+        <div className="flex justify-center flex-wrap items-center mt-3">
+          <button
+            onClick={trigger}
+            className="w-full max-w-[200px] block bg-primary text-[#fff] text-sm lg:text-base outline-none  py-3 px-5  rounded-[100px] cursor-pointer hover:opacity-80"
+          >
+            fund Account
+          </button>
+          <button className=" w-full max-w-[200px] bg-primary text-[#fff] text-sm lg:text-base outline-none  py-3 px-5 mt-5  rounded-[100px] cursor-pointer hover:opacity-80">
             Withdraw Balance
           </button>
         </div>
@@ -196,13 +212,59 @@ const Body = ({ balance, data }: { balance: number; data: any[] }) => {
     </div>
   );
 };
+
+const ModalContent = ({ onclick }: any) => {
+  return (
+    <BackDrop onclick={onclick}>
+      <div className="font-ubuntu">
+        <h4 className="font-bold text-heading text-center text-[1.2rem] lg:text-[1.5rem]">
+          How would you like to fund your wallet?
+        </h4>
+        {/* {loading ? (
+          <Spinner toggle={false} />
+        ) : (
+          <div className="flex items-center justify-center flex-wrap my-5">
+            <button
+              onClick={() => payWithWallet(data)}
+              className=" w-full md:w-auto bg-secondary border-2 border-btnBorder font-semibold text-heading text-sm lg:text-base  py-3 px-10  rounded-[10px] cursor-pointer hover:opacity-80"
+            >
+              Pay from Wallet
+            </button>
+            <button
+              onClick={() => payWithFlutterWave()}
+              className="mt-[1rem]  xl:mt-0 md:ml-3 w-full md:w-auto bg-secondary border-2 border-btnBorder font-semibold text-heading text-sm lg:text-base  py-3 px-10  rounded-[10px] cursor-pointer hover:opacity-80"
+            >
+              Pay using Flutterwave
+            </button>
+          </div>
+        )} */}
+        <div className="flex items-center justify-center flex-wrap my-5">
+          <button className=" w-full md:w-auto bg-secondary border-2 border-btnBorder font-semibold text-heading text-sm lg:text-base  py-3 px-10  rounded-[10px] cursor-pointer hover:opacity-80">
+            Pay from Paystack
+          </button>
+          <button className="mt-[1rem]  xl:mt-0 md:ml-3 w-full md:w-auto bg-secondary border-2 border-btnBorder font-semibold text-heading text-sm lg:text-base  py-3 px-10  rounded-[10px] cursor-pointer hover:opacity-80">
+            Pay using Flutterwave
+          </button>
+        </div>
+      </div>
+    </BackDrop>
+  );
+};
 const Profile = () => {
+  const [modalIsOpen, setIsOpen] = React.useState<boolean>(false);
   return (
     <Suspense fallback={<Spinner />}>
       <DashBoardLayout type="follower">
         <BackgroundDrop>
           <Header />
-          <Body data={data} balance={100000000} />
+          <Body
+            data={data}
+            balance={100000000}
+            trigger={() => setIsOpen((k) => !k)}
+          />
+          <Modal visible={modalIsOpen}>
+            <ModalContent onclick={() => setIsOpen((k) => !k)} />
+          </Modal>
         </BackgroundDrop>
       </DashBoardLayout>
     </Suspense>

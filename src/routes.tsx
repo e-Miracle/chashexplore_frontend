@@ -36,6 +36,7 @@ import {
   FollowersResults,
   FollowersProfile,
   FollowersNotification,
+  FollowersReviewTicket,
   FollowersTicket,
   AdminDashboard,
   AdminRegistration,
@@ -165,6 +166,10 @@ const router = createBrowserRouter([
         element: <FollowersNotification />,
       },
       {
+        path: `/my/dashboard/${_FOLLOWER_}/draws/review/:id`,
+        element: <FollowersReviewTicket />,
+      },
+      {
         path: `/my/dashboard/${_INFLUENCER_}/home`,
         element: <InflunecersDashboard />,
       },
@@ -199,6 +204,10 @@ const router = createBrowserRouter([
       {
         path: `/my/dashboard/${_INFLUENCER_}/transactions`,
         element: <InflunecersTransactions />,
+      },
+      {
+        path: `/my/dashboard/${_INFLUENCER_}/draws/review/:id`,
+        element: <FollowersReviewTicket />,
       },
       {
         path: `/my/dashboard/${_INFLUENCER_}/transactions/active`,

@@ -265,4 +265,24 @@ export const loadUser = async () => {
   return role ? role : null;
 };
 
+export const getSocialUrl = (link: string, text: string, url: string) => {
+  const encodedText = encodeURIComponent(text);
+  const encodedUrl = encodeURIComponent(url);
+  const linkedSummary = encodeURIComponent(
+    "Cashexplore is a site where you can play games and win prizes"
+  );
+  const socials = {
+    facebook: "facebook",
+    linkedin: "linkedin",
+    twitter: "twitter",
+  };
+  if (link.toLowerCase().includes(socials.facebook))
+    return `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}&quote=${encodedText}`;
+  if (link.toLowerCase().includes(socials.twitter))
+    return `https://twitter.com/intent/tweet?text=${encodedText}&url=${encodedUrl}`;
+  if (link.toLowerCase().includes(socials.linkedin))
+    return `https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}&title=${encodedText}&summary=${linkedSummary}`;
+  return;
+};
+
 export * from "./types";

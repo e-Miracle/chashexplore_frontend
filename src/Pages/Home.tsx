@@ -293,14 +293,15 @@ const LoginForm = () => {
 
 const Login = () => {
   const navigate = useNavigate();
+  const token = Cookies.get(USER.__TOKEN__);
   React.useEffect(() => {
     // this logs the user in with only the token
     const init = async () => {
       const role = await loadUser();
       if (role) navigate(`/my/dashboard/${role}/home`);
     };
-    init();
-  }, []);
+    if (token) init();
+  }, [token]);
   const headerProps: HeaderProps = {
     title: "Login",
     text: "Don’t have an account? ",

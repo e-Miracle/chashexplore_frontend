@@ -25,7 +25,7 @@ const DashboardLayout: React.FC<Props> = ({ children, type, backbtn }) => {
     frontIcon: true,
     icon: {
       prefix: "fas",
-      name: "long-arrow-alt-left",
+      name: "chevron-left",
     },
     className:
       "text-primary font-ubuntu hover:opacity-80 text-sm lg:text-base ml-2 lg:ml-0",

@@ -234,7 +234,7 @@ export const logout = () => {
   Cookies.remove(USER.__TOKEN__);
   clearAllCookies();
   delete axios.defaults.headers.common["Authorization"];
-  return <Navigate to={PAGES.LOGIN_PAGE} />;
+  return window.location.reload();;
 };
 
 export const socialRequest = async (
@@ -281,7 +281,8 @@ export const getSocialUrl = (link: string, text: string, url: string) => {
   if (link.toLowerCase().includes(socials.twitter))
     return `https://twitter.com/intent/tweet?text=${encodedText}&url=${encodedUrl}`;
   if (link.toLowerCase().includes(socials.linkedin))
-    return `https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}&title=${encodedText}&summary=${linkedSummary}`;
+    return `https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}&title=${encodedText}&summary=${linkedSummary}`;;
+ 
   return;
 };
 

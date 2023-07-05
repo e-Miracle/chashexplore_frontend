@@ -13,8 +13,15 @@ import {
   followersdashBoardLinks,
 } from "../../constants";
 import { useNavigate } from "react-router-dom";
+import { logout } from "../../Utils"
 
 const SideBarLink = React.lazy(() => import("../SideBarLink"));
+const Modal = React.lazy(() => import("../Modal/Modal"));
+const BackDrop = React.lazy(() =>
+  import("../../Pages/dashboard/influencer/SingleDraw").then((res) => {
+    return { default: res.BackDrop };
+  })
+);
 
 type Props = {
   mobileNav: boolean;
@@ -23,7 +30,31 @@ type Props = {
   type: "influencer" | "follower" | "admin";
 };
 
+const ModalContent = ({ onclick }: any) => {
+  return (
+    <BackDrop onclick={onclick}>
+      <div className="font-ubuntu">
+        <h4 className="font-bold text-heading text-center text-[1.2rem] lg:text-[1.5rem]">
+          Are you sure you want to leave?
+        </h4>
+        <div className="flex items-center justify-center flex-wrap my-5">
+          <button onClick={() => logout()} className=" w-full md:w-auto bg-[#E4033B] border-2 border-btnBorder font-semibold text-white text-sm lg:text-base  py-3 px-10  rounded-[10px] cursor-pointer hover:opacity-80">
+            Yes
+          </button>
+          <button
+            onClick={onclick}
+            className="mt-[1rem] lg:mt-0  xl:mt-0 md:ml-3 w-full md:w-auto bg-green border-2 border-btnBorder font-semibold text-white text-sm lg:text-base  py-3 px-10  rounded-[10px] cursor-pointer hover:opacity-80"
+          >
+            No
+          </button>
+        </div>
+      </div>
+    </BackDrop>
+  );
+};
+
 const Index: React.FC<Props> = ({ mobileNav, expand, userImg, type }) => {
+  const [modalIsOpen, setIsOpen] = React.useState<boolean>(false);
   const isMobile: boolean = useMediaQuery({ query: `(max-width: 768px)` });
   const navigate = useNavigate();
   return (
@@ -111,16 +142,25 @@ const Index: React.FC<Props> = ({ mobileNav, expand, userImg, type }) => {
           )}
 
           {expand ? (
-            <button className=" outline-none pl-9 mt-10 flex justify-start text-2xl  w-full  text-white my-[1rem] hover:opacity-80 ">
+            <button
+              onClick={() => setIsOpen((k) => !k)}
+              className=" outline-none pl-9 mt-10 flex justify-start text-2xl  w-full  text-white my-[1rem] hover:opacity-80 "
+            >
               <FontAwesomeIcon icon={faArrowLeft} />
             </button>
           ) : (
-            <button className=" ml-[-1.5rem] font-ubuntu my-[1rem] text-base lg:text-[1.25rem] hover:opacity-80 ">
+            <button
+              onClick={() => setIsOpen((k) => !k)}
+              className=" ml-[-1.5rem] font-ubuntu my-[1rem] text-base lg:text-[1.25rem] hover:opacity-80 "
+            >
               <FontAwesomeIcon icon={faArrowLeft} className="mr-2" /> Logout
             </button>
           )}
         </div>
       </div>
+      <Modal visible={modalIsOpen}>
+        <ModalContent onclick={() => setIsOpen(false)} />
+      </Modal>
     </Suspense>
   );
 };

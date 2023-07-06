@@ -9,6 +9,7 @@ type Props = {
 const NotifyToast: React.FC<Props> = ({ item, OnClick, noref }) => {
   return (
     <>
+     
       <div
         ref={noref}
         onClick={OnClick}
@@ -21,10 +22,10 @@ const NotifyToast: React.FC<Props> = ({ item, OnClick, noref }) => {
         <div className="w-full flex flex-col md:flex-row items-center justify-between ml-0 md:ml-[0rem] md:pl-[3rem]  ">
           <div className="w-auto  ">
             <h1 className="text-heading text-bold text-base lg:text-[1.25rem]">
-              {item.data.campaign_title}
+              {item?.data?.title}
             </h1>
             <p className="mt-3 text-labelLight text-[10px] lg:text-[12px]">
-              You have a new Notification
+              {item?.data?.description}
             </p>
           </div>
           <div className="w-auto flex lg:flex-col items-end justify-between    ">

@@ -150,11 +150,16 @@ export interface Draws {
   participants: Partcipants[];
 }
 
-interface NotificationData {
+interface OtherNotificationData {
   campaign_title: string;
   campaign_id: 17;
   purchase_ref: string;
   ticket_id: 16;
+}
+interface NotificationData {
+  data: OtherNotificationData;
+  description: string;
+  title: string;
 }
 export interface Notification {
   created_at: Date;

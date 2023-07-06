@@ -333,7 +333,11 @@ const PurchaseTicket = () => {
       },
     }
   );
-  const buyticket = useBuyTicket(() => setLoading(false));
+  const buyticket = useBuyTicket(
+    Number(id),
+    () => setLoading(false),
+    () => setIsOpen(false)
+  );
   useErrorHandler(buyticket, "Purchase Successful", "Purchase Error");
   const [modalIsOpen, setIsOpen] = React.useState<boolean>(false);
   const [mainData, setData] = React.useState<any>();

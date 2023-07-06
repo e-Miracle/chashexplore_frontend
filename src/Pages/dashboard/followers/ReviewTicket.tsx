@@ -38,7 +38,8 @@ const StarRating = ({ onClick }: any) => {
 };
 
 const Form = ({ id }: { id: number }) => {
-  const addReview = useAddReview();
+  const [loader, setLoader] = React.useState<boolean>(false)
+  const addReview = useAddReview(() => setLoader(k => !k));
   useErrorHandler(addReview, "Review Successful", "Review Error");
   const formSchema = z.object({
     comment: z
@@ -59,6 +60,7 @@ const Form = ({ id }: { id: number }) => {
   });
 
   const onSubmit: SubmitHandler<FormSchemaType> = async (data) => {
+    setLoader((k) => !k);
     const newData = {
       ...data,
       campaign_id: id,
@@ -131,13 +133,13 @@ const Form = ({ id }: { id: number }) => {
       </div>
 
       <div className=" w-full p-[1rem] lg:p-0 md:flex md:items-end md:justify-end">
-        {isSubmitting ? (
+        {loader ? (
           <div>
             <Spinner toggle={false} />
           </div>
         ) : (
           <button
-            disabled={isSubmitting}
+            disabled={loader}
             type="submit"
             className=" w-full md:w-auto bg-primary text-white text-sm lg:text-base  py-3 px-10 my-5 rounded-[100px] cursor-pointer hover:opacity-80"
           >

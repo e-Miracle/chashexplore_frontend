@@ -37,7 +37,7 @@ const ModalContent = ({ onclick }: any) => {
         <h4 className="font-bold text-heading text-center text-[1.2rem] lg:text-[1.5rem]">
           Are you sure you want to leave?
         </h4>
-        <div className="flex items-center justify-center flex-wrap my-5">
+        <div className="flex items-center justify-center flex-wrap mt-20">
           <button onClick={() => logout()} className=" w-full md:w-auto bg-[#E4033B] border-2 border-btnBorder font-semibold text-white text-sm lg:text-base  py-3 px-10  rounded-[10px] cursor-pointer hover:opacity-80">
             Yes
           </button>

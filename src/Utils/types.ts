@@ -13,6 +13,15 @@ export interface Verification {
   updated_at: Date;
   user_id: string;
 }
+interface Wallet {
+  balance: string;
+  created_at: Date;
+  id: number;
+  status: string;
+  updated_at: string;
+  walletable_id: string;
+  walletable_type: string;
+}
 export interface Influencer {
   token: string;
   id: number;
@@ -29,6 +38,8 @@ export interface Influencer {
   participants_reached?: number;
   verification_detail?: Verification;
   account_verification_pending?: boolean;
+  wallet_balance?: number;
+  wallet?: Wallet;
 }
 
 export interface AccountVerification {
@@ -137,4 +148,21 @@ export interface Draws {
   ticket: Ticket | null;
   media: Media[];
   participants: Partcipants[];
+}
+
+interface NotificationData {
+  campaign_title: string;
+  campaign_id: 17;
+  purchase_ref: string;
+  ticket_id: 16;
+}
+export interface Notification {
+  created_at: Date;
+  data: NotificationData;
+  id: string;
+  notifiable_id: string;
+  notifiable_type: string;
+  read_at: null | string;
+  type: string;
+  updated_at: Date;
 }

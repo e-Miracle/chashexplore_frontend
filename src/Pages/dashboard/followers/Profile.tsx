@@ -7,7 +7,11 @@ import { faPen, faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import { nFormatter, getUserData } from "../../../Utils";
 import { Raffle } from "../../../assets";
 import { BackDrop } from "../influencer/SingleDraw";
+import { useQuery } from "react-query";
+import toast from "react-hot-toast";
+import { fetchLoggedInUser } from "../../../hooks/customGets";
 const Modal = React.lazy(() => import("../../../components/Modal/Modal"));
+const Error = React.lazy(() => import("../../../components/ErrorComponent"));
 const ActiveDraws = React.lazy(() =>
   import("../influencer/Profile").then((res) => {
     return { default: res.ActiveDraws };
@@ -100,8 +104,8 @@ export const Header = () => {
   // ];
   return (
     <div className="flex flex-wrap font-ubuntu ">
-      <div className="w-full md:w-[80%] flex ">
-        <div className=" hidden lg:block relative  w-[70px] h-[70px] lg:w-[120px]   lg:h-[120px] p-1 rounded-full border-[7px] border-primary border-r-white relative">
+      <div className="w-full md:w-[70%] flex ">
+        <div className=" hidden lg:block  w-[70px] h-[70px] lg:w-[120px]   lg:h-[120px] p-1 rounded-full border-[7px] border-primary border-r-white relative">
           <img
             className="  w-full h-full object-cover rounded-full "
             src={"https://via.placeholder.com/100x100"}
@@ -159,11 +163,9 @@ export const Header = () => {
 };
 
 const Body = ({
-  balance,
   data,
   trigger,
 }: {
-  balance: number;
   data: any[];
   trigger: any;
 }) => {
@@ -184,7 +186,14 @@ const Body = ({
             Wallet Balance:
           </p>
           <h2 className="text-primary text-[1.8rem] lg:text-[2rem] mt-3">
-            {visible ? ` ₦ ${nFormatter(balance, 3)}` : "********"}
+            {visible
+              ? ` ₦ ${nFormatter(
+                  getUserData()?.wallet_balance
+                    ? Number(getUserData()?.wallet_balance)
+                    : 0,
+                  3
+                )}`
+              : "********"}
           </h2>
           <button
             className="absolute right-2 bottom-2"
@@ -252,6 +261,26 @@ const ModalContent = ({ onclick }: any) => {
 };
 const Profile = () => {
   const [modalIsOpen, setIsOpen] = React.useState<boolean>(false);
+   const { isLoading, isError, data, error } = useQuery(
+     "profile",
+     () => fetchLoggedInUser(),
+     {
+       onSuccess: (data) => {
+         console.log(data);
+         if (data) toast.success("Successfully fetched campaign");
+       },
+       onError: (err) => {
+         if (err) toast.error("An error occured");
+       },
+     }
+   );
+
+   if (isLoading) return <Spinner />;
+
+   if (isError) {
+     const errorMessage = (error as any).message || "An unknown error occurred";
+     return <Error err={errorMessage} />;
+   }
   return (
     <Suspense fallback={<Spinner />}>
       <DashBoardLayout type="follower">
@@ -259,7 +288,6 @@ const Profile = () => {
           <Header />
           <Body
             data={data}
-            balance={100000000}
             trigger={() => setIsOpen((k) => !k)}
           />
           <Modal visible={modalIsOpen}>

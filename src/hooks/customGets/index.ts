@@ -6,3 +6,4 @@ export * from "./getGoogleAuth"
 export * from "./getReviews";
 export * from "./getWinners";
 export * from "./getUser";
+export * from "./getNofications";

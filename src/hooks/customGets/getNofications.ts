@@ -1,34 +1,18 @@
 import axios from "axios";
 import { ENDPOINTS } from "../../constants";
 import toast from "react-hot-toast";
-import {
-  logout,
-  storeSessionUser,
-  getUserData,
-  updateUserData,
-} from "../../Utils";
-export const fetchUser = async (token: string) => {
-  const route = String(ENDPOINTS.API_USER);
-  try {
-    const { data } = await axios.get(route);
-    storeSessionUser({ ...data, token });
-    return data?.role;
-  } catch (err: any) {
-    toast.error(err.message);
-    toast.error(err.response.data.message);
-    if (err.response && err.response.status === 401) {
-      toast.error("Unauthorized");
-      logout();
-    }
-  }
-};
+import { logout } from "../../Utils";
 
-export const fetchLoggedInUser = async () => {
-  const route = String(ENDPOINTS.API_USER);
+export const fetchNotifications = async ({
+  page = 1,
+  endpoint = String(ENDPOINTS.API_NOTIFICATIONS),
+}: {
+  endpoint?: string;
+  page?: number;
+}) => {
+  const route = (ENDPOINTS.API_BASE_URL as string) + endpoint + `?page=${page}`;
   try {
     const { data } = await axios.get(route);
-    Object.entries(data).forEach(([key, value]) => updateUserData(key, value));
-    console.log("data", data);
     return data;
   } catch (err: any) {
     toast.error(err.message);
@@ -37,5 +21,29 @@ export const fetchLoggedInUser = async () => {
       toast.error("Unauthorized");
       logout();
     }
+    return err;
+  }
+};
+
+
+export const fetchMarkAsRead = async ({
+  page = 1,
+  endpoint = String(ENDPOINTS.API_NOTIFICATIONS_MARK_AS_READ),
+}: {
+  endpoint: string;
+  page: number;
+}) => {
+  const route = (ENDPOINTS.API_BASE_URL as string) + endpoint + `?page=${page}`;
+  try {
+    const { data } = await axios.get(route);
+    return data;
+  } catch (err: any) {
+    toast.error(err.message);
+    toast.error(err.response.data.message);
+    if (err.response && err.response.status === 401) {
+      toast.error("Unauthorized");
+      logout();
+    }
+    return err;
   }
 };

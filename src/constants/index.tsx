@@ -338,6 +338,10 @@ export const ENDPOINTS: { [key: string]: string | Function } = {
   API_BASE_URL: import.meta.env.VITE_APP_API_URL,
   API_BUY_TICKET: "/buy-ticket/wallet",
   API_USER: "https://cashexploreapi.emiracle.me/api/user",
+  API_NOTIFICATIONS: "/notifications",
+  API_NOTIFICATIONS_UNREAD: "/notifications/unread",
+  API_NOTIFICATIONS_MARK_AS_READ: "/notifications/mark-as-read",
+  API_NOTIFICATIONS_MARK_ALL_AS_READ: "/notifications/mark-all-as-read",
 
   // influencer auth URL
   API_INFLUENCER_AUTH_SIGNUP: "/auth/influencer-register",

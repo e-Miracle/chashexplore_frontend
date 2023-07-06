@@ -492,7 +492,7 @@ const SingleDraw = () => {
             <button
               onClick={() =>
                 navigate(
-                  `/my/dashboard/${_FOLLOWER_}/home/purchase-ticket/${id}/${data?.data?.title}/${data?.data?.end_date}/${data?.data?.ticket?.ticket_prize}`
+                  `/my/dashboard/${_FOLLOWER_}/home/purchase-ticket/${id}`
                 )
               }
               className=" w-full md:w-auto bg-primary text-white text-sm lg:text-base  py-3 px-10 my-5 rounded-[100px] cursor-pointer hover:opacity-80"

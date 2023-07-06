@@ -28,6 +28,7 @@ import { Draws } from "../../../Utils";
 import { ENDPOINTS } from "../../../constants";
 import { useIntersection } from "@mantine/hooks";
 import { useNavigate } from "react-router-dom";
+import { fetchLoggedInUser } from "../../../hooks/customGets";
 const Error = React.lazy(() => import("../../../components/ErrorComponent"));
 
 export const data = [
@@ -118,7 +119,7 @@ export const Header = () => {
   return (
     <div className="flex flex-wrap font-ubuntu">
       <div className="w-full md:w-[70%] flex ">
-        <div className=" hidden lg:block relative  w-[70px] h-[70px] lg:w-[120px]   lg:h-[120px] p-1 rounded-full border-[7px] border-primary border-r-white relative">
+        <div className=" hidden lg:block   w-[70px] h-[70px] lg:w-[120px]   lg:h-[120px] p-1 rounded-full border-[7px] border-primary border-r-white relative">
           <img
             className="  w-full h-full object-cover rounded-full "
             src={"https://via.placeholder.com/100x100"}
@@ -347,7 +348,7 @@ export const InActiveDraws = () => {
 
   if (isError) {
     const errorMessage = (error as any).message || "An unknown error occurred";
-   return <Error err={errorMessage} small={true} />;
+    return <Error err={errorMessage} small={true} />;
   }
   return (
     <div className="w-full bg-bg rounded-[10px] p-[1rem] font-ubuntu mt-[1rem]">
@@ -397,7 +398,7 @@ export const InActiveDraws = () => {
   );
 };
 
-const Body = ({ balance, data }: { balance: number; data: any[] }) => {
+const Body = ({ data }: { data: any[] }) => {
   const [visible, setVisbility] = useState<boolean>(false);
   return (
     <div className=" bg-white mt-[1rem] lg:mt-10 grid grid-cols-1 lg:grid-cols-6 gap-[1rem]  md:h-[calc(100vh-30vh)] font-ubuntu">
@@ -415,7 +416,14 @@ const Body = ({ balance, data }: { balance: number; data: any[] }) => {
             Wallet Balance:
           </p>
           <h2 className="text-primary text-[1.8rem] text-[2rem] mt-3">
-            {visible ? ` ₦ ${nFormatter(balance, 3)}` : "********"}
+            {visible
+              ? ` ₦ ${nFormatter(
+                  getUserData()?.wallet_balance
+                    ? Number(getUserData()?.wallet_balance)
+                    : 0,
+                  3
+                )}`
+              : "********"}
           </h2>
           <button
             className="absolute right-2 bottom-2"
@@ -441,12 +449,32 @@ const Body = ({ balance, data }: { balance: number; data: any[] }) => {
   );
 };
 const Profile = () => {
+  const { isLoading, isError, data, error } = useQuery(
+    "profile",
+    () => fetchLoggedInUser(),
+    {
+      onSuccess: (data) => {
+        console.log(data);
+        if (data) toast.success("Successfully fetched campaign");
+      },
+      onError: (err) => {
+        if (err) toast.error("An error occured");
+      },
+    }
+  );
+
+  if (isLoading) return <Spinner />;
+
+  if (isError) {
+    const errorMessage = (error as any).message || "An unknown error occurred";
+    return <Error err={errorMessage} />;
+  }
   return (
     <Suspense fallback={<Spinner />}>
       <DashBoardLayout type="influencer">
         <BackgroundDrop>
           <Header />
-          <Body data={data} balance={100000000} />
+          <Body data={data} />
         </BackgroundDrop>
       </DashBoardLayout>
     </Suspense>

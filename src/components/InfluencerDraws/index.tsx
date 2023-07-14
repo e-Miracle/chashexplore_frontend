@@ -6,12 +6,13 @@ import toast from "react-hot-toast";
 import { fetchDraws } from "../../hooks/customGets";
 import { ENDPOINTS, _INFLUENCER_ } from "../../constants";
 import Spinner from "../Spinner";
-import { Draws } from "../../Utils";
+import { Draws, Campaign } from "../../Utils";
 import { useNavigate } from "react-router-dom";
 import { faEye, faShareSquare } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useMediaQuery } from "react-responsive";
 import { useIntersection } from "@mantine/hooks";
+import { getUserData } from "../../Utils";
 const Modal = React.lazy(() => import("../Modal/Modal"));
 const ModalContent = React.lazy(() =>
   import("../../Pages/dashboard/influencer/SingleDraw").then((res) => {
@@ -59,7 +60,6 @@ const index = () => {
       },
     }
   );
-  console.log("takt", data?.pages[data?.pages.length - 1]?.data?.next_page_url);
   const flattenedData = data?.pages.flatMap((page) => page.data.data) || [];
   const observerRef = React.useRef<HTMLDivElement>(null);
   const { ref, entry } = useIntersection({
@@ -86,7 +86,7 @@ const index = () => {
 
   if (isError) {
     const errorMessage = (error as any).message || "An unknown error occurred";
-     return <Error err={errorMessage} small={true} />;
+    return <Error err={errorMessage} small={true} />;
   }
   return (
     <Suspense>
@@ -135,7 +135,7 @@ const index = () => {
                 <tbody>
                   {flattenedData &&
                     flattenedData.length > 0 &&
-                    flattenedData.map((item: Draws, i: number) => (
+                    flattenedData.map((item: Campaign, i: number) => (
                       <tr
                         key={item.id}
                         className="bg-white hover:opacity-80 cursor-pointer h-[100px] mx-5"
@@ -219,12 +219,13 @@ const index = () => {
                           <button
                             onClick={() =>
                               navigate(
-                                `/my/dashboard/${_INFLUENCER_}/draws/preview/${item.id}`
+                                item.influencer.id === getUserData()?.id
+                                  ? `/my/dashboard/${_INFLUENCER_}/draws/singledraw/${item.id}`
+                                  : `/my/dashboard/${_INFLUENCER_}/draws/preview/${item.id}`
                               )
                             }
                             className="flex items-center bg-[#F4F6F8] rounded-[100px] text-primary p-5 hover:opacity-80"
                           >
-                            {" "}
                             <FontAwesomeIcon className="mr-2" icon={faEye} />
                             View
                           </button>

@@ -61,7 +61,7 @@ const PreviewDraw = () => {
   const Hero = (
     <div className="text-labels mt-10 p-5 font-ubuntu flex flex-wrap">
       <div className="w-full md:w-1/2">
-        <h1 className="text-[2.5rem] lg:text-[3rem]  font-bold text-center md:text-left">
+        <h1 className="text-[2.5rem] lg:text-[3rem] capitalize  font-bold text-center md:text-left">
           {data?.data?.title}
         </h1>
         <p className="my-10 text-[1rem] lg:text-[1.25rem] text-[#4E5767] text-center md:text-left">
@@ -69,18 +69,16 @@ const PreviewDraw = () => {
         </p>
         <div className="flex flex-col flex-wrap md:flex-row items-center justify-between">
           <Link
-           to={`/my/dashboard/${
+            to={`/my/dashboard/${
               getUserData()?.role
-            }/home/purchase-ticket/${id}/${data?.data?.title}/${
-              data?.data?.end_date
-            }/${data?.data?.ticket?.ticket_prize}`}
-            className="w-full md:w-[48%] inline-block text-center bg-primary text-white rounded-[100px] p-5 text-sm lg:text-base hover:opacity-80"
+            }/home/purchase-ticket/${id}`}
+            className="w-full xl:w-[48%] md:w-auto mt-5 xl:mt-0  inline-block text-center bg-primary border-[2px] border-primary text-white rounded-[100px] py-5 px-10 text-sm lg:text-base hover:opacity-80"
           >
             Join Raffle Draw{" "}
           </Link>
           <Link
             to={`/my/dashboard/${_INFLUENCER_}/home`}
-            className="w-full md:w-[48%] md:w-auto mt-5 md:mt-0 inline-block text-center bg-transparent border-[2px] border-primary text-primary rounded-[100px] py-5 px-10 text-sm lg:text-base hover:opacity-80"
+            className="w-full xl:w-[48%] md:w-auto mt-5 xl:mt-0  inline-block text-center bg-transparent border-[2px] border-primary text-primary rounded-[100px] py-5 px-10 text-sm lg:text-base hover:opacity-80"
           >
             View Public Raffles
           </Link>
@@ -182,19 +180,19 @@ const PreviewDraw = () => {
     </div>
   );
 
-  const BtnBlock = (
-    <div className="flex flex-col md:flex-row items-center justify-end mt-10">
-      <Link
-        className="w-full md:w-auto inline-block text-center bg-transparent border-[2px] border-primary text-primary rounded-[100px] py-5 px-10 text-sm lg:text-base hover:opacity-80"
-        to={`/my/dashboard/${_INFLUENCER_}/update/:id`}
-      >
-        Continue Editing{" "}
-      </Link>
-      <button className="w-full md:w-auto md:ml-5 mt-5 md:mt-0 inline-block text-center border-[2px] border-primary bg-primary text-white rounded-[100px] py-5 px-10 text-sm lg:text-base hover:opacity-80">
-        Send
-      </button>
-    </div>
-  );
+  // const BtnBlock = (
+  //   <div className="flex flex-col md:flex-row items-center justify-end mt-10">
+  //     <Link
+  //       className="w-full md:w-auto inline-block text-center bg-transparent border-[2px] border-primary text-primary rounded-[100px] py-5 px-10 text-sm lg:text-base hover:opacity-80"
+  //       to={`/my/dashboard/${_INFLUENCER_}/update/:id`}
+  //     >
+  //       Continue Editing{" "}
+  //     </Link>
+  //     <button className="w-full md:w-auto md:ml-5 mt-5 md:mt-0 inline-block text-center border-[2px] border-primary bg-primary text-white rounded-[100px] py-5 px-10 text-sm lg:text-base hover:opacity-80">
+  //       Send
+  //     </button>
+  //   </div>
+  // );
 
   if (isLoading) return <Spinner />;
 
@@ -226,7 +224,7 @@ const PreviewDraw = () => {
             {Block1}
             {Block2}
             {Block3}
-            {BtnBlock}
+            {/* {BtnBlock} */}
           </>
         </div>
       </DashBoardLayout>

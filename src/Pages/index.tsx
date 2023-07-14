@@ -78,6 +78,8 @@ const InflunecersParticipants = lazy(
   () => import("./dashboard/influencer/Participants")
 );
 
+const InflunecerPurchaseTickets = lazy(() => import("./dashboard/influencer/PurchaseTicket"));
+
 //admin section
 const AdminDashboard = lazy(() => import("./dashboard/admin"));
 const AdminRegistration = lazy(() => import("./dashboard/admin/Registrations"));
@@ -151,6 +153,7 @@ export {
   InflunecersActiveTransaction,
   InflunecersNotifications,
   InflunecersParticipants,
+  InflunecerPurchaseTickets,
   FollowersRafflePagePreview,
   FollowersResults,
   FollowersProfile,

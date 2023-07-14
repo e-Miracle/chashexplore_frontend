@@ -23,8 +23,7 @@ const Index: React.FC<Props> = ({
   return (
     <Suspense>
       <div
-        ref={observerRef}
-        className="relative overflow-x-auto bg-white rounded-[10px] mt-10"
+        className="relative overflow-x-auto bg-white rounded-[10px] mt-10 "
       >
         <table
           className="w-full text-sm text-white text-gray-500 dark:text-gray-400 z-[1]"

@@ -29,6 +29,7 @@ import {
   InflunecersProfile,
   InflunecersActiveTransaction,
   InflunecersNotifications,
+  InflunecerPurchaseTickets,
   FollowersViewRaffle,
   FollowersRafflePagePreview,
   FollowersPurchaseTicket,
@@ -226,8 +227,8 @@ const router = createBrowserRouter([
         element: <InflunecersParticipants />,
       },
       {
-        path: `/my/dashboard/${_INFLUENCER_}/home/purchase-ticket/:id/:name/:time/:amount`,
-        element: <FollowersPurchaseTicket />,
+        path: `/my/dashboard/${_INFLUENCER_}/home/purchase-ticket/:id`,
+        element: <InflunecerPurchaseTickets />,
       },
       {
         path: `/my/dashboard/${_ADMIN_}/home`,

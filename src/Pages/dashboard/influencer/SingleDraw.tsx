@@ -13,6 +13,7 @@ import {
   countDown,
   getUserData,
   getSocialUrl,
+  Campaign,
 } from "../../../Utils";
 import { PreviewImage } from "../../../assets";
 import { fetchSingleCampaign } from "../../../hooks/customGets";
@@ -123,26 +124,40 @@ const Boxes = ({
 
 type BtnProp = {
   onClickShare?: React.MouseEventHandler<HTMLButtonElement> | undefined;
+  flattenedData: Campaign[];
+  id: number;
 };
-const Buttons: React.FC<BtnProp> = ({ onClickShare }) => {
+const Buttons: React.FC<BtnProp> = ({ onClickShare, flattenedData, id }) => {
   const navigate = useNavigate();
   return (
-    <div className="mt-[1rem] flex justify-center items-center">
-      <button
-        onClick={() => navigate(`/my/dashboard/${_INFLUENCER_}/create`)}
-        className="w-full md:w-auto md:ml-5 mt-5 md:mt-0 inline-block text-center border-[2px] border-primary bg-primary text-white rounded-[100px] py-5 px-10 text-sm lg:text-base hover:opacity-80"
-      >
-        Host Live Draw
-      </button>
-      <button
-        onClick={onClickShare}
-        className="w-full md:w-auto md:ml-5 mt-5 md:mt-0 inline-block text-center border-[2px] border-primary bg-primary text-white rounded-[100px] py-5 px-10 text-sm lg:text-base hover:opacity-80"
-      >
-        {" "}
-        <FontAwesomeIcon className="mr-2" icon={faShare} />
-        Share Link
-      </button>
-    </div>
+    <>
+      <div className=" flex justify-center items-center">
+        {flattenedData.length > 10 && (
+          <Link
+            to={`/my/dashboard/${_INFLUENCER_}/draws/participants/${id}`}
+            className="w-full md:w-auto mt-5  inline-block text-center bg-transparent border-[2px] border-primary text-primary rounded-[100px] py-5 px-10 text-sm lg:text-base hover:opacity-80"
+          >
+            View More Participants
+          </Link>
+        )}
+      </div>
+      <div className="mt-[1rem] flex justify-center items-center">
+        <button
+          onClick={() => navigate(`/my/dashboard/${_INFLUENCER_}/create`)}
+          className="w-full md:w-auto md:ml-5 mt-5 md:mt-0 inline-block text-center border-[2px] border-primary bg-primary text-white rounded-[100px] py-5 px-10 text-sm lg:text-base hover:opacity-80"
+        >
+          Host Live Draw
+        </button>
+        <button
+          onClick={onClickShare}
+          className="w-full md:w-auto md:ml-5 mt-5 md:mt-0 inline-block text-center border-[2px] border-primary bg-primary text-white rounded-[100px] py-5 px-10 text-sm lg:text-base hover:opacity-80"
+        >
+          {" "}
+          <FontAwesomeIcon className="mr-2" icon={faShare} />
+          Share Link
+        </button>
+      </div>
+    </>
   );
 };
 
@@ -316,6 +331,7 @@ const SingleDraw = () => {
       email: "@" + name,
       score: number_of_tickets,
     })) || [];
+
   const columnsArr = [
     { Header: "Participants’ Username", accessor: "email" },
     { Header: "Tickets Bought", accessor: "score" },
@@ -352,8 +368,12 @@ const SingleDraw = () => {
             id={Number(id)}
             participants={data?.data?.participants}
           />
-          <Table dataArr={flattenedData} columnsArr={columnsArr} />
-          <Buttons onClickShare={() => setIsOpen(true)} />
+          <Table dataArr={flattenedData.slice(-10)} columnsArr={columnsArr} />
+          <Buttons
+            onClickShare={() => setIsOpen(true)}
+            flattenedData={flattenedData}
+            id={Number(id)}
+          />
           <Modal visible={modalIsOpen}>
             <ModalContent
               onclick={() => setIsOpen(false)}

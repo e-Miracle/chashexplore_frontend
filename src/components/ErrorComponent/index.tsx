@@ -28,7 +28,7 @@ const Error: React.FC<Props> = ({ err, small = false }) => {
         </h1>
 
         <p className="text-lg mt-5 font-nunito w-full lg:text-base text-center text-[#213F7D]">
-          {err}
+          {err.toString()}
         </p>
       </div>
     </Suspense>

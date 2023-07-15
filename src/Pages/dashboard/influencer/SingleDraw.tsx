@@ -275,7 +275,9 @@ export const ModalContent: React.FC<ModalContent> = ({ onclick, link }) => {
               sharing. Click on the button to verify
             </h3>
             <button
-              onClick={() => navigate(`/my/dashboard/${_INFLUENCER_}/create`)}
+              onClick={() =>
+                navigate(`/my/dashboard/${_INFLUENCER_}/account-verification`)
+              }
               className="w-full md:w-auto  my-5  inline-block text-center border-[2px] border-primary bg-primary text-white rounded-[100px] py-3 px-5 text-sm lg:text-base hover:opacity-80"
             >
               Verify Account

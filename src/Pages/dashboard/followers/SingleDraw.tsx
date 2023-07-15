@@ -15,7 +15,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLongArrowRight } from "@fortawesome/free-solid-svg-icons";
 import { _FOLLOWER_, _INFLUENCER_ } from "../../../constants";
 import { fetchSingleCampaign } from "../../../hooks/customGets";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, Link } from "react-router-dom";
 import { useQuery } from "react-query";
 import toast from "react-hot-toast";
 const Error = React.lazy(() => import("../../../components/ErrorComponent"));
@@ -482,6 +482,14 @@ const SingleDraw = () => {
               {...ticketDetails}
             />
           </Modal>
+          <div>
+            <Link
+              to={`/my/dashboard/${_FOLLOWER_}/draws/review/${id}`}
+              className="w-full md:w-auto mt-5  inline-block text-center bg-transparent border-[2px] border-primary text-primary rounded-[100px] py-5 px-10 text-sm lg:text-base hover:opacity-80"
+            >
+              Add Review
+            </Link>
+          </div>
           <div className="flex justify-center items-center my-5">
             <button
               onClick={() => setIsOpen(true)}
@@ -497,7 +505,7 @@ const SingleDraw = () => {
               }
               className=" w-full md:w-auto bg-primary text-white text-sm lg:text-base  py-3 px-10 my-5 rounded-[100px] cursor-pointer hover:opacity-80"
             >
-              Buy Tickets(s)
+              Buy More Tickets(s)
             </button>
           </div>
         </BackgroundDrop>

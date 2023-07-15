@@ -185,7 +185,7 @@ const Notifications = () => {
   if (isLoading) return <Spinner />;
 
   if (isError) {
-    const errorMessage = (error as any).message || "An unknown error occurred";
+    const errorMessage = error instanceof Error ? (error as any).message : "An unknown error occurred";
     return <Error err={errorMessage} small={true} />;
   }
   return (
@@ -210,7 +210,7 @@ const Notifications = () => {
             )}
           </>
         ) : (
-          <div>
+          <div className="h-[90vh]">
             <h1 className="text-primary font-ubuntu text-[1.2rem] lg:text-[1.5rem] text-center md:text-left">
               No notifications yet.
             </h1>
